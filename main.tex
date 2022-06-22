@@ -1,0 +1,100 @@
+\documentclass[language=polish,type=master]{aghmodern}
+
+%\usepackage{lua-visual-debug}
+\usepackage{lipsum}
+
+\titleEN{Most important thesis in the world}
+\titlePL{Najważniejsza rozprawa na świecie}
+\author{Jan Kowalski}
+\faculty{Wydział Informatyki, Elektroniki i Telekomunikacji}
+\department{Katedra Informatyki}
+\supervisor{prof. dr hab Więcław Więcławski}
+\degreeprogramme{Informatyka}
+\degreetype{Stacjonarne}
+\date{2020}
+\dedication{Test}
+
+\usepackage[backend=biber,doi=true,url=false]{biblatex}
+\addbibresource{bibliography.bib}
+
+\usepackage{minted}
+
+\begin{document}
+
+\frontmatter
+\maketitle
+\tableofcontents
+
+\mainmatter
+
+\chapter{Wstęp}
+
+\lipsum[1]
+
+\begin{figure}
+\includegraphics[width=\textwidth]{agh-name-color-pl.pdf}
+\caption{Logo AGH}
+\label{fig:logoagh}
+\end{figure}
+
+To jest logo AGH (\autoref{fig:logoagh}).
+
+\lipsum[2-5]
+
+\chapter{Dalsza analiza}
+
+\lipsum\cite{nowacki1995t}
+
+\begin{minted}{c}
+#include<stdio.h>
+int main() {
+    int intType;
+    float floatType;
+    double doubleType;
+    char charType;
+
+    // sizeof evaluates the size of a variable
+    printf("Size of int: %ld bytes\n", sizeof(intType));
+    printf("Size of float: %ld bytes\n", sizeof(floatType));
+    printf("Size of double: %ld bytes\n", sizeof(doubleType));
+    printf("Size of char: %ld byte\n", sizeof(charType));
+
+    return 0;
+}
+\end{minted}
+
+\appendix
+
+\chapter{Dodatek 1}
+
+\begin{table}[t]
+	\centering
+
+	\begin{tabular}{l c}
+		\toprule
+		Nagłówek 1 & Nagłówek 2 \\ \midrule
+		Wiersz 11 & Wiersz 12 \\
+		Wiersz 21 & Wiersz 22 \\
+		\bottomrule
+	\end{tabular}
+	\caption{To jest tablica}
+	\label{tab:tablica}
+\end{table}
+
+\lipsum
+
+To jest tablica (\autoref{tab:tablica}).
+
+\backmatter
+
+\cleardoublepage
+\listoffigures
+
+\cleardoublepage
+\listoftables
+
+\cleardoublepage
+\printbibliography
+
+\end{document}
+
