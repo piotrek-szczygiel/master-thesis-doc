@@ -1,0 +1,14 @@
+{
+    "Insert figure": {
+        "scope": "latex",
+        "prefix": "fig",
+        "body": [
+            "\\begin{figure}[H]",
+            "   \\centering",
+            "   \\includegraphics[width=$1\\textwidth]{$2}",
+            "   \\caption{$3}",
+            "   \\label{fig:$4}",
+            "\\end{figure}"
+        ]
+    }
+}

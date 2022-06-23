@@ -3,6 +3,7 @@
 \ProvidesClass{aghmodern}[2020/06/10 Modernized AGH thesis template]
 
 \LoadClass{scrbook}
+\RequirePackage{scrhack}
 \RequirePackage{kvoptions,etoolbox,iftex}
 
 %% Parse options
