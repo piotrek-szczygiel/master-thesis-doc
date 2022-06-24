@@ -3,6 +3,8 @@
 \ProvidesClass{aghmodern}[2020/06/10 Modernized AGH thesis template]
 
 \LoadClass{scrbook}
+\RequirePackage{setspace}
+\RequirePackage[perpage]{footmisc}
 \RequirePackage{scrhack}
 \RequirePackage{kvoptions,etoolbox,iftex}
 

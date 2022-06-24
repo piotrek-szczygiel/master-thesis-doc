@@ -14,8 +14,6 @@
 \usepackage[backend=biber,doi=true,url=false]{biblatex}
 \addbibresource{bibliography.bib}
 
-\usepackage{minted}
-
 \begin{document}
 
 \frontmatter
@@ -24,13 +22,108 @@
 
 \mainmatter
 
+\onehalfspacing
+
 \chapter{Wstęp}
 
-\chapter{State of the art}
+wstęp...
+
+\section{Cel}
+
+Celem pracy jest stworzenie zbioru rekomendacji dla programistów tworzących interaktywne aplikacje webowe.
+Rekomendacje będą dotyczyć trzech sfer.
+Pierwszą z nich jest kwestia używania WebAssembly w nowych i istniejących aplikacjach.
+Przedstawi ona przypadki, w których WebAssembly nie pomoże wydajności naszej aplikacji.
+Pokaże również te, gdzie użycie WebAssembly znacząco poprawi wydajność i responsywność danej strony.
+Kolejna rekomendacja dotyczyć będzie wyboru języka programowania kompilowanego do WebAssembly.
+Jeśli programista zdecyduję się już na użycie WebAssembly, będzie musiał wybrać do tego jeszcze język, w którym będzie pracować.
+Różnią się one między sobą wygodą użytkowania oraz wydajnością, więc jest to również ważna decyzja.
+Ostatnia rekomendacja to wybór protokołu komunikacji sieciowej.
+Przedstawi ona wyniki testów opóźnień pomiędzy WebSocket, a WebRTC.
+Oprócz tego wyjaśni różnice w wygodzie tworzenia aplikacji z użyciem danego protokołu.
+Finalnie więc czytelnik będzie miał pogląd na rekomendowane technologie używane w procesie tworzenia wydajnych i responsywnych aplikacji webowych.
+
+\section{Motywacja}
+
+Większość ludzi posiadających dostęp do internetu każdego dnia korzysta z różnego rodzaju stron internetowych.
+W kieszeni posiadamy komputery z procesorami wielokrotnie razy szybszymi niż komputery personalne jeszcze nie tak dawno temu.
+Pomimo tego niektóre strony internetowe potrafią ładować się po kilkanaście sekund, a przy próbie interakcji z nimi zachowywać się nieresponsywnie.
+Wiele osób jest poirytowanych takim stanem rzeczy i wspomina czasy dużo wolniejszych komputerów, na których aplikacje mimo tego ładowały się szybko i nie zacinały się.
+Stan ten spowodowany jest w głównej mierze pewnego rodzaju chaosem panującym w sferze twórców stron internetowych.
+Poradniki do tworzenia nawet najprostszych aplikacji zawierają kod zaciągający tysiące bibliotek niepotrzebnie spowalniających ich działanie.
+Nowoczesne technologie takie jak WebAssembly kuszą wielu programistów rozwiązaniem tych problemów.
+Jednak na tym stadium rozwoju wiele programistów nadal nie wie czy jest to coś wartego ich uwagi.
+Aby ułatwić im dokonanie tego wyboru, w tej pracy skupiono się na pokazaniu z jakich technologii skorzystać, aby przyspieszyć działanie współczesnych aplikacji webowych.
+
+\section{Metodologia}
+
+Prace rozpoczęto od zapoznania się z językami kompilowanymi do WebAssembly.
+Po wybraniu trzech języków utworzono z ich wykorzystaniem prosty benchmark.
+Wykorzystany był on do badań nad wydajnością każdego z języków, a proces tworzenia aplikacji dostarczył informacji o wygodzie pisania w danym języku.
+Po wybraniu jednego z języków utworzono szereg innych aplikacji webowych, które dostarczyły więcej informacji o danej technologii.
+Pozwalały one zbadać wydajność tego języka w porównaniu z JavaScriptem.
+Na koniec utworzono aplikację podchodzącą pod nurt Tactile Internet.
+Utworzono ją jednocześnie jako aplikacje webową JavaScript, WebAssembly oraz aplikację natywną.
+Do tego dołączono również badania nad WebSocket oraz WebRTC.
+Protokoły te mogłyby służyć przykładowo jako kanał komunikacji w tej aplikacji.
+Na podstawie otrzymanych wyników wysnuto wnioski oraz utworzono zestaw rekomendacji dla przyszłych programistów interaktywnych aplikacji webowych.
 
 
+\section{Zawartość pracy}
 
-\chapter{WebAssembly}
+Dalsza część pracy została rozdzielona na następujące części:
+
+\begin{itemize}
+    \item Rozdział 2 -- zawiera przedstawienie aktualnego stanu wiedzy na tematy badane w tej pracy
+\end{itemize}
+
+\chapter{Aktualny stan wiedzy}
+
+W tym rozdziale przedstawione zostaną badane technologie oraz aktualny stan wiedzy z nimi związany.
+
+\section{Porównanie wydajności WebAssembly}
+
+WebAssembly (w skrócie WASM) jest to binarny format instrukcji dla maszyny wirtualnej opartej na stosie.
+Został stworzony jako przenośny cel kompilacji dla języków programowania.
+Umożliwia tworzenie aplikacji webowych zarówno po stronie klienta jak i serwera.
+
+Maszyna WASM została przystosowana, aby wczytywać programy szybko, jednocześnie zajmując nie więcej pamięci niż jest to konieczne.
+Celuje w osiągnięcie natywnej prędkości korzystając z powszechnych możliwości sprzętowych dostępnych na różnych platformach.
+Określa bezpieczne pod względem pamięci oraz dostępu z zewnątrz środowisko wykonywalne.
+
+WebAssembly może być współcześnie stosowany jako zastępstwo lub dopełnienie JavaScript w tworzeniu aplikacji webowych.
+Przedstawione poniżej pracę poruszają kwestie porównania wydajności WASM z resztą dostępnych rozwiązań.
+
+W pracy \cite{wasm_blazor} Dawid Suryś, Piotr Szłapa oraz Maria Skublewska-Paszkowska prowadzą badania nad wydajnością WASM oraz JavaScript.
+Dochodzą do wniosków, że WASM może być szybszy od JavaScript w przypadku aplikacji zawierających dużą ilość obliczeń oraz operacji na zbiorach danych.
+Mimo pisania aplikacji WASM nadal jesteśmy zmuszeni do korzystania z JavaScript do wywoływania zapytań sieciowych czy operacji na DOM.
+Powoduje to, że takie operacje są wolniejsze w WASM niż w samym JavaScript przez dodatkowy narzut.
+Przedstawiony test frameworka Blazor\footnotemark{} pokazał, że jest on wolniejszy niż istniejące popularne frameworki napisane w JavaScript.
+\footnotetext{Blazor -- frontend w C\# wykorzystujący WebAssembly (\url{https://blazor.net/})}
+Pokazał jednak, że WebAssembly jest na tyle dojrzały, aby stworzyć w nim kompletny i działający projekt.
+
+Praca \cite{wasm_speedyjs} Micha Reiser oraz Luc Bl\"{a}ser przedstawia projekt \emph{Speedy.js}, który kompiluje wybrane funkcję z języka TypeScript\footnotemark{} do WebAssembly.
+\footnotetext{TypeScript -- statycznie typowany nadzbiór JavaScript (\url{https://www.typescriptlang.org/})}
+Generuje on również automatycznie kod pozwalający na łatwą integracje z resztą kodu napisanego w TypeScript.
+W niektórych przypadkach osiągnięto nawet czterokrotne przyspieszenie dla funkcji skompilowanych do WASM.
+Projekt proponuje ciekawą strategie stopniowej transformacji kodu obliczeniowo intensywnego do WebAssembly.
+
+Abhinav Jangda i inni w swojej pracy \cite{wasm_native} porównują wydajność WASM z natywnymi aplikacjami.
+Wykorzystując \emph{BROWSIX-WASM}\footnotemark{} porównano wydajność programów skompilowanych do aplikacji natywnych oraz WebAssembly.
+\footnotetext{BROWSIX -- projekt umożliwiający uruchamianie niezmodyfikowanych plików wykonywalnych systemu Linux w przeglądarce (\url{https://browsix.org/})}
+Aplikacje WASM były średnio wolniejsze od natywnych aplikacji o 1.55x dla przeglądarki Chrome i 1.45x dla Firefox.
+Główny powód dla którego WASM jest wolniejsze od natywnej aplikacji to gorsza optymalizacja kodu maszynowego.
+Spowodowane jest to ograniczeniami wynikającymi ze specyfikacji WebAssembly (np. stack overflow checks, indirect call checks, reserved registers).
+Ograniczenia te nie muszą być zawarte w aplikacji natywnej.
+
+\section{WebRTC vs WebSocket}
+
+WebRTC to technologia umożliwiająca aplikacjom webowym i stronom internetowym przechwytywać oraz opcjonalnie strumieniować media audio-wizualne.
+Pozwala również na wymianę różnorodnych danych pomiędzy przeglądarkami bez konieczności posiadania serwera pośredniczącego.
+Pod spodem korzysta z protokołów UDP, TCP oraz SCTP w zależności od ustawień firewall użytkowników oraz rodzaju przesyłanych danych.
+
+WebSocket natomiast to technologia umożliwiająca otwarcie interaktywnej sesji komunikacji pomiędzy przeglądarką a serwerem.
+Zapewnia dwukierunkowy kanał wymiany danych poprzez pojedyncze połączenie TCP.
 
 \backmatter
 
