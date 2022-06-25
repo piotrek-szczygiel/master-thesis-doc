@@ -143,10 +143,10 @@ pdfencoding=unicode}
 \textbf{Oświadczenie studenta}
 \end{center}
 
-Uprzedzony(-a) o~odpowiedzialności karnej na podstawie art.~115 ust.~1 i~2 ustawy z~dnia 4~lutego 1994~r. o~prawie autorskim i~prawach pokrewnych (t.j. Dz.~U. z~2018 r. poz. 1191 z~późn. zm.):
+Uprzedzony o~odpowiedzialności karnej na podstawie art.~115 ust.~1 i~2 ustawy z~dnia 4~lutego 1994~r. o~prawie autorskim i~prawach pokrewnych (t.j. Dz.~U. z~2018 r. poz. 1191 z~późn. zm.):
 „Kto przywłaszcza sobie autorstwo albo wprowadza w~błąd co do autorstwa całości lub części cudzego utworu albo artystycznego wykonania, podlega grzywnie, karze ograniczenia wolności albo pozbawienia wolności do lat 3.
-Tej samej karze podlega, kto rozpowszechnia bez podania nazwiska lub pseudonimu twórcy cudzy utwór w~wersji oryginalnej albo w~postaci opracowania, artystyczne wykonanie albo publicznie zniekształca taki utwór, artystyczne wykonanie, fonogram, wideogram lub nadanie.”, a~także uprzedzony(-a) o~odpowiedzialności dyscyplinarnej na podstawie art.~307 ust.~1 ustawy z~dnia 20 lipca 2018 r. Prawo o~szkolnictwie wyższym i~nauce (Dz.~U. z~2018~r. poz.~1668 z~późn. zm.)
-„Student podlega odpowiedzialności dyscyplinarnej za naruszenie przepisów obowiązujących w~uczelni oraz za czyn uchybiający godności studenta.”, oświadczam, że niniejszą pracę dyplomową wykonałem(-am) osobiście i~samodzielnie i~nie korzystałem(-am) ze źródeł innych niż wymienione w~pracy.
+Tej samej karze podlega, kto rozpowszechnia bez podania nazwiska lub pseudonimu twórcy cudzy utwór w~wersji oryginalnej albo w~postaci opracowania, artystyczne wykonanie albo publicznie zniekształca taki utwór, artystyczne wykonanie, fonogram, wideogram lub nadanie.”, a~także uprzedzony o~odpowiedzialności dyscyplinarnej na podstawie art.~307 ust.~1 ustawy z~dnia 20 lipca 2018 r. Prawo o~szkolnictwie wyższym i~nauce (Dz.~U. z~2018~r. poz.~1668 z~późn. zm.)
+„Student podlega odpowiedzialności dyscyplinarnej za naruszenie przepisów obowiązujących w~uczelni oraz za czyn uchybiający godności studenta.”, oświadczam, że niniejszą pracę dyplomową wykonałem osobiście i~samodzielnie i~nie korzystałem ze źródeł innych niż wymienione w~pracy.
 
 Jednocześnie Uczelnia informuje, że zgodnie z~art. 15a ww. ustawy o~prawie autorskim i~prawach pokrewnych Uczelni przysługuje pierwszeństwo w~opublikowaniu pracy dyplomowej studenta.
 Jeżeli Uczelnia nie opublikowała pracy dyplomowej w~terminie 6~miesięcy od dnia jej obrony, autor może ją opublikować, chyba że praca jest częścią utworu zbiorowego.

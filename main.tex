@@ -55,10 +55,10 @@ Aby ułatwić im dokonanie tego wyboru, w tej pracy skupiono się na pokazaniu z
 \section{Metodologia}
 Prace rozpoczęto od zapoznania się z językami kompilowanymi do WebAssembly.
 Po wybraniu trzech języków utworzono z ich wykorzystaniem prosty benchmark.
-Wykorzystany był on do badań nad wydajnością każdego z języków, a proces tworzenia aplikacji dostarczył informacji o wygodzie pisania w danym języku.
+Został on użyty do badań nad wydajnością każdego z języków, a proces tworzenia aplikacji dostarczył informacji o wygodzie pisania w danym języku.
 Po wybraniu jednego z języków utworzono szereg innych aplikacji webowych, które dostarczyły więcej informacji o danej technologii.
 Pozwalały one zbadać wydajność tego języka w porównaniu z JavaScriptem.
-Na koniec utworzono aplikację podchodzącą pod nurt Tactile Internet.
+Na koniec zaprojektowano aplikację podchodzącą pod nurt Tactile Internet.
 Utworzono ją jednocześnie jako aplikacje webową JavaScript, WebAssembly oraz aplikację natywną.
 Do tego dołączono również badania nad WebSocket oraz WebRTC.
 Protokoły te mogłyby służyć przykładowo jako kanał komunikacji w tej aplikacji.
@@ -117,7 +117,7 @@ Zaskoczeniem był też telefon iPhone 10, który był szybszy niż MacBook Pro 2
 
 \emph{Weihang Wang} w swoim artykule \cite{wasm_js_bench2} porównuje WASM i JS dla czasu wykonania i zużycia pamięci różnych programów.
 Zauważa, że WebAssembly zużywa dużo więcej pamięci niż JavaScript.
-Mimo tego WASM był dużo szybszy od JS dla bardzo małych rozmiarów danych (35.3x średnie przyspieszenie) oraz małych danych (7.67x przyspieszenie).
+Mimo tego WASM był dużo szybszy od JS dla bardzo małych rozmiarów danych (35.3x średnie przyspieszenie) oraz małych danych (7.67x średnie przyspieszenie).
 Natomiast dla większych rozmiarów danych, dzięki \emph{JIT}\footnotemark{}, JavaScript doganiał WASM, a nawet zdarzały się przypadki gdzie WebAssembly był wolniejszy od JS.
 \footnotetext{Kompilator JIT -- kompiluje kod w trakcie wykonywania programu, w przeciwieństwie do zwykłych kompilatorów, które robią to przed jego uruchomieniem}
 Otrzymane przez niego wyniki pokazują, że optymalizacja \emph{JIT} w Chrome znacząco poprawia wyniki JavaScript, nie mając wpływu na WASM.
@@ -125,7 +125,7 @@ Otrzymane przez niego wyniki pokazują, że optymalizacja \emph{JIT} w Chrome zn
 \subsection{Wnioski}
 WebAssembly jest obiecującą technologią.
 Dla wielu przypadków osiągał dużo lepsze wyniki, jeśli chodzi o obliczenia w przeglądarce.
-Mimo tego wspomniane prace głównie skupiały się na samej wydajności, a nie wiele było poruszonych tematów tworzenia aplikacji.
+Mimo tego wspomniane prace głównie skupiały się na samej wydajności, a niewiele było poruszonych tematów tworzenia aplikacji.
 Wiele benchmarków były to programy napisane w C przeportowane\footnotemark{} do WASM.
 \footnotetext{Portowanie -- proces przenoszenia wersji programu komputerowego na inną platformę sprzętową lub programistyczną}
 W tej pracy poruszony zostanie natomiast temat tworzenia nowych aplikacji oraz wybór języka kompilowanego do WASM, który się do tego najbardziej aktualnie nadaje.
@@ -153,6 +153,62 @@ Praca \cite{websocket_webrtc_streamr} \emph{Santeri Juslenius} analizowała zach
 \footnotetext{Jest to system komunikacji, w którym wysyłane wiadomości mają przypisane pewne kategorie, które odbiorcy mogą subskrybować w celu ich otrzymywania}
 Wyniki badań zauważyły, że WebSocket odnosi lepsze rezultaty pod względem opóźnień.
 Jednak dla tej konkretnej topologii WebRTC był bardziej użyteczny ze względu na lepsze wyniki dla małych pakietów oraz możliwości połączeń P2P.
+
+\subsection{Wnioski}
+Wszystkie prace zgodnie uznają, że oba protokoły nadają się do tworzenia aplikacji sieciowych.
+Niektóre mówią o niższych opóźnieniach dla WebRTC, a inne dla WebSocket.
+Sprawdzimy to i w tej pracy implementując prostą aplikacje webową.
+Mimo tego, że ta praca będzie się skupiać na technologii WebAssembly, to nie zabraknie w niej badania prostoty użycia tych protokołów sieciowych w interaktywnej aplikacji webowej.
+
+\chapter{Języki kompilowane do WebAssembly}
+
+\section{Zig}
+
+\subsection{Wydajność}
+
+\subsection{Użytkowanie}
+
+\section{AssemblyScript}
+
+\subsection{Wydajność}
+
+\subsection{Użytkowanie}
+
+\section{Rust}
+
+\subsection{Wydajność}
+
+\subsection{Użytkowanie}
+
+\section{Wnioski}
+
+\chapter{Użytkowanie i wydajność Rust}
+
+\section{Sumowanie macierzy}
+
+\subsection{JavaScript}
+
+\subsection{Rust}
+
+\subsection{Rust z wykorzystaniem SIMD}
+
+\section{Symulacja N ciał}
+
+\subsection{JavaScript}
+
+\subsection{Rust}
+
+\section{Wnioski}
+
+\chapter{Interaktywna aplikacja webowa z użyciem WebAssembly}
+
+\section{Przykładowa aplikacja}
+
+\section{Porównanie wydajności}
+
+\section{WebRTC vs WebSocket}
+
+\chapter{Podsumowanie}
 
 \backmatter
 
