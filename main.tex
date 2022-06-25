@@ -25,11 +25,9 @@
 \onehalfspacing
 
 \chapter{Wstęp}
-
-wstęp...
+TODO: wstęp...
 
 \section{Cel}
-
 Celem pracy jest stworzenie zbioru rekomendacji dla programistów tworzących interaktywne aplikacje webowe.
 Rekomendacje będą dotyczyć trzech sfer.
 Pierwszą z nich jest kwestia używania WebAssembly w nowych i istniejących aplikacjach.
@@ -44,7 +42,6 @@ Oprócz tego wyjaśni różnice w wygodzie tworzenia aplikacji z użyciem danego
 Finalnie więc czytelnik będzie miał pogląd na rekomendowane technologie używane w procesie tworzenia wydajnych i responsywnych aplikacji webowych.
 
 \section{Motywacja}
-
 Większość ludzi posiadających dostęp do internetu każdego dnia korzysta z różnego rodzaju stron internetowych.
 W kieszeni posiadamy komputery z procesorami wielokrotnie razy szybszymi niż komputery personalne jeszcze nie tak dawno temu.
 Pomimo tego niektóre strony internetowe potrafią ładować się po kilkanaście sekund, a przy próbie interakcji z nimi zachowywać się nieresponsywnie.
@@ -56,7 +53,6 @@ Jednak na tym stadium rozwoju wiele programistów nadal nie wie czy jest to coś
 Aby ułatwić im dokonanie tego wyboru, w tej pracy skupiono się na pokazaniu z jakich technologii skorzystać, aby przyspieszyć działanie współczesnych aplikacji webowych.
 
 \section{Metodologia}
-
 Prace rozpoczęto od zapoznania się z językami kompilowanymi do WebAssembly.
 Po wybraniu trzech języków utworzono z ich wykorzystaniem prosty benchmark.
 Wykorzystany był on do badań nad wydajnością każdego z języków, a proces tworzenia aplikacji dostarczył informacji o wygodzie pisania w danym języku.
@@ -70,19 +66,17 @@ Na podstawie otrzymanych wyników wysnuto wnioski oraz utworzono zestaw rekomend
 
 
 \section{Zawartość pracy}
-
 Dalsza część pracy została rozdzielona na następujące części:
 
 \begin{itemize}
-    \item Rozdział 2 -- zawiera przedstawienie aktualnego stanu wiedzy na tematy badane w tej pracy
+    \item Rozdział 2 -- zawiera przedstawienie aktualnego stanu wiedzy
+    \item Rozdział 3 -- przedstawia porównanie języków kompilowanych do WebAssembly
 \end{itemize}
 
 \chapter{Aktualny stan wiedzy}
-
 W tym rozdziale przedstawione zostaną badane technologie oraz aktualny stan wiedzy z nimi związany.
 
-\section{Porównanie wydajności WebAssembly}
-
+\section{Wydajność WebAssembly}
 WebAssembly (w skrócie WASM) jest to binarny format instrukcji dla maszyny wirtualnej opartej na stosie.
 Został stworzony jako przenośny cel kompilacji dla języków programowania.
 Umożliwia tworzenie aplikacji webowych zarówno po stronie klienta jak i serwera.
@@ -94,7 +88,7 @@ Określa bezpieczne pod względem pamięci oraz dostępu z zewnątrz środowisko
 WebAssembly może być współcześnie stosowany jako zastępstwo lub dopełnienie JavaScript w tworzeniu aplikacji webowych.
 Przedstawione poniżej pracę poruszają kwestie porównania wydajności WASM z resztą dostępnych rozwiązań.
 
-W pracy \cite{wasm_blazor} Dawid Suryś, Piotr Szłapa oraz Maria Skublewska-Paszkowska prowadzą badania nad wydajnością WASM oraz JavaScript.
+W pracy \cite{wasm_blazor} \emph{Dawid Suryś}, \emph{Piotr Szłapa} oraz \emph{Maria Skublewska-Paszkowska} prowadzą badania nad wydajnością WASM oraz JavaScript.
 Dochodzą do wniosków, że WASM może być szybszy od JavaScript w przypadku aplikacji zawierających dużą ilość obliczeń oraz operacji na zbiorach danych.
 Mimo pisania aplikacji WASM nadal jesteśmy zmuszeni do korzystania z JavaScript do wywoływania zapytań sieciowych czy operacji na DOM.
 Powoduje to, że takie operacje są wolniejsze w WASM niż w samym JavaScript przez dodatkowy narzut.
@@ -102,13 +96,13 @@ Przedstawiony test frameworka Blazor\footnotemark{} pokazał, że jest on wolnie
 \footnotetext{Blazor -- frontend w C\# wykorzystujący WebAssembly (\url{https://blazor.net/})}
 Pokazał jednak, że WebAssembly jest na tyle dojrzały, aby stworzyć w nim kompletny i działający projekt.
 
-Praca \cite{wasm_speedyjs} Micha Reiser oraz Luc Bl\"{a}ser przedstawia projekt \emph{Speedy.js}, który kompiluje wybrane funkcję z języka TypeScript\footnotemark{} do WebAssembly.
+Praca \cite{wasm_speedyjs} \emph{Micha Reiser} oraz \emph{Luc Bl\"{a}ser} przedstawia projekt \emph{Speedy.js}, który kompiluje wybrane funkcję z języka TypeScript\footnotemark{} do WebAssembly.
 \footnotetext{TypeScript -- statycznie typowany nadzbiór JavaScript (\url{https://www.typescriptlang.org/})}
 Generuje on również automatycznie kod pozwalający na łatwą integracje z resztą kodu napisanego w TypeScript.
 W niektórych przypadkach osiągnięto nawet czterokrotne przyspieszenie dla funkcji skompilowanych do WASM.
 Projekt proponuje ciekawą strategie stopniowej transformacji kodu obliczeniowo intensywnego do WebAssembly.
 
-Abhinav Jangda i inni w swojej pracy \cite{wasm_native} porównują wydajność WASM z natywnymi aplikacjami.
+\emph{Abhinav Jangda} i inni w swojej pracy \cite{wasm_native} porównują wydajność WASM z natywnymi aplikacjami.
 Wykorzystując \emph{BROWSIX-WASM}\footnotemark{} porównano wydajność programów skompilowanych do aplikacji natywnych oraz WebAssembly.
 \footnotetext{BROWSIX -- projekt umożliwiający uruchamianie niezmodyfikowanych plików wykonywalnych systemu Linux w przeglądarce (\url{https://browsix.org/})}
 Aplikacje WASM były średnio wolniejsze od natywnych aplikacji o 1.55x dla przeglądarki Chrome i 1.45x dla Firefox.
@@ -116,14 +110,49 @@ Główny powód dla którego WASM jest wolniejsze od natywnej aplikacji to gorsz
 Spowodowane jest to ograniczeniami wynikającymi ze specyfikacji WebAssembly (np. stack overflow checks, indirect call checks, reserved registers).
 Ograniczenia te nie muszą być zawarte w aplikacji natywnej.
 
-\section{WebRTC vs WebSocket}
+Artykuł \cite{wasm_js_bench} napisany przez \emph{David Herrera} i innych zawiera zbiór benchmarków porównujących WASM oraz JS w różnych konfiguracjach.
+Dla maszyny z systemem Windows, WebAssembly był około 70\% szybszy dla przeglądarki Chrome, 60\% szybszy dla Firefox i 163\% szybszy dla przeglądarki Edge.
+Z tych trzech przeglądarek najlepsze wyniki odniósł Firefox.
+Zaskoczeniem był też telefon iPhone 10, który był szybszy niż MacBook Pro 2013.
 
+\emph{Weihang Wang} w swoim artykule \cite{wasm_js_bench2} porównuje WASM i JS dla czasu wykonania i zużycia pamięci różnych programów.
+Zauważa, że WebAssembly zużywa dużo więcej pamięci niż JavaScript.
+Mimo tego WASM był dużo szybszy od JS dla bardzo małych rozmiarów danych (35.3x średnie przyspieszenie) oraz małych danych (7.67x przyspieszenie).
+Natomiast dla większych rozmiarów danych, dzięki \emph{JIT}\footnotemark{}, JavaScript doganiał WASM, a nawet zdarzały się przypadki gdzie WebAssembly był wolniejszy od JS.
+\footnotetext{Kompilator JIT -- kompiluje kod w trakcie wykonywania programu, w przeciwieństwie do zwykłych kompilatorów, które robią to przed jego uruchomieniem}
+Otrzymane przez niego wyniki pokazują, że optymalizacja \emph{JIT} w Chrome znacząco poprawia wyniki JavaScript, nie mając wpływu na WASM.
+
+\subsection{Wnioski}
+WebAssembly jest obiecującą technologią.
+Dla wielu przypadków osiągał dużo lepsze wyniki, jeśli chodzi o obliczenia w przeglądarce.
+Mimo tego wspomniane prace głównie skupiały się na samej wydajności, a nie wiele było poruszonych tematów tworzenia aplikacji.
+Wiele benchmarków były to programy napisane w C przeportowane\footnotemark{} do WASM.
+\footnotetext{Portowanie -- proces przenoszenia wersji programu komputerowego na inną platformę sprzętową lub programistyczną}
+W tej pracy poruszony zostanie natomiast temat tworzenia nowych aplikacji oraz wybór języka kompilowanego do WASM, który się do tego najbardziej aktualnie nadaje.
+
+\section{WebRTC vs WebSocket}
 WebRTC to technologia umożliwiająca aplikacjom webowym i stronom internetowym przechwytywać oraz opcjonalnie strumieniować media audio-wizualne.
 Pozwala również na wymianę różnorodnych danych pomiędzy przeglądarkami bez konieczności posiadania serwera pośredniczącego.
 Pod spodem korzysta z protokołów UDP, TCP oraz SCTP w zależności od ustawień firewall użytkowników oraz rodzaju przesyłanych danych.
 
 WebSocket natomiast to technologia umożliwiająca otwarcie interaktywnej sesji komunikacji pomiędzy przeglądarką a serwerem.
 Zapewnia dwukierunkowy kanał wymiany danych poprzez pojedyncze połączenie TCP.
+Przedstawione poniżej prace skupiają się na porównaniu tych dwóch protokołów w różnych kontekstach.
+
+\emph{G{\"u}nay Mert Karadogan} w swojej pracy \cite{websocket_webrtc_iot} bada WebRTC oraz WebSocket pod względem użycia ich w IoT\footnotemark{}.
+\footnotetext{Internet of Things -- sieć fizycznych obiektów wyposażonych w czujniki i oprogramowanie umożliwiające wymianę danych z innymi urządzeniami za pośrednictwem Internetu}
+Wnioskuje on, że zarówno WebSocket jak i WebRTC może zostać użyte do łączenia urządzeń IoT z Internetem.
+
+\emph{Tomasz Karla} i \emph{Jarosław Tarnawski} w pracy \cite{websocket_webrtc_realtime} porównują opóźnienie protokołów WebRTC oraz WebSocket w różnych scenariuszach.
+Testowane były przykładowo sieci lokalne, GSM oraz WiFi. Protokół WebRTC zanotował minimalnie mniejsze opóźnienia.
+Umożliwił on również komunikacje aplikacji w obrębie sieci lokalnej\footnotemark{}, mimo postawienia strony na publicznym serwerze.
+\footnotetext{WebRTC potrafi połączyć się między dwoma przeglądarkami bezpośrednio, jeśli ustawienia Firewall użytkowników na to pozwalają}
+Autorzy wnioskują, że oba protokoły jak najbardziej nadają się do tworzenia aplikacji sieciowej.
+
+Praca \cite{websocket_webrtc_streamr} \emph{Santeri Juslenius} analizowała zachowanie protokołów WebRTC oraz WebSocket w sieci \emph{Streamr}, która jest zdecentralizowanym systemem \emph{publish-subscribe}\footnotemark{}.
+\footnotetext{Jest to system komunikacji, w którym wysyłane wiadomości mają przypisane pewne kategorie, które odbiorcy mogą subskrybować w celu ich otrzymywania}
+Wyniki badań zauważyły, że WebSocket odnosi lepsze rezultaty pod względem opóźnień.
+Jednak dla tej konkretnej topologii WebRTC był bardziej użyteczny ze względu na lepsze wyniki dla małych pakietów oraz możliwości połączeń P2P.
 
 \backmatter
 
