@@ -14,10 +14,16 @@
 \usepackage[backend=biber,doi=true,url=false]{biblatex}
 \addbibresource{bibliography.bib}
 
+\setminted{autogobble,breaklines,frame=single,fontsize=\footnotesize}
+\definecolor{number}{RGB}{102, 102, 102}
+\definecolor{type}{RGB}{176, 0, 64}
+
 \begin{document}
 
 \frontmatter
 \maketitle
+
+\setcounter{tocdepth}{1}
 \tableofcontents
 
 \mainmatter
@@ -161,54 +167,211 @@ Sprawdzimy to i w tej pracy implementując prostą aplikacje webową.
 Mimo tego, że ta praca będzie się skupiać na technologii WebAssembly, to nie zabraknie w niej badania prostoty użycia tych protokołów sieciowych w interaktywnej aplikacji webowej.
 
 \chapter{Języki kompilowane do WebAssembly}
+WebAssembly jest binarnym formatem, interpretowanym przez wirtualną maszynę uruchamianą w przeglądarce lub jako niezależną aplikację.
+Nie jest on więc językiem programowania samym w sobie.
+Może on natomiast być celem kompilacji dla innych języków.
+Wybór takiego języka może okazać się równie ważny jak podjęcie decyzji o tym czy w ogóle korzystać z WASM.
+Aktualnie dużo języków posiada WebAssembly jako platformę wynikową kompilacji.
+W tej pracy jednak skupiono się na trzech językach: Zig, AssemblyScript oraz Rust.
+Pierwszym językiem, któremu zostanie poświęcona uwaga w tej pracy jest Zig.
+Jest to młody, szybko rozwijający się język, którego celem jest zastąpienie współczesnych użyć języka C.
+AssemblyScript został wybrany jako język bardzo zbliżony składnią i użyciem do popularnego TypeScript.
+Dzięki niemu programiści stron internetowych mogliby bez dużej ilości nauki tworzyć moduły WebAssembly.
+Rust został wybrany ze względu na największą popularność wśród programistów WASM.
+Jest w nim też pokładana największa nadzieja jeśli chodzi o przyszłość programowania WebAssembly.
+W tym rozdziale przedstawione będzie porównanie tych języków zarówno pod względem wydajności kodu wynikowego jak i ogólnego procesu tworzenia aplikacji.
+Pominięto takie języki jak C oraz C++ ze względu na to, że tak samo jak Rust i Zig korzystają z LLVM\footnotemark{} do generowania kodu wynikowego.
+\footnotetext{LLVM -- backend dla kompilatorów z którego korzystają różne frontendy dla takich języków jak C, C++, Rust, Zig, Swift i wiele innych (\url{https://llvm.org/})}
+Oznacza to, że niekoniecznie będą od nich wydajniejsze, a współcześni programiści starają się odchodzić od korzystania z tych języków w nowych projektach na rzecz nowocześniejszych rozwiązań.
+Zaprezentowane zostanie utworzenie dwóch prostych funkcji w każdym z języków -- rekurencyjnego obliczania n-tej liczby ciągu Fibonacciego oraz sortowania tablicy liczb.
+Przedstawiona będzie rekurencyjna wersja Fibonacciego zamiast iteracyjnej, ponieważ jest dużo wolniejsza i szybko zapełnia stos, dzięki czemu łatwiej pokazuje różnice w wydajności między językami.
 
 \section{Zig}
+Posiłkując się definicją ze strony głównej projektu\footnotemark{}, Zig to język programowania ogólnego przeznaczenia i zestaw narzędzi do utrzymywania solidnego i optymalnego oprogramowania wielokrotnego użytku.
+\footnotetext{\url{https://ziglang.org/}}
+Próbuję on być nowoczesnym zastępcą języka C, czyli niskopoziomowym kompilowanym językiem, bez ukrytych alokacji pamięci, automatycznej dealokacji i tym podobnych rozwiązań.
+Jednocześnie próbuje naprawić główne problemy swojego poprzednika przykładowo wychwytując dużo problemów związanych z bezpieczeństwem już w trakcie kompilacji.
 
-\subsection{Wydajność}
+\subsection{Instalacja}
+Proces instalacji potrzebnych narzędzi jest bardzo prosty i zajmuję dosłownie minutę.
+Pobieramy archiwum ze strony, wypakowujemy i ewentualnie dodajemy folder do zmiennej środowiskowej \emph{PATH}, aby można było kompilować bez podawania pełnej ścieżki do kompilatora.
+Zamiast pobierać manualnie, można też skorzystać z menadżera paczek dla naszego systemu operacyjnego.
+Pobrany zestaw narzędzi zawiera wszystko co potrzebne do utworzenia modułu WebAssembly.
 
-\subsection{Użytkowanie}
+\subsection{Tworzenie funkcji \emph{fib}}
+Możemy więc zacząć tworzyć naszą aplikację rozpoczynając od napisania funkcji rekurencyjnie liczącej n-tą liczbę w ciągu Fibonacciego.
+
+\begin{listing}[H]
+    \begin{minted}{zig}
+        export fn fib(n: u64) u64 {
+            if (n == 1) return 1;
+            if (n == 2) return 1;
+            return fib(n - 1) + fib(n - 2);
+        }
+    \end{minted}
+    \caption{Funkcja obliczająca n-tą liczbę ciągu Fibonacciego w języku Zig}
+\end{listing}
+
+Jak widać składnia jest bardzo zbliżona do języków z rodziny C.
+Słowo kluczowe \emph{export} umożliwia wywołanie danej funkcji z poziomu JavaScript.
+
+\subsection{Tworzenie funkcji \emph{sort}}
+Utworzymy teraz funkcję, która otrzymuję tablicę z zewnątrz, a następnie ją sortuję.
+Pojawia się tutaj jednak pierwszy problem -- zarządzanie pamięcią.
+Nie można mianowicie przekazać tabeli bezpośrednio z poziomu kodu napisanego w JavaScript do moduły WebAssembly.
+Nasz program napisany w Zig ma jedynie dostęp do swojej pamięci i jest w tzw. piaskownicy\footnotemark{}.
+\footnotetext{Piaskownica (ang. sandbox) -- izoluje program od reszty systemu w celu poprawy bezpieczeństwa}
+Należy więc udostępnić tą pamięć użytkownikowi, aby mógł przez nią przekazać nam tablicę do posortowania.
+
+% Minted doesn't detect Zig 10_000_000 number correctly and it breaks syntax highlighting
+\begin{listing}[H]
+    \begin{minted}[escapeinside=||]{zig}
+        const std = @import("std");
+        const allocator = @import("std").heap.page_allocator;
+
+        var array: []f64 = undefined;
+
+        export fn initialize_array() *f64 {
+            array = allocator.alloc(f64, |\textcolor{number}{10\_000\_000}|) catch unreachable;
+            return &array[0];
+        }
+
+        export fn sort(size: usize) void {
+            std.sort.sort(f64, array[0..size], {}, comptime std.sort.asc(f64));
+        }
+    \end{minted}
+    \caption{Kod udostępniający pamięć dla tablicy oraz funkcja ją sortująca}
+\end{listing}
+
+Funkcja \emph{initialize\_array} alokuję najpierw 10MB pamięci, a następnie zwraca wskaźnik na początek zaalokowanej tabeli.
+Dzięki temu użytkownik będzie mógł ją wypełnić swoimi danymi, a następnie za pomocą funkcji \emph{sort} posortować N pierwszych liczb.
+Nie jest to najwygodniejszy sposób pisania kodu operującego na danych przekazywanych z poziomu strony internetowej.
+Zostanie przedstawione później jak w prostszy sposób inne języki radzą sobie z tym problemem.
+
+\subsection{Kompilacja}
+Możemy teraz skompilować nasz plik, który nazwiemy \emph{main.zig} i utworzyć moduł WebAssembly \emph{zig.wasm} następującym poleceniem:
+
+\begin{minted}{text}
+    $ zig build-lib main.zig -target wasm32-freestanding -dynamic -O ReleaseFast -femit-bin=zig.wasm
+\end{minted}
+
+Ustawiliśmy poziom optymalizacji \emph{ReleaseFast}, aby uzyskać jak najlepszą wydajność modułu.
+Język Zig oprócz kompilacji z poziomu linii poleceń umożliwia również tworzenie bardziej skomplikowanych programów budujących.
+Mogą być one napisane również w języku Zig, zamiast w jakimś innym, kompletnie nie związanym z aplikacją języku opisującym proces budowania.
+Dzięki temu nie trzeba uczyć się dodatkowych narzędzi takich jak CMake, Make czy wiele innych.
+Temat ten jednak wychodzi poza zakres tej pracy.
 
 \section{AssemblyScript}
+AssemblyScript jest wyjątkowy pod tym względem, że został zaprojektowany specjalnie dla WebAssembly.
+Korzysta ze składni bardzo zbliżonej do języka TypeScript, dzięki czemu programiści stron internetowych nie będą musieli poświęcać dużo czasu na jej naukę.
 
-\subsection{Wydajność}
+\subsection{Instalacja}
+AssemblyScript w prosty sposób integruje się z istniejącym ekosystem stron internetowych.
+Zainstalować go można korzystając z menadżera paczek \emph{npm}.
+Cały proces inicjalizacji nowego projektu jest szybki, prosty i dokładnie opisany w oficjalnym wstępie do języka\footnotemark{}.
+\footnotetext{\url{https://www.assemblyscript.org/getting-started.html}}
 
-\subsection{Użytkowanie}
+\subsection{Tworzenie funkcji \emph{fib}}
+Zaczynamy pisać kod w wygenerowanym pliku \emph{index.ts} od funkcji \emph{fib}.
+
+% Second u64 is not highlighted for some reason
+\begin{listing}[H]
+    \begin{minted}[escapeinside=||]{typescript}
+        export function fib(n: u64): |\textcolor{type}{u64}| {
+            if (n == 1) return 1;
+            if (n == 2) return 1;
+            return fib(n - 1) + fib(n - 2);
+        }
+    \end{minted}
+    \caption{Funkcja obliczająca n-tą liczbę ciągu Fibonacciego w języku AssemblyScript}
+\end{listing}
+
+Kod jest praktycznie taki sam jaki można by napisać w języku TypeScript.
+Główną różnicą jest użycie typu \emph{u64}, ponieważ WebAssembly wymaga specyfikacji konkretnego typu używanych liczb całkowitych.
+
+\subsection{Tworzenie funkcji \emph{sort}}
+
+Funkcje sort można w tym języku napisać dużo szybciej niż w języku Zig.
+
+\begin{listing}[H]
+    \begin{minted}{typescript}
+        export function sort(array: Array<f64>): void {
+            array.sort();
+        }
+    \end{minted}
+    \caption{Funkcja sortująca tablicę w języku AssemblyScript}
+\end{listing}
+
+Jak można zauważyć, wystarczy że ustawimy typ zmiennej wejściowej jako \emph{Array<f64>}, aby funkcja przyjmowała tablicę liczb zmiennoprzecinkowych.
+W przeciwieństwie do języka Zig, nie jest konieczne manualnie tworzenie bufora, do którego przekażemy tablice z zewnątrz.
+AssemblyScript w trakcie kompilacji automatycznie generuje kod, dzięki któremu nie musimy się tym przejmować.
+Tworzona jest funkcja okalająca (ang. wrapper function), która alokuje pamięć dla naszej tablicy i przekazuje ją do właściwej funkcji jako wskaźnik na tą pamięć.
+
+\subsection{Kompilacja}
+Skompilować projekt możemy za pomocą narzędzia \emph{npm}.
+
+\begin{minted}{text}
+    $ npm run build
+\end{minted}
+
+Podczas inicjalizacji projektu wygenerowała się konfiguracja, która powoduje, że to polecenie kompiluje nasz program do modułu WebAssembly.
+Co ważne w przypadku tego języku, z racji na ścisłą integrację z resztą ekosystemu tworzenia stron internetowych, buduje to również jednocześnie pozostały kod strony.
+Oznacza to, że nie potrzebujemy dodatkowego kroku kompilacji WebAssembly, a wszystko odbywa się z użyciem jednego systemu budującego.
+Bardzo przydatną funkcją są również automatycznie generowane pliki typów TypeScript.
+
+\begin{listing}[H]
+    \begin{minted}{typescript}
+        export declare function fib(n: bigint): bigint;
+        export declare function sort(array: Array<number>): void;
+    \end{minted}
+    \caption{Fragment automatycznie wygenerowanego pliku typów}
+\end{listing}
+
+Dzięki nim otrzymujemy podpowiedzi w naszym środowisku programistycznym w trakcie odwoływania się do funkcji napisanych w AssemblyScript.
 
 \section{Rust}
 
-\subsection{Wydajność}
+\subsection{Instalacja}
 
-\subsection{Użytkowanie}
+\subsection{Tworzenie funkcji \emph{fib}}
 
-\section{Wnioski}
+\subsection{Tworzenie funkcji \emph{sort}}
 
-\chapter{Użytkowanie i wydajność Rust}
+\subsection{Kompilacja}
 
-\section{Sumowanie macierzy}
-
-\subsection{JavaScript}
-
-\subsection{Rust}
-
-\subsection{Rust z wykorzystaniem SIMD}
-
-\section{Symulacja N ciał}
-
-\subsection{JavaScript}
-
-\subsection{Rust}
+\section{Porównanie wydajności języków}
 
 \section{Wnioski}
 
-\chapter{Interaktywna aplikacja webowa z użyciem WebAssembly}
+% \chapter{Użytkowanie i wydajność Rust}
 
-\section{Przykładowa aplikacja}
+% \section{Sumowanie macierzy}
 
-\section{Porównanie wydajności}
+% \subsection{JavaScript}
 
-\section{WebRTC vs WebSocket}
+% \subsection{Rust}
 
-\chapter{Podsumowanie}
+% \subsection{Rust z wykorzystaniem SIMD}
+
+% \section{Symulacja N ciał}
+
+% \subsection{JavaScript}
+
+% \subsection{Rust}
+
+% \section{Wnioski}
+
+% \chapter{Interaktywna aplikacja webowa z użyciem WebAssembly}
+
+% \section{Przykładowa aplikacja}
+
+% \section{Porównanie wydajności}
+
+% \section{Aplikacja natywna}
+
+% \section{WebRTC vs WebSocket}
+
+% \chapter{Podsumowanie}
 
 \backmatter
 
@@ -217,6 +380,10 @@ Mimo tego, że ta praca będzie się skupiać na technologii WebAssembly, to nie
 
 \cleardoublepage
 \listoftables
+
+\cleardoublepage
+\renewcommand\listoflistingscaption{Spis listingów}
+\listoflistings
 
 \cleardoublepage
 \printbibliography

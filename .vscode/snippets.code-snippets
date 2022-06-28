@@ -10,5 +10,26 @@
             "   \\label{fig:$4}",
             "\\end{figure}"
         ]
+    },
+    "Insert listing": {
+        "scope": "latex",
+        "prefix": "code",
+        "body": [
+            "\\begin{listing}[H]",
+            "    \\begin{minted}{$1}",
+            "    $0",
+            "    \\end{minted}",
+            "    \\caption{$2}",
+            "\\end{listing}"
+        ]
+    },
+    "Insert command": {
+        "scope": "latex",
+        "prefix": "cmd",
+        "body": [
+            "\\begin{minted}{text}",
+            "    $ $1",
+            "\\end{minted}"
+        ]
     }
 }

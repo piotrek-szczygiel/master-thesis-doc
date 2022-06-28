@@ -91,6 +91,7 @@ pdfencoding=unicode}
 
 \RequirePackage[mono=false]{libertinus}
 \RequirePackage{microtype}
+\RequirePackage{minted}
 \RequirePackage{csquotes}
 
 \def\titlePL#1{\gdef\@titlePL{#1}}

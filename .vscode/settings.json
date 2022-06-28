@@ -107,10 +107,14 @@
     ],
     "cSpell.words": [
         "Abhinav",
+        "alokatora",
         "Blazor",
         "BROWSIX",
+        "dealokacji",
         "frameworka",
         "frameworki",
+        "frontendy",
+        "inicjalizacji",
         "Jangda",
         "Juslenius",
         "Karadogan",
@@ -127,6 +131,10 @@
         "Skublewska",
         "Streamr",
         "Suryś",
-        "Weihang"
+        "Weihang",
+        "zaalokowanej"
+    ],
+    "cSpell.ignoreRegExpList": [
+        "/(?:\\\\begin{minted}[\\s\\S]*?\\\\end{minted})/g"
     ]
 }
