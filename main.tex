@@ -44,7 +44,7 @@ Jeśli programista zdecyduję się już na użycie WebAssembly, będzie musiał 
 Różnią się one między sobą wygodą użytkowania oraz wydajnością, więc jest to również ważna decyzja.
 Ostatnia rekomendacja to wybór protokołu komunikacji sieciowej.
 Przedstawi ona wyniki testów opóźnień pomiędzy WebSocket, a WebRTC.
-Oprócz tego wyjaśni różnice w wygodzie tworzenia aplikacji z użyciem danego protokołu.
+Oprócz tego wyjaśnione zostaną różnice w wygodzie tworzenia aplikacji z użyciem danego protokołu.
 Finalnie więc czytelnik będzie miał pogląd na rekomendowane technologie używane w procesie tworzenia wydajnych i responsywnych aplikacji webowych.
 
 \section{Motywacja}
@@ -60,9 +60,9 @@ Aby ułatwić im dokonanie tego wyboru, w tej pracy skupiono się na pokazaniu z
 
 \section{Metodologia}
 Prace rozpoczęto od zapoznania się z językami kompilowanymi do WebAssembly.
-Po wybraniu trzech języków utworzono z ich wykorzystaniem prosty benchmark.
+Po wybraniu trzech interesujących języków utworzono z ich wykorzystaniem prosty benchmark.
 Został on użyty do badań nad wydajnością każdego z języków, a proces tworzenia aplikacji dostarczył informacji o wygodzie pisania w danym języku.
-Po wybraniu jednego z języków utworzono szereg innych aplikacji webowych, które dostarczyły więcej informacji o danej technologii.
+Po wybraniu jednego z języków utworzono inne aplikacje webowe, które dostarczyły więcej informacji o danej technologii.
 Pozwalały one zbadać wydajność tego języka w porównaniu z JavaScriptem.
 Na koniec zaprojektowano aplikację podchodzącą pod nurt Tactile Internet.
 Utworzono ją jednocześnie jako aplikacje webową JavaScript, WebAssembly oraz aplikację natywną.
@@ -83,21 +83,21 @@ Dalsza część pracy została rozdzielona na następujące części:
 W tym rozdziale przedstawione zostaną badane technologie oraz aktualny stan wiedzy z nimi związany.
 
 \section{Wydajność WebAssembly}
-WebAssembly (w skrócie WASM) jest to binarny format instrukcji dla maszyny wirtualnej opartej na stosie.
+WebAssembly (w skrócie WebAssembly) jest to binarny format instrukcji dla maszyny wirtualnej opartej na stosie.
 Został stworzony jako przenośny cel kompilacji dla języków programowania.
 Umożliwia tworzenie aplikacji webowych zarówno po stronie klienta jak i serwera.
 
-Maszyna WASM została przystosowana, aby wczytywać programy szybko, jednocześnie zajmując nie więcej pamięci niż jest to konieczne.
+Maszyna WebAssembly została przystosowana, aby wczytywać programy szybko, jednocześnie zajmując nie więcej pamięci niż jest to konieczne.
 Celuje w osiągnięcie natywnej prędkości korzystając z powszechnych możliwości sprzętowych dostępnych na różnych platformach.
 Określa bezpieczne pod względem pamięci oraz dostępu z zewnątrz środowisko wykonywalne.
 
 WebAssembly może być współcześnie stosowany jako zastępstwo lub dopełnienie JavaScript w tworzeniu aplikacji webowych.
-Przedstawione poniżej pracę poruszają kwestie porównania wydajności WASM z resztą dostępnych rozwiązań.
+Przedstawione poniżej pracę poruszają kwestie porównania wydajności WebAssembly z resztą dostępnych rozwiązań.
 
-W pracy \cite{wasm_blazor} \emph{Dawid Suryś}, \emph{Piotr Szłapa} oraz \emph{Maria Skublewska-Paszkowska} prowadzą badania nad wydajnością WASM oraz JavaScript.
-Dochodzą do wniosków, że WASM może być szybszy od JavaScript w przypadku aplikacji zawierających dużą ilość obliczeń oraz operacji na zbiorach danych.
-Mimo pisania aplikacji WASM nadal jesteśmy zmuszeni do korzystania z JavaScript do wywoływania zapytań sieciowych czy operacji na DOM.
-Powoduje to, że takie operacje są wolniejsze w WASM niż w samym JavaScript przez dodatkowy narzut.
+W pracy \cite{wasm_blazor} \emph{Dawid Suryś}, \emph{Piotr Szłapa} oraz \emph{Maria Skublewska-Paszkowska} prowadzą badania nad wydajnością WebAssembly oraz JavaScript.
+Dochodzą do wniosków, że WebAssembly może być szybszy od JavaScript w przypadku aplikacji zawierających dużą ilość obliczeń oraz operacji na zbiorach danych.
+Mimo pisania aplikacji WebAssembly nadal jesteśmy zmuszeni do korzystania z JavaScript do wywoływania zapytań sieciowych czy operacji na DOM.
+Powoduje to, że takie operacje są wolniejsze w WebAssembly niż w samym JavaScript przez dodatkowy narzut.
 Przedstawiony test frameworka Blazor\footnotemark{} pokazał, że jest on wolniejszy niż istniejące popularne frameworki napisane w JavaScript.
 \footnotetext{Blazor -- frontend w C\# wykorzystujący WebAssembly (\url{https://blazor.net/})}
 Pokazał jednak, że WebAssembly jest na tyle dojrzały, aby stworzyć w nim kompletny i działający projekt.
@@ -105,36 +105,36 @@ Pokazał jednak, że WebAssembly jest na tyle dojrzały, aby stworzyć w nim kom
 Praca \cite{wasm_speedyjs} \emph{Micha Reiser} oraz \emph{Luc Bl\"{a}ser} przedstawia projekt \emph{Speedy.js}, który kompiluje wybrane funkcję z języka TypeScript\footnotemark{} do WebAssembly.
 \footnotetext{TypeScript -- statycznie typowany nadzbiór JavaScript (\url{https://www.typescriptlang.org/})}
 Generuje on również automatycznie kod pozwalający na łatwą integracje z resztą kodu napisanego w TypeScript.
-W niektórych przypadkach osiągnięto nawet czterokrotne przyspieszenie dla funkcji skompilowanych do WASM.
+W niektórych przypadkach osiągnięto nawet czterokrotne przyspieszenie dla funkcji skompilowanych do WebAssembly.
 Projekt proponuje ciekawą strategie stopniowej transformacji kodu obliczeniowo intensywnego do WebAssembly.
 
-\emph{Abhinav Jangda} i inni w swojej pracy \cite{wasm_native} porównują wydajność WASM z natywnymi aplikacjami.
+\emph{Abhinav Jangda} i inni w swojej pracy \cite{wasm_native} porównują wydajność WebAssembly z natywnymi aplikacjami.
 Wykorzystując \emph{BROWSIX-WASM}\footnotemark{} porównano wydajność programów skompilowanych do aplikacji natywnych oraz WebAssembly.
 \footnotetext{BROWSIX -- projekt umożliwiający uruchamianie niezmodyfikowanych plików wykonywalnych systemu Linux w przeglądarce (\url{https://browsix.org/})}
-Aplikacje WASM były średnio wolniejsze od natywnych aplikacji o 1.55x dla przeglądarki Chrome i 1.45x dla Firefox.
-Główny powód dla którego WASM jest wolniejsze od natywnej aplikacji to gorsza optymalizacja kodu maszynowego.
+Aplikacje WebAssembly były średnio wolniejsze od natywnych aplikacji o 1.55x dla przeglądarki Chrome i 1.45x dla Firefox.
+Główny powód dla którego WebAssembly jest wolniejsze od natywnej aplikacji to gorsza optymalizacja kodu maszynowego.
 Spowodowane jest to ograniczeniami wynikającymi ze specyfikacji WebAssembly (np. stack overflow checks, indirect call checks, reserved registers).
 Ograniczenia te nie muszą być zawarte w aplikacji natywnej.
 
-Artykuł \cite{wasm_js_bench} napisany przez \emph{David Herrera} i innych zawiera zbiór benchmarków porównujących WASM oraz JS w różnych konfiguracjach.
+Artykuł \cite{wasm_js_bench} napisany przez \emph{David Herrera} i innych zawiera zbiór benchmarków porównujących WebAssembly oraz JavaScript w różnych konfiguracjach.
 Dla maszyny z systemem Windows, WebAssembly był około 70\% szybszy dla przeglądarki Chrome, 60\% szybszy dla Firefox i 163\% szybszy dla przeglądarki Edge.
 Z tych trzech przeglądarek najlepsze wyniki odniósł Firefox.
 Zaskoczeniem był też telefon iPhone 10, który był szybszy niż MacBook Pro 2013.
 
-\emph{Weihang Wang} w swoim artykule \cite{wasm_js_bench2} porównuje WASM i JS dla czasu wykonania i zużycia pamięci różnych programów.
+\emph{Weihang Wang} w swoim artykule \cite{wasm_js_bench2} porównuje WebAssembly i JavaScript dla czasu wykonania i zużycia pamięci różnych programów.
 Zauważa, że WebAssembly zużywa dużo więcej pamięci niż JavaScript.
-Mimo tego WASM był dużo szybszy od JS dla bardzo małych rozmiarów danych (35.3x średnie przyspieszenie) oraz małych danych (7.67x średnie przyspieszenie).
-Natomiast dla większych rozmiarów danych, dzięki \emph{JIT}\footnotemark{}, JavaScript doganiał WASM, a nawet zdarzały się przypadki gdzie WebAssembly był wolniejszy od JS.
+Mimo tego WebAssembly był dużo szybszy od JavaScript dla bardzo małych rozmiarów danych (35.3x średnie przyspieszenie) oraz małych danych (7.67x średnie przyspieszenie).
+Natomiast dla większych rozmiarów danych, dzięki \emph{JIT}\footnotemark{}, JavaScript doganiał WebAssembly, a nawet zdarzały się przypadki gdzie WebAssembly był wolniejszy od JavaScript.
 \footnotetext{Kompilator JIT -- kompiluje kod w trakcie wykonywania programu, w przeciwieństwie do zwykłych kompilatorów, które robią to przed jego uruchomieniem}
-Otrzymane przez niego wyniki pokazują, że optymalizacja \emph{JIT} w Chrome znacząco poprawia wyniki JavaScript, nie mając wpływu na WASM.
+Otrzymane przez niego wyniki pokazują, że optymalizacja \emph{JIT} w Chrome znacząco poprawia wyniki JavaScript, nie mając wpływu na WebAssembly.
 
 \subsection{Wnioski}
 WebAssembly jest obiecującą technologią.
 Dla wielu przypadków osiągał dużo lepsze wyniki, jeśli chodzi o obliczenia w przeglądarce.
 Mimo tego wspomniane prace głównie skupiały się na samej wydajności, a niewiele było poruszonych tematów tworzenia aplikacji.
-Wiele benchmarków były to programy napisane w C przeportowane\footnotemark{} do WASM.
+Wiele benchmarków były to programy napisane w C przeportowane\footnotemark{} do WebAssembly.
 \footnotetext{Portowanie -- proces przenoszenia wersji programu komputerowego na inną platformę sprzętową lub programistyczną}
-W tej pracy poruszony zostanie natomiast temat tworzenia nowych aplikacji oraz wybór języka kompilowanego do WASM, który się do tego najbardziej aktualnie nadaje.
+W tej pracy poruszony zostanie natomiast temat tworzenia nowych aplikacji oraz wybór języka kompilowanego do WebAssembly, który się do tego najbardziej aktualnie nadaje.
 
 \section{WebRTC vs WebSocket}
 WebRTC to technologia umożliwiająca aplikacjom webowym i stronom internetowym przechwytywać oraz opcjonalnie strumieniować media audio-wizualne.
@@ -170,14 +170,14 @@ Mimo tego, że ta praca będzie się skupiać na technologii WebAssembly, to nie
 WebAssembly jest binarnym formatem, interpretowanym przez wirtualną maszynę uruchamianą w przeglądarce lub jako niezależną aplikację.
 Nie jest on więc językiem programowania samym w sobie.
 Może on natomiast być celem kompilacji dla innych języków.
-Wybór takiego języka może okazać się równie ważny jak podjęcie decyzji o tym czy w ogóle korzystać z WASM.
-Aktualnie dużo języków posiada WebAssembly jako platformę wynikową kompilacji.
-W tej pracy jednak skupiono się na trzech językach: Zig, AssemblyScript oraz Rust.
+Wybór takiego języka może okazać się równie ważny jak podjęcie decyzji o tym czy w ogóle korzystać z WebAssembly.
+Aktualnie dużo języków ma możliwość ustawienia WebAssembly jako platformę wynikową kompilacji.
+W tej pracy jednak skupiono się na trzech: Zig, AssemblyScript oraz Rust.
 Pierwszym językiem, któremu zostanie poświęcona uwaga w tej pracy jest Zig.
 Jest to młody, szybko rozwijający się język, którego celem jest zastąpienie współczesnych użyć języka C.
 AssemblyScript został wybrany jako język bardzo zbliżony składnią i użyciem do popularnego TypeScript.
 Dzięki niemu programiści stron internetowych mogliby bez dużej ilości nauki tworzyć moduły WebAssembly.
-Rust został wybrany ze względu na największą popularność wśród programistów WASM.
+Rust został wybrany ze względu na największą popularność wśród programistów WebAssembly.
 Jest w nim też pokładana największa nadzieja jeśli chodzi o przyszłość programowania WebAssembly.
 W tym rozdziale przedstawione będzie porównanie tych języków zarówno pod względem wydajności kodu wynikowego jak i ogólnego procesu tworzenia aplikacji.
 Pominięto takie języki jak C oraz C++ ze względu na to, że tak samo jak Rust i Zig korzystają z LLVM\footnotemark{} do generowania kodu wynikowego.
@@ -199,7 +199,7 @@ Zamiast pobierać manualnie, można też skorzystać z menadżera paczek dla nas
 Pobrany zestaw narzędzi zawiera wszystko co potrzebne do utworzenia modułu WebAssembly.
 
 \subsection{Tworzenie funkcji \emph{fib}}
-Możemy więc zacząć tworzyć naszą aplikację rozpoczynając od napisania funkcji rekurencyjnie liczącej n-tą liczbę w ciągu Fibonacciego.
+Można więc zacząć tworzyć aplikację rozpoczynając od napisania funkcji rekurencyjnie liczącej n-tą liczbę w ciągu Fibonacciego.
 
 \begin{listing}[H]
     \begin{minted}{zig}
@@ -209,17 +209,17 @@ Możemy więc zacząć tworzyć naszą aplikację rozpoczynając od napisania fu
             return fib(n - 1) + fib(n - 2);
         }
     \end{minted}
-    \caption{Funkcja obliczająca n-tą liczbę ciągu Fibonacciego w języku Zig}
+    \caption{Funkcja \emph{fib} w języku Zig}
 \end{listing}
 
 Jak widać składnia jest bardzo zbliżona do języków z rodziny C.
 Słowo kluczowe \emph{export} umożliwia wywołanie danej funkcji z poziomu JavaScript.
 
 \subsection{Tworzenie funkcji \emph{sort}}
-Utworzymy teraz funkcję, która otrzymuję tablicę z zewnątrz, a następnie ją sortuję.
+Kolejnym krokiem jest utworzenie funkcji, która otrzymuję tablicę z zewnątrz, a następnie ją sortuję.
 Pojawia się tutaj jednak pierwszy problem -- zarządzanie pamięcią.
-Nie można mianowicie przekazać tabeli bezpośrednio z poziomu kodu napisanego w JavaScript do moduły WebAssembly.
-Nasz program napisany w Zig ma jedynie dostęp do swojej pamięci i jest w tzw. piaskownicy\footnotemark{}.
+Nie można mianowicie przekazać tablicy bezpośrednio z poziomu kodu napisanego w JavaScript do modułu WebAssembly.
+Program napisany w Zig ma jedynie dostęp do swojej pamięci i jest w tzw. piaskownicy\footnotemark{}.
 \footnotetext{Piaskownica (ang. sandbox) -- izoluje program od reszty systemu w celu poprawy bezpieczeństwa}
 Należy więc udostępnić tą pamięć użytkownikowi, aby mógł przez nią przekazać nam tablicę do posortowania.
 
@@ -240,22 +240,22 @@ Należy więc udostępnić tą pamięć użytkownikowi, aby mógł przez nią pr
             std.sort.sort(f64, array[0..size], {}, comptime std.sort.asc(f64));
         }
     \end{minted}
-    \caption{Kod udostępniający pamięć dla tablicy oraz funkcja ją sortująca}
+    \caption{Funkcja \emph{sort} i jej kod pomocniczy w języku Zig}
 \end{listing}
 
-Funkcja \emph{initialize\_array} alokuję najpierw 10MB pamięci, a następnie zwraca wskaźnik na początek zaalokowanej tabeli.
+Funkcja \emph{initialize\_array} alokuję najpierw 10MB pamięci, a następnie zwraca wskaźnik na początek zaalokowanej tablicy.
 Dzięki temu użytkownik będzie mógł ją wypełnić swoimi danymi, a następnie za pomocą funkcji \emph{sort} posortować N pierwszych liczb.
 Nie jest to najwygodniejszy sposób pisania kodu operującego na danych przekazywanych z poziomu strony internetowej.
 Zostanie przedstawione później jak w prostszy sposób inne języki radzą sobie z tym problemem.
 
 \subsection{Kompilacja}
-Możemy teraz skompilować nasz plik, który nazwiemy \emph{main.zig} i utworzyć moduł WebAssembly \emph{zig.wasm} następującym poleceniem:
+Można teraz skompilować plik, który nazwany został \emph{main.zig} i utworzyć moduł WebAssembly \emph{zig.wasm} następującym poleceniem:
 
-\begin{minted}{text}
+\begin{minted}{console}
     $ zig build-lib main.zig -target wasm32-freestanding -dynamic -O ReleaseFast -femit-bin=zig.wasm
 \end{minted}
 
-Ustawiliśmy poziom optymalizacji \emph{ReleaseFast}, aby uzyskać jak najlepszą wydajność modułu.
+Ustawiono poziom optymalizacji na \emph{ReleaseFast}, aby uzyskać jak najlepszą wydajność modułu.
 Język Zig oprócz kompilacji z poziomu linii poleceń umożliwia również tworzenie bardziej skomplikowanych programów budujących.
 Mogą być one napisane również w języku Zig, zamiast w jakimś innym, kompletnie nie związanym z aplikacją języku opisującym proces budowania.
 Dzięki temu nie trzeba uczyć się dodatkowych narzędzi takich jak CMake, Make czy wiele innych.
@@ -263,16 +263,16 @@ Temat ten jednak wychodzi poza zakres tej pracy.
 
 \section{AssemblyScript}
 AssemblyScript jest wyjątkowy pod tym względem, że został zaprojektowany specjalnie dla WebAssembly.
-Korzysta ze składni bardzo zbliżonej do języka TypeScript, dzięki czemu programiści stron internetowych nie będą musieli poświęcać dużo czasu na jej naukę.
+Korzysta ze składni bardzo zbliżonej do języka TypeScript, dzięki czemu programiści stron internetowych nie muszą poświęcać dużo czasu na jej naukę.
 
 \subsection{Instalacja}
-AssemblyScript w prosty sposób integruje się z istniejącym ekosystem stron internetowych.
+AssemblyScript w prosty sposób integruje się z istniejącym ekosystemem stron internetowych.
 Zainstalować go można korzystając z menadżera paczek \emph{npm}.
 Cały proces inicjalizacji nowego projektu jest szybki, prosty i dokładnie opisany w oficjalnym wstępie do języka\footnotemark{}.
 \footnotetext{\url{https://www.assemblyscript.org/getting-started.html}}
 
 \subsection{Tworzenie funkcji \emph{fib}}
-Zaczynamy pisać kod w wygenerowanym pliku \emph{index.ts} od funkcji \emph{fib}.
+Pisanie kodu rozpoczęto w wygenerowanym pliku \emph{index.ts} od funkcji \emph{fib}.
 
 % Second u64 is not highlighted for some reason
 \begin{listing}[H]
@@ -283,11 +283,11 @@ Zaczynamy pisać kod w wygenerowanym pliku \emph{index.ts} od funkcji \emph{fib}
             return fib(n - 1) + fib(n - 2);
         }
     \end{minted}
-    \caption{Funkcja obliczająca n-tą liczbę ciągu Fibonacciego w języku AssemblyScript}
+    \caption{Funkcja \emph{fib} w języku AssemblyScript}
 \end{listing}
 
 Kod jest praktycznie taki sam jaki można by napisać w języku TypeScript.
-Główną różnicą jest użycie typu \emph{u64}, ponieważ WebAssembly wymaga specyfikacji konkretnego typu używanych liczb całkowitych.
+Główną różnicą jest użycie typu \emph{u64}, ponieważ WebAssembly wymaga specyfikacji konkretnego typu liczby obsługiwanego przez maszynę wirtualną.
 
 \subsection{Tworzenie funkcji \emph{sort}}
 
@@ -299,7 +299,7 @@ Funkcje sort można w tym języku napisać dużo szybciej niż w języku Zig.
             array.sort();
         }
     \end{minted}
-    \caption{Funkcja sortująca tablicę w języku AssemblyScript}
+    \caption{Funkcja \emph{sort} w języku AssemblyScript}
 \end{listing}
 
 Jak można zauważyć, wystarczy że ustawimy typ zmiennej wejściowej jako \emph{Array<f64>}, aby funkcja przyjmowała tablicę liczb zmiennoprzecinkowych.
@@ -310,7 +310,7 @@ Tworzona jest funkcja okalająca (ang. wrapper function), która alokuje pamię�
 \subsection{Kompilacja}
 Skompilować projekt możemy za pomocą narzędzia \emph{npm}.
 
-\begin{minted}{text}
+\begin{minted}{console}
     $ npm run build
 \end{minted}
 
@@ -324,66 +324,202 @@ Bardzo przydatną funkcją są również automatycznie generowane pliki typów T
         export declare function fib(n: bigint): bigint;
         export declare function sort(array: Array<number>): void;
     \end{minted}
-    \caption{Fragment automatycznie wygenerowanego pliku typów}
+    \caption{Fragment wygenerowanego pliku typów AssemblyScript}
 \end{listing}
 
-Dzięki nim otrzymujemy podpowiedzi w naszym środowisku programistycznym w trakcie odwoływania się do funkcji napisanych w AssemblyScript.
+Dzięki nim otrzymywano podpowiedzi w środowisku programistycznym w trakcie odwoływania się do funkcji napisanych w AssemblyScript.
 
 \section{Rust}
+Rust, podobnie jak Zig jest językiem programowania ogólnego przeznaczenia.
+Stworzony został z myślą o bezpieczeństwie, współbieżności i praktyczności.
+Według corocznej ankiety serwisu Stack Overflow\footnotemark{}, Rust jest najbardziej lubianym językiem programowania od 2015 roku.
+\footnotetext{\url{https://insights.stackoverflow.com/survey/}}
 
 \subsection{Instalacja}
+Rust można zainstalować korzystając z menadżera paczek systemu operacyjnego lub skorzystać z programu \emph{rustup}\footnotemark{}, który szybko przeprowadzi użytkownika przez kolejne kroki instalacji.
+\footnotetext{\url{https://rustup.rs/}}
+Instalacja na systemie Windows wymaga również zainstalowania Microsoft Visual Studio dla języka C++.
+Po zainstalowaniu języka możemy przystąpić do tworzenia nowego projektu.
+Książka \emph{Rust and WebAssembly}\footnotemark{} prezentuje krok po kroku ten proces.
+\footnotetext{\url{https://rustwasm.github.io/}}
+Jest on prosty i zrozumiały, co ważne pokazuję też jak w prosty sposób integrować utworzone moduły ze stronami internetowymi.
 
 \subsection{Tworzenie funkcji \emph{fib}}
+Po przygotowaniu środowiska można rozpocząć edycję pliku \emph{lib.rs}.
+
+\begin{listing}[H]
+    \begin{minted}{rust}
+        #[wasm_bindgen]
+        pub fn fib(n: u64) -> u64 {
+            match n {
+                1 => 1,
+                2 => 1,
+                _ => fib(n - 1) + fib(n - 2)
+            }
+        }
+    \end{minted}
+    \caption{Funkcja \emph{fib} w języku Rust}
+\end{listing}
+
+Jak widać, poza specyficzną dyrektywą \emph{match}, kod powinien być zrozumiały dla większości programistów.
+W języku Rust ostatnie wyrażenie w funkcji uznawane jest jako wartość zwracana, a dyrektywa \emph{match} działa podobnie jak \emph{switch} w językach z rodziny C.
+Atrybut \emph{wasm\_bindgen} oznacza funkcje jako dostępną do wywołania z poziomu strony internetowej.
+Jest to wymagane, dlatego że oprócz modułu WebAssembly, automatycznie generowany będzie również kod JavaScript inicjalizujący ten moduł oraz dodający funkcje pomocnicze.
+Podobne rozwiązanie mogliśmy zauważyć w projekcie AssemblyScript, a brak jego jest odczuwalny tworząc projekt w języku Zig.
 
 \subsection{Tworzenie funkcji \emph{sort}}
+Przekazywanie tablicy do modułu WebAssembly można zrobić na różne sposoby.
+Jeden z nich jest przedstawiony poniżej.
+
+\begin{listing}[H]
+    \begin{minted}{rust}
+        #[wasm_bindgen]
+        pub fn sort(js_array: &Float64Array) {
+            let mut numbers: Vec<f64> = js_array.to_vec();
+            numbers.sort_by(|a, b| a.partial_cmp(b).unwrap());
+        }
+    \end{minted}
+    \caption{Funkcja \emph{sort} w języku Rust}
+\end{listing}
+
+Przekazaną z poziomu JavaScript tablicę konwertujemy na natywny dla języka Rust typ \emph{Vec}, który określa dynamiczną tablicę.
+Może to spowodować mały narzut czasowy, ale jeśli komuś by na tym zależało, zawsze może podobnie jak w języku Zig, udostępnić bezpośrednio adres pamięci do zapisu.
+Rozwiązanie tutaj przedstawione jest jednak preferowane w większości wypadków, ponieważ programista nie musi się zastanawiać nad zarządzaniem pamięcią udostępnianą przeglądarce.
+Po konwersji tablicy na typ \emph{Vec} używamy na niej funkcji \emph{sort\_by}, która jak można się domyśleć sortuję tablicę.
 
 \subsection{Kompilacja}
+Cały projekt kompilujemy korzystając z programu \emph{wasm-pack}.
 
-\section{Porównanie wydajności języków}
+\begin{minted}{text}
+    $ wasm-pack build
+\end{minted}
+
+Kompilator, podobnie jak w przypadku AssemblyScript, oprócz utworzenia samego modułu WebAssembly, generuje również pomocnicze funkcje JavaScript oraz pliki typów TypeScript.
+Generowane są również funkcje okalające, które alokują pamięć dla tablicy i przekazują ją pod spodem do właściwej funkcji.
+
+\section{Porównanie języków}
+Każdy z przedstawionych języków różnił się od pozostałych pod wieloma względami.
+Bezpośrednie stwierdzenie, który z nich jest lepszy lub gorszy nie jest do końca możliwe.
+Można natomiast porównać jak zachowywały się w konkretnych kategoriach i na tej podstawie stwierdzić, który z nich będzie rozsądnym wyborem dla większości osób.
+
+\subsection{Instalacja}
+Pod względem instalacji najwygodniejszy zdecydowanie był język Zig.
+Instalacja sprowadzała się do pobrania i wypakowania archiwum, po czym można było rozpocząć tworzenie projektu.
+AssemblyScript oraz Rust były trochę cięższe w instalacji, ale nie były one też specjalnie trudne.
+Instalacja trwała po prostu dłużej.
+Należy też zaznaczyć, że projekty tworzone w AssemblyScript oraz Rust, oprócz kompilacji do modułu WebAssembly, generowały też przydatne pliki JavaScript oraz TypeScript.
+Zig na dzień dzisiejszy nie posiada bibliotek, które umożliwiałyby taką funkcjonalność.
+
+\subsection{Implementacja prostych funkcji}
+Kwestia składni i prostoty pisania w danym języku jest bardzo subiektywna, ponieważ w zależności od umiejętności i doświadczenia, każda osoba może mieć inne odczucia.
+Najbardziej wyróżniającym się problemem były trudności w przekazywaniu dużych tablic do funkcji napisanej w języku Zig.
+Zarówno Rust jak i AssemblyScript, dzięki generowaniu pomocniczych modułów JavaScript odciążają programistę z konieczności implementacji ich samemu.
+Bardzo ważną kwestią jest też to, że Zig nie posiada żadnego wsparcia dla integracji z aplikacjami internetowymi.
+Rust i AssemblyScript generując wspominane wcześniej pomocnicze moduły, bardzo upraszczają integrację modułu WebAssembly z resztą kodu pisanego w JavaScript.
+
+\subsection{Wydajność}
+Jednym z najważniejszych zagadnień w kontekście minimalizacji opóźnień aplikacji jest wydajność programów napisanych w danym języku.
+W celu dokonania porównania, utworzono prostą aplikacje internetową.
+Ładuje ona stworzone wcześniej moduły WebAssembly i wypisuje czas wywołania konkretnych funkcji dla różnych parametrów.
+Warto też wspomnieć, że wyniki zależą od użytego sprzętu oraz przeglądarki.
+Wszystkie aplikacje uruchamiane były na przeglądarce Google Chrome\footnote{\url{https://www.google.com/chrome/}} oraz Mozilla Firefox\footnote{\url{https://www.mozilla.org/firefox/}}.
+
+Konfiguracja sprzętowa komputera testowego przedstawia się następująco:
+\begin{itemize}
+    \item Procesor \emph{ADM Ryzen 5 5600} -- 6 rdzeni / 12 wątków / 4,4 GHz
+    \item Karta graficzna \emph{GeForce GTX 1080}
+    \item Pamięć RAM 16GB DDR4
+    \item System operacyjny \emph{Windows 10}
+\end{itemize}
+
+\begin{figure}[ht]
+    \centering
+    \import{plots}{sort6_chrome.pgf}
+    \caption{Czas sortowania miliona liczb dla przeglądarki Google Chrome}
+    \label{fig:sort6_chrome}
+
+    \import{plots}{sort6_firefox.pgf}
+    \caption{Czas sortowania miliona liczb dla przeglądarki Mozilla Firefox}
+    \label{fig:sort6_firefox}
+\end{figure}
+
+Analizę wydajności rozpoczęto od funkcji sortującej milion liczb.
+Jak można zauważyć na wykresie \ref{fig:sort6_chrome}, wszystkie moduły WebAssembly poradziły sobie o cały rząd złożoności lepiej niż JavaScript.
+Rust osiągnął najlepszy wynik, ale Zig i AssemblyScript bardzo od niego nie odstawały.
+Wykres \ref{fig:sort6_firefox} dla przeglądarki Firefox przedstawia podobną historię, z tą różnicą, że JavaScript osiągnęło dużo lepszy wynik niż na przeglądarce konkurencji.
+Zig i Rust poradziły sobie najlepiej, a AssemblyScript osiągnęło wynik mniej więcej pomiędzy nimi a JavaScript.
+
+\begin{figure}[ht]
+    \centering
+    \import{plots}{fib40_chrome.pgf}
+    \caption{Czas wykonania \emph{fib(40)} dla przeglądarki Google Chrome}
+    \label{fig:fib40_chrome}
+
+    \import{plots}{fib40_firefox.pgf}
+    \caption{Czas wykonania \emph{fib(40)} dla przeglądarki Mozilla Firefox}
+    \label{fig:fib40_firefox}
+\end{figure}
+
+Dla funkcji obliczającej ciąg Fibonacciego, w przypadku przeglądarki Firefox odnotowano podobne zależności jak w poprzednim teście.
+Na wykresie \ref{fig:fib40_firefox} można zauważyć, że najgorszy wynik uzyskała zwykła funkcja JavaScript.
+Rust i Zig odnotowują najlepsze wyniki, natomiast AssemblyScript jest od nich trochę wolniejsze.
+W przeglądarce Chrome natomiast sytuacja przedstawia się trochę inaczej.
+Na wykresie \ref{fig:fib40_chrome} można zauważyć, że najgorszy wynik uzyskało AssemblyScript.
+Rust jest tylko trochę szybszy od JavaScript, a Zig jest prawie dwukrotnie szybszy niż Rust.
+
+\section{Wnioski}
+Biorąc pod uwagę, że dla tematu tej pracy wydajność ma największe znaczenie, to AssemblyScript nie do końca jest w stanie konkurować.
+Jakikolwiek wynik gorszy niż JavaScript świadczy o tym, że może kompilatorowi brakować niektórych optymalizacji.
+Być może w przyszłości ten język będzie się świetnie nadawał do pisania wydajnych modułów WebAssembly.
+Na ten moment jednak dla interaktywnych aplikacji webowych może być to niewystarczające.
+Rust oraz Zig w kwestii wydajności są bardzo zbliżone.
+Oba te języki korzystają bowiem z LLVM -- oznacza to, że w większości przypadków wygenerowany przez nich kod wynikowy będzie podobny.
+Poza samą wydajnością jednak Rust jest lepszy na prawie każdym polu.
+Integracja z aplikacjami webowymi jest dużo prostsza -- generowanie pomocniczego kodu potrafi zaoszczędzić mnóstwo czasu.
+Do tego dokumentacja jest o wiele lepsza.
+Pisaniu programów w Rust dla WebAssembly poświęcona jest cała książka, natomiast dla języka Zig ciężko znaleźć jakiekolwiek materiały w Internecie.
+Rust posiada również bardzo bogaty ekosystem bibliotek, coś czego na ten moment językowi Zig brakuje.
+Podsumowując, rekomendowanym wyborem języka programowania modułów WebAssembly dla interaktywnych aplikacji webowych jest zdecydowanie Rust.
+Posiada wszystko czego można od takiego języka oczekiwać -- wydajność, dojrzałość i dużą ilość materiałów do nauki.
+
+\chapter{Użytkowanie i wydajność Rust}
+
+\section{Sumowanie macierzy}
+
+\subsection{JavaScript}
+
+\subsection{Rust}
+
+\subsection{Rust z wykorzystaniem SIMD}
+
+\section{Symulacja N ciał}
+
+\subsection{JavaScript}
+
+\subsection{Rust}
 
 \section{Wnioski}
 
-% \chapter{Użytkowanie i wydajność Rust}
+\chapter{Interaktywna aplikacja webowa z użyciem WebAssembly}
 
-% \section{Sumowanie macierzy}
+\section{Przykładowa aplikacja}
 
-% \subsection{JavaScript}
+\section{Porównanie wydajności}
 
-% \subsection{Rust}
+\section{Aplikacja natywna}
 
-% \subsection{Rust z wykorzystaniem SIMD}
+\section{WebRTC vs WebSocket}
 
-% \section{Symulacja N ciał}
-
-% \subsection{JavaScript}
-
-% \subsection{Rust}
-
-% \section{Wnioski}
-
-% \chapter{Interaktywna aplikacja webowa z użyciem WebAssembly}
-
-% \section{Przykładowa aplikacja}
-
-% \section{Porównanie wydajności}
-
-% \section{Aplikacja natywna}
-
-% \section{WebRTC vs WebSocket}
-
-% \chapter{Podsumowanie}
+\chapter{Podsumowanie}
 
 \backmatter
 
 \cleardoublepage
-\listoffigures
-
-\cleardoublepage
-\listoftables
-
-\cleardoublepage
 \renewcommand\listoflistingscaption{Spis listingów}
 \listoflistings
+
+\cleardoublepage
+\listoffigures
 
 \cleardoublepage
 \printbibliography

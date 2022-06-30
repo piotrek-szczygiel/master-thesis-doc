@@ -93,6 +93,8 @@ pdfencoding=unicode}
 \RequirePackage{microtype}
 \RequirePackage{minted}
 \RequirePackage{csquotes}
+\RequirePackage{pgf}
+\RequirePackage{import}
 
 \def\titlePL#1{\gdef\@titlePL{#1}}
 \def\titleEN#1{\gdef\@titleEN{#1}}

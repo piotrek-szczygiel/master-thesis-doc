@@ -3,12 +3,12 @@
         "scope": "latex",
         "prefix": "fig",
         "body": [
-            "\\begin{figure}[H]",
-            "   \\centering",
-            "   \\includegraphics[width=$1\\textwidth]{$2}",
-            "   \\caption{$3}",
-            "   \\label{fig:$4}",
-            "\\end{figure}"
+        "\\begin{figure}[H]",
+        "    \\centering",
+        "    \\import{plots}{$1}",
+        "    \\caption{$2}",
+        "    \\label{$3}",
+        "\\end{figure}"
         ]
     },
     "Insert listing": {

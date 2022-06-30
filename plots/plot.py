@@ -1,27 +1,48 @@
 import matplotlib.pyplot as plt
+import matplotlib
 import pandas as pd
 
+width = 5.23724  # inches
 
-def bar_plot(xs, ys, title, ylabel, filename, fmt="%s", log=False):
+matplotlib.use("pgf")
+matplotlib.rcParams.update(
+    {
+        "pgf.texsystem": "pdflatex",
+        "font.family": "serif",
+        "text.usetex": True,
+        "pgf.rcfonts": False,
+    }
+)
+
+colors = {
+    "JavaScript": "#efd81d",
+    "AssemblyScript": "#0076c6",
+    "Rust": "#ef4900",
+    "Zig": "#ef9f1c",
+}
+
+
+def bar_plot(xs, ys, color, ylabel, filename, fmt="%s", log=False):
     ys_pos = range(len(ys))
-    fig, ax = plt.subplots(figsize=(9, 6))
-    bars = ax.bar(ys_pos, ys)
-    ax.bar_label(bars, fmt=fmt)
+    fig, ax = plt.subplots(figsize=(width, 3))
+    ax.set_ymargin(0.1)
+    bars = ax.bar(ys_pos, ys, color=color)
+    ax.bar_label(bars, padding=2, fmt=fmt)
     ax.set_xticks(ys_pos, xs)
 
     if log:
         ax.set_yscale("log")
 
-    ax.set(title=title, ylabel=ylabel)
-    fig.savefig(filename, bbox_inches="tight", dpi=300)
+    ax.set(ylabel=ylabel)
+    fig.savefig(filename)
     plt.close(fig)
 
 
-def benchmark_chrome():
+def benchmark():
     chrome = pd.read_csv("benchmark_chrome.csv")
     firefox = pd.read_csv("benchmark_firefox.csv")
 
-    def plot_type(df, type, title=None):
+    def plot_type(df, type):
         data = df.loc[df["type"] == type]
 
         if df is chrome:
@@ -32,35 +53,33 @@ def benchmark_chrome():
         bar_plot(
             data["language"],
             data["time"],
-            title,
-            "Czas sortowania (ms)",
-            f"{type}_{file_suffix}.svg",
+            [colors[lang] for lang in data["language"]],
+            "Czas wykonania (ms)",
+            f"{type}_{file_suffix}.pgf",
             fmt="%d ms",
         )
 
-    plot_type(chrome, "sort6")  # , title="Sortowanie miliona liczb (Chrome)")
-    plot_type(firefox, "sort6")  # , title="Sortowanie miliona liczb (Firefox)")
+    plot_type(chrome, "sort6")
+    plot_type(firefox, "sort6")
 
-    plot_type(chrome, "fib40")  # , title="40 liczba Fibonacciego rekursywnie (Chrome)")
-    plot_type(firefox, "fib40")  # , title="40 liczba Fibonacciego rekursywnie (Firefox)")
+    plot_type(chrome, "fib40")
+    plot_type(firefox, "fib40")
 
 
 def nbody():
     bar_plot(
         ["JavaScript", "Rust"],
         [5.9, 6.4],
-        None,  # "Symulacja N ciał (Chrome)",
         "Średni czas jednego kroku symulacji (ms)",
-        "nbody_chrome.svg",
+        "nbody_chrome.pgf",
         fmt="%.1f ms",
     )
 
     bar_plot(
         ["JavaScript", "Rust"],
         [6.3, 6.5],
-        None,  # "Symulacja N ciał (Firefox)",
         "Średni czas jednego kroku symulacji (ms)",
-        "nbody_firefox.svg",
+        "nbody_firefox.pgf",
         fmt="%.1f ms",
     )
 
@@ -69,18 +88,16 @@ def matrix():
     bar_plot(
         ["JavaScript", "Rust", "Rust SIMD"],
         [994, 417, 365],
-        None,  # "Dodawanie 1KB wektorów milion razy (Chrome)",
         "Czas wykonania (ms)",
-        "matrix_chrome.svg",
+        "matrix_chrome.pgf",
         fmt="%d ms",
     )
 
     bar_plot(
         ["JavaScript", "Rust", "Rust SIMD"],
         [1171, 534, 458],
-        None,  # "Dodawanie 1KB wektorów milion razy (Firefox)",
         "Czas wykonania (ms)",
-        "matrix_firefox.svg",
+        "matrix_firefox.pgf",
         fmt="%d ms",
     )
 
@@ -95,14 +112,13 @@ def edges():
             "Rust (Native)",
         ],
         [51.11, 14.93, 7.43, 9.57, 0.609476],
-        None,  # "Wykrywanie krawędzi w OpenCV",
         "Czas procesowania klatki (ms)",
-        "edges.svg",
+        "edges.pgf",
         fmt="%.2f ms",
     )
 
 
-benchmark_chrome()
-nbody()
-matrix()
-edges()
+benchmark()
+# nbody()
+# matrix()
+# edges()
