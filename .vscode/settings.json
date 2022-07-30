@@ -123,6 +123,7 @@
         "nieresponsywnie",
         "Portowanie",
         "przeportowane",
+        "RAII",
         "Reiser",
         "responsywność",
         "responsywnych",
@@ -139,5 +140,8 @@
     ],
     "cSpell.ignoreRegExpList": [
         "/(?:\\\\begin{minted}[\\s\\S]*?\\\\end{minted})/g"
+    ],
+    "cSpell.enableFiletypes": [
+        "!python"
     ]
 }
