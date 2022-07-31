@@ -588,10 +588,6 @@ Wersja napisana w języku Rust była około dwa razy szybsza, a kiedy dodatkowo 
     \label{fig:matrix}
 \end{figure}
 
-\subsection{Wnioski}
-Ten prosty test udowadnia, że Rust potrafi bardzo przyspieszyć operacje na dużej ilości danych.
-Pokazuje też, że dzięki stosowaniu niskopoziomowego języka można uzyskać większą kontrolę nad instrukcjami wykonywanymi przez procesor, otrzymując jeszcze większe przyspieszenie.
-
 \section{Symulacja N ciał}
 Kolejnym testem będzie symulacja N ciał.
 Polega ona na wyznaczeniu toru ruchów wszystkich ciał układu o danych masach, prędkościach i początkowych położeniach.
@@ -601,6 +597,7 @@ Oprócz samych obliczeń wykonywanych zarówno w JavaScript jak i Rust, aktualny
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.4\textwidth]{images/nbody.pdf}
+    \vspace*{10pt}
     \caption{Wyświetlany stan symulacji w przeglądarce po kilku sekundach}
     \label{fig:nbody_screenshot}
 \end{figure}
@@ -682,7 +679,7 @@ Pokazuje to jak łatwo można przepisać istniejące funkcje JavaScript na języ
     \caption{Kod obliczania kroku symulacji w języku Rust}
 \end{listing}
 
-Pominięto w tym kodzie funkcje pomocnicze tworzące klasę zawierającą funkcje przedstawioną powyżej.
+Pominięto w tym kodzie funkcje pomocnicze tworzące klasę zawierającą funkcję przedstawioną powyżej.
 Nie przedstawiona została również funkcja pomocnicza zwracająca aktualny stan symulacji dla modułu wyświetlającego napisanego w JavaScript.
 
 \subsection{Wydajność}
@@ -697,9 +694,12 @@ Mimo wszystko jednak moduł WebAssembly napisany w języku Rust odnotował czasy
 \end{figure}
 
 \section{Wnioski}
-Test ten pokazał, że WebAssembly nie będzie szybszy od JavaScript w każdym przypadku.
+Pierwszy test sprawdzający wydajność operacji na wektorach udowadnia, że Rust potrafi bardzo przyspieszyć operacje na dużej ilości danych.
+Pokazuje też, że dzięki stosowaniu niskopoziomowego języka można uzyskać większą kontrolę nad instrukcjami wykonywanymi przez procesor, otrzymując jeszcze większe przyspieszenie.
+
+Test symulacji N ciał pokazał natomiast, że WebAssembly nie będzie szybszy od JavaScript w każdym przypadku.
 Silniki JavaScript zawarte w przeglądarkach są jedynymi z najlepiej zoptymalizowanych programów na świecie.
-Wynika to z tego, że mało który kod jest tak często uruchamiany na komputerach jak ten odpowiadający za działanie większości stron internetowych.
+Swoją optymalizacje zawdzięczają temu, że mało który kod jest tak często uruchamiany na komputerach jak ten odpowiedzialny za działanie większości stron internetowych.
 Korzystają one z kompilacji \emph{JIT}\footnotemark{} (ang. just-in-time) dla funkcji, które są często używane.
 \footnotetext{Kompilacja just-in-time -- sposób wykonywania kodu wymagający kompilacji programu w trakcie jego wykonywania}
 Kompilator JIT potrafi generować bezpośrednio natywny kod maszynowy komputera na którym uruchamiany jest kod JavaScript.
@@ -707,17 +707,99 @@ Z tego powodu, w przypadku tego testu, wykonywał się on minimalnie szybciej ni
 Należy mieć tego świadomość tworząc aplikację internetową, gdyż korzystanie z WebAssembly w miejscach, w których nie do końca się do tego nadaje może nie przynieść żadnych korzyści.
 
 \chapter{Interaktywna aplikacja webowa z użyciem WebAssembly}
+Testy wykonane w poprzednich rozdziałach pokazały, że korzystając z WebAssembly można w niektórych przypadkach osiągnąć duże przyspieszenia w działaniu aplikacji.
+Były to jednak uproszczone testy nie oddające działania prawdziwej interaktywnej aplikacji.
+W tym rozdziale przedstawiona zostanie prosta aplikacja webowa, która wczytuje strumień wideo i wykonuje na nim operacje przetwarzania obrazu.
+Przykładem zastosowania takiej aplikacji może być np. urządzenie do przeprowadzania zdalnych operacji chirurgicznych.
+Lekarz znajdujący się w zupełnie innym miejscu niż jego pacjent, zdalnie dokonuje na nim operacji korzystając z robota oraz aplikacji, która umożliwia nad nim kontrole.
+Przetwarzanie obrazu może w tym wypadku służyć jako wsparcie lekarza w podejmowaniu decyzji lub jako ułatwienie identyfikowania rzeczy znajdujących się na obrazie.
+Aplikacja została napisana z wykorzystaniem JavaScript oraz WebAssembly.
+Utworzona została również natywna aplikacja o tej samej funkcjonalności.
+Będzie ona stanowiła punkt odniesienia dla wydajności aplikacji webowych.
+Warstwa komunikacji korzystać będzie z technologii WebRTC oraz WebSocket.
+Porównane zostaną zarówno różnice w opóźnieniach jak i sens korzystania z danej technologii w konkretnych przypadkach.
 
 \section{Przykładowa aplikacja}
+Na początku aplikacje były tworzone w oparciu o własnoręcznie pisane algorytmy przetwarzania obrazu.
+W toku tworzenia pracy natknięto się jednak na informacje, że popularna biblioteka do przetwarzania obrazu OpenCV\footnotemark{} posiada również wersje JavaScript oraz WebAssembly.
+\footnotetext{\url{https://opencv.org/}}
+Zdecydowano się więc wykorzystać gotową bibliotekę.
+Dzięki temu można mieć większą pewność, że algorytmy w niej zawarte są optymalne i różnice w wydajności będą wynikały głównie z użytego rodzaju biblioteki.
+
+Utworzone zostały więc trzy funkcjonalnie identyczne aplikacje:
+\begin{itemize}
+    \item aplikacja webowa wykorzystująca OpenCV dla języka JavaScript
+    \item aplikacja webowa wykorzystująca OpenCV skompilowaną do modułu WebAssembly
+    \item aplikacja natywna napisana w języku Rust wykorzystująca bibliotekę OpenCV
+\end{itemize}
+
+Każda z aplikacji odwołuje się do tych samych funkcji biblioteki.
+Dla uproszczenia testowania aplikacji, jako algorytm przetwarzający obraz został wybrany algorytm wykrywania krawędzi \emph{Canny}\footnotemark{}.
+\footnotetext{Canny -- metoda detekcji krawędzi wykorzystująca wielostopniowy algorytm opracowana w 1986 roku przez Johna F. Canny}
+Jest on wystarczająco wymagający dla procesora, aby zauważyć różnice w wydajności dla różnych wersji aplikacji.
+Dzięki niemu można też w łatwy sposób zweryfikować czy funkcja faktycznie działa, wyświetlając wygenerowany przez nią obraz wynikowy.
+Przykładowy wynik działania takiej funkcji zaprezentowany jest na rysunku \ref{fig:edges_example}.
+Poniżej jest przedstawiony kod procesujący pojedynczą klatkę obrazu dla aplikacji natywnej.
+Kod dla wersji aplikacji korzystającej z JavaScript i WebAssembly jest analogiczny i różni się jedynie składnią języka.
+
+\begin{listing}[H]
+    \begin{minted}{rust}
+        let start = Instant::now();
+
+        let mut gray = Mat::default();
+        imgproc::cvt_color(
+            &frame,
+            &mut gray,
+            imgproc::COLOR_BGR2GRAY,
+            0,
+        )?;
+
+        let mut canny = Mat::default();
+        imgproc::canny(
+            &gray,
+            &mut canny,
+            150.0,
+            300.0,
+            3,
+            false
+        )?;
+
+        let duration = start.elapsed();
+    \end{minted}
+    \caption{Kod wykrywający krawędzie w obrazie napisany w języku Rust}
+\end{listing}
+
+Jak można wyczytać z kodu klatka obrazu jest najpierw konwertowana do skali szarości, a następnie uruchamiany jest na niej faktyczny algorytm Canny.
+Jak widać czas mierzony jest jedynie dla wykonania tych dwóch funkcji, więc funkcje pomocnicze, ani czas oczekiwania na obraz nie są wliczone w wyniki.
+W kolejnym rozdziale czasy zostaną porównane ze sobą między rożnymi wersjami aplikacji.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/edges.pdf}
+    \vspace*{10pt}
+    \caption{Przykładowy wynik działania algorytmu \emph{Canny}}
+    \label{fig:edges_example}
+\end{figure}
 
 \section{Porównanie wydajności}
+Na wykresie \ref{fig:edges} widać, że wersja wykorzystująca wersję biblioteki napisaną w JavaScript odniosła zdecydowanie najgorsze wyniki.
+Dla przeglądarki Chrome czas około 50 milisekund potrzebny na procesowanie jednej klatki oznaczać będzie strumień 20 klatek na sekundę.
+Jest to zdecydowanie niewystarczająca płynność obrazu, która może powodować u odbiorcy dyskomfort związany z niską responsywnością aplikacji.
+Przeglądarka Firefox poradziła sobie z tą wersją aplikacji dużo lepiej, uzyskując wynik, dzięki któremu strumień będzie mieć ponad 60 klatek na sekundę.
+Należy jednak pamiętać, że na słabszym sprzęcie wyniki te będą prezentować się dużo gorzej.
 
-\section{Aplikacja natywna}
+Wersja aplikacji korzystająca z biblioteki OpenCV skompilowanej do WebAssembly poradziła sobie dużo lepiej.
+W obu przeglądarkach wyniki były zbliżone i oscylowały w okolicach 8 milisekund.
+Jest to wystarczająco niski czas procesowania klatki, aby zapewnić płynność obrazu nawet w wypadku dodania większej ilości funkcji procesujących.
+
+Wersja natywna napisana w języku Rust i uruchomiona na systemie Windows odniosła najlepsze wyniki.
+Oczywistym jest, że aplikacje natywne są szybsze od ich odpowiedników uruchamianych w przeglądarce internetowej.
+Jednak fakt, że w tym wypadku jest szybsza o cały rząd złożoności pokazuje narzut jaki przeglądarka ma na działanie aplikacji w niej uruchamianych.
 
 \begin{figure}[H]
     \centering
     \import{plots}{edges.pgf}
-    \caption{Czasy procesowania pojedynczej klatki}
+    \caption{Średnie czasy procesowania klatki dla różnych wersji OpenCV}
     \label{fig:edges}
 \end{figure}
 

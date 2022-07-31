@@ -15,7 +15,7 @@ matplotlib.rcParams.update(
 )
 
 
-def plot_times(languages, chrome, firefox, filename, max=None, ylabel="Czas wykonania (ms)", fmt="%d ms"):
+def plot_times(languages, chrome, firefox, filename, max=None, ylabel="Czas wykonania (ms)", fmt="%d"):
     bar_width = 0.35
 
     fig, ax = plt.subplots(figsize=(PAGE_WIDTH, 3))
@@ -30,16 +30,22 @@ def plot_times(languages, chrome, firefox, filename, max=None, ylabel="Czas wyko
     ticks_x, ticks_val = [], []
 
     for i, (language, time) in enumerate(zip(languages, chrome)):
-        bars = ax.bar(xs[i], time, bar_width, color="#4285f4", edgecolor="black", linewidth=0.1, label="Google Chrome")
-        ax.bar_label(bars, padding=2, fmt=fmt, size="x-small")
+        bars = ax.bar(xs[i], time, bar_width, color="#006e3d", edgecolor="black", linewidth=0.1, label="Google Chrome")
+        ax.bar_label(bars, padding=2, fmt=fmt, size="small")
         ticks_x.append(xs[i] + bar_width / 2)
         ticks_val.append(language)
 
     for i, (language, time) in enumerate(zip(languages, firefox)):
         bars = ax.bar(
-            xs[i] + bar_width, time, bar_width, color="orange", edgecolor="black", linewidth=0.1, label="Mozilla Firefox"
+            xs[i] + bar_width,
+            time,
+            bar_width,
+            color="#be1d24",
+            edgecolor="black",
+            linewidth=0.1,
+            label="Mozilla Firefox",
         )
-        ax.bar_label(bars, padding=2, fmt=fmt, size="x-small")
+        ax.bar_label(bars, padding=2, fmt=fmt, size="small")
 
     ax.set_xticks(ticks_x, ticks_val)
     ax.set(ylabel=ylabel)
@@ -81,7 +87,7 @@ def nbody():
         "nbody",
         max=10,
         ylabel="Średni czas jednego kroku symulacji (ms)",
-        fmt="%.1f ms",
+        fmt="%.1f",
     )
 
 
@@ -91,40 +97,47 @@ def edges():
     fig, ax = plt.subplots(figsize=(PAGE_WIDTH, 3))
     ax.set_ymargin(0.1)
 
-    languages = ["JavaScript", "Rust"]
+    languages = ["JavaScript", "WebAssembly"]
     chrome = [51.11, 7.43]
     firefox = [14.93, 9.57]
     native = 0.609476
 
-    fmt = "%.2f ms"
+    fmt = "%.2f"
 
     xs = [0.15, 1.5, 2.85]
 
     ticks_x, ticks_val = [], []
 
     for i, (language, time) in enumerate(zip(languages, chrome)):
-        bars = ax.bar(xs[i], time, bar_width, color="#4285f4", edgecolor="black", linewidth=0.1, label="Google Chrome")
+        bars = ax.bar(xs[i], time, bar_width, color="#006e3d", edgecolor="black", linewidth=0.1, label="Google Chrome")
         ax.bar_label(bars, padding=2, fmt=fmt, size="x-small")
         ticks_x.append(xs[i] + bar_width / 2)
         ticks_val.append(language)
 
     for i, (language, time) in enumerate(zip(languages, firefox)):
         bars = ax.bar(
-            xs[i] + bar_width, time, bar_width, color="orange", edgecolor="black", linewidth=0.1, label="Mozilla Firefox"
+            xs[i] + bar_width,
+            time,
+            bar_width,
+            color="#be1d24",
+            edgecolor="black",
+            linewidth=0.1,
+            label="Mozilla Firefox",
         )
-        ax.bar_label(bars, padding=2, fmt=fmt, size="x-small")
+        ax.bar_label(bars, padding=2, fmt=fmt, size="small")
 
-    bars = ax.bar(xs[2], native, bar_width, color="gray", edgecolor="black", linewidth=0.1, label="Aplikacja natywna")
-    ax.bar_label(bars, padding=2, fmt=fmt, size="x-small")
+    bars = ax.bar(
+        xs[2], native, bar_width, color="#2c2e35", edgecolor="black", linewidth=0.1, label="Aplikacja natywna"
+    )
+    ax.bar_label(bars, padding=2, fmt=fmt, size="small")
     ticks_x.append(xs[2])
-    ticks_val.append("Rust")
+    ticks_val.append("Natywna")
 
     ax.set_xticks(ticks_x, ticks_val)
-    ax.set(ylabel="Czas procesowania klatki (ms)")
+    ax.set(ylabel="Średni czas procesowania klatki (ms)")
     handles, labels = plt.gca().get_legend_handles_labels()
     by_label = dict(zip(labels, handles))
     plt.legend(by_label.values(), by_label.keys())
-    plt.yscale("log")
     plt.xlim(-0.5, 3.5)
     fig.savefig("edges.pgf")
     plt.close(fig)
