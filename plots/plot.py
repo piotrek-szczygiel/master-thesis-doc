@@ -15,96 +15,122 @@ matplotlib.rcParams.update(
 )
 
 
+def plot_times(languages, chrome, firefox, filename, max=None, ylabel="Czas wykonania (ms)", fmt="%d ms"):
+    bar_width = 0.35
+
+    fig, ax = plt.subplots(figsize=(PAGE_WIDTH, 3))
+    ax.set_ymargin(0.1)
+
+    xs = range(len(languages))
+    if len(languages) == 2:
+        xs = [0.75, 2.25]
+    elif len(languages) == 3:
+        xs = [0.15, 1.5, 2.85]
+
+    ticks_x, ticks_val = [], []
+
+    for i, (language, time) in enumerate(zip(languages, chrome)):
+        bars = ax.bar(xs[i], time, bar_width, color="#4285f4", edgecolor="black", linewidth=0.1, label="Google Chrome")
+        ax.bar_label(bars, padding=2, fmt=fmt, size="x-small")
+        ticks_x.append(xs[i] + bar_width / 2)
+        ticks_val.append(language)
+
+    for i, (language, time) in enumerate(zip(languages, firefox)):
+        bars = ax.bar(
+            xs[i] + bar_width, time, bar_width, color="orange", edgecolor="black", linewidth=0.1, label="Mozilla Firefox"
+        )
+        ax.bar_label(bars, padding=2, fmt=fmt, size="x-small")
+
+    ax.set_xticks(ticks_x, ticks_val)
+    ax.set(ylabel=ylabel)
+    handles, labels = plt.gca().get_legend_handles_labels()
+    by_label = dict(zip(labels, handles))
+    plt.legend(by_label.values(), by_label.keys())
+
+    if max:
+        plt.ylim(top=max)
+
+    plt.xlim(-0.5, 3 + bar_width + 0.5)
+
+    fig.savefig(f"{filename}.pgf")
+    plt.close(fig)
+
+
 def benchmark():
     chrome = pd.read_csv("benchmark_chrome.csv")
     firefox = pd.read_csv("benchmark_firefox.csv")
 
-    def plot_type(type):
+    def plot(type):
         data_chrome = chrome.loc[chrome["type"] == type]
         data_firefox = firefox.loc[firefox["type"] == type]
+        plot_times(data_chrome["language"], data_chrome["time"], data_firefox["time"], type)
 
-        bar_width = 0.35
-
-        fig, ax = plt.subplots(figsize=(PAGE_WIDTH, 3))
-        ax.set_ymargin(0.1)
-
-        ticks_x, ticks_val = [], []
-
-        for i, (language, time) in enumerate(zip(data_chrome["language"], data_chrome["time"])):
-            bars = ax.bar(i, time, bar_width, color="#4285f4", label="Google Chrome")
-            ax.bar_label(bars, padding=2, fmt="%d ms", size="x-small")
-            ticks_x.append(i + bar_width / 2)
-            ticks_val.append(language)
-
-        for i, (language, time) in enumerate(zip(data_firefox["language"], data_firefox["time"])):
-            bars = ax.bar(i + bar_width, time, bar_width, color="orange", label="Mozilla Firefox")
-            ax.bar_label(bars, padding=2, fmt="%d ms", size="x-small")
-
-        ax.set_xticks(ticks_x, ticks_val)
-        ax.set(ylabel="Czas wykonania (ms)")
-        handles, labels = plt.gca().get_legend_handles_labels()
-        by_label = dict(zip(labels, handles))
-        plt.legend(by_label.values(), by_label.keys())
-        fig.savefig(f"{type}.pgf")
-        plt.close(fig)
-
-    plot_type("sort6")
-    plot_type("fib40")
+    plot("sort6")
+    plot("fib40")
 
 
-# def nbody():
-#     bar_plot(
-#         ["JavaScript", "Rust"],
-#         [5.9, 6.4],
-#         "Średni czas jednego kroku symulacji (ms)",
-#         "nbody_chrome.pgf",
-#         fmt="%.1f ms",
-#     )
-
-#     bar_plot(
-#         ["JavaScript", "Rust"],
-#         [6.3, 6.5],
-#         "Średni czas jednego kroku symulacji (ms)",
-#         "nbody_firefox.pgf",
-#         fmt="%.1f ms",
-#     )
+def matrix():
+    plot_times(["JavaScript", "Rust", "Rust SIMD"], [1001, 665, 399], [1169, 507, 415], "matrix")
 
 
-# def matrix():
-#     bar_plot(
-#         ["JavaScript", "Rust", "Rust SIMD"],
-#         [994, 417, 365],
-#         "Czas wykonania (ms)",
-#         "matrix_chrome.pgf",
-#         fmt="%d ms",
-#     )
-
-#     bar_plot(
-#         ["JavaScript", "Rust", "Rust SIMD"],
-#         [1171, 534, 458],
-#         "Czas wykonania (ms)",
-#         "matrix_firefox.pgf",
-#         fmt="%d ms",
-#     )
+def nbody():
+    plot_times(
+        ["JavaScript", "Rust"],
+        [5.9, 6.4],
+        [6.3, 6.5],
+        "nbody",
+        max=10,
+        ylabel="Średni czas jednego kroku symulacji (ms)",
+        fmt="%.1f ms",
+    )
 
 
-# def edges():
-#     bar_plot(
-#         [
-#             "JS (Chrome)",
-#             "JS (Firefox)",
-#             "WASM (Chrome)",
-#             "WASM (Firefox)",
-#             "Rust (Native)",
-#         ],
-#         [51.11, 14.93, 7.43, 9.57, 0.609476],
-#         "Czas procesowania klatki (ms)",
-#         "edges.pgf",
-#         fmt="%.2f ms",
-#     )
+def edges():
+    bar_width = 0.35
+
+    fig, ax = plt.subplots(figsize=(PAGE_WIDTH, 3))
+    ax.set_ymargin(0.1)
+
+    languages = ["JavaScript", "Rust"]
+    chrome = [51.11, 7.43]
+    firefox = [14.93, 9.57]
+    native = 0.609476
+
+    fmt = "%.2f ms"
+
+    xs = [0.15, 1.5, 2.85]
+
+    ticks_x, ticks_val = [], []
+
+    for i, (language, time) in enumerate(zip(languages, chrome)):
+        bars = ax.bar(xs[i], time, bar_width, color="#4285f4", edgecolor="black", linewidth=0.1, label="Google Chrome")
+        ax.bar_label(bars, padding=2, fmt=fmt, size="x-small")
+        ticks_x.append(xs[i] + bar_width / 2)
+        ticks_val.append(language)
+
+    for i, (language, time) in enumerate(zip(languages, firefox)):
+        bars = ax.bar(
+            xs[i] + bar_width, time, bar_width, color="orange", edgecolor="black", linewidth=0.1, label="Mozilla Firefox"
+        )
+        ax.bar_label(bars, padding=2, fmt=fmt, size="x-small")
+
+    bars = ax.bar(xs[2], native, bar_width, color="gray", edgecolor="black", linewidth=0.1, label="Aplikacja natywna")
+    ax.bar_label(bars, padding=2, fmt=fmt, size="x-small")
+    ticks_x.append(xs[2])
+    ticks_val.append("Rust")
+
+    ax.set_xticks(ticks_x, ticks_val)
+    ax.set(ylabel="Czas procesowania klatki (ms)")
+    handles, labels = plt.gca().get_legend_handles_labels()
+    by_label = dict(zip(labels, handles))
+    plt.legend(by_label.values(), by_label.keys())
+    plt.yscale("log")
+    plt.xlim(-0.5, 3.5)
+    fig.savefig("edges.pgf")
+    plt.close(fig)
 
 
 benchmark()
-# nbody()
-# matrix()
-# edges()
+matrix()
+nbody()
+edges()

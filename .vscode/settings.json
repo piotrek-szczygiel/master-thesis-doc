@@ -140,8 +140,5 @@
     ],
     "cSpell.ignoreRegExpList": [
         "/(?:\\\\begin{minted}[\\s\\S]*?\\\\end{minted})/g"
-    ],
-    "cSpell.enableFiletypes": [
-        "!python"
     ]
 }

@@ -14,6 +14,8 @@
 \usepackage[backend=biber,doi=true,url=false]{biblatex}
 \addbibresource{bibliography.bib}
 
+\usepackage[skip=2pt]{caption}
+
 \setminted{autogobble,breaklines,frame=single,fontsize=\footnotesize}
 \definecolor{number}{RGB}{102, 102, 102}
 \definecolor{type}{RGB}{176, 0, 64}
@@ -31,7 +33,6 @@
 \onehalfspacing
 
 \chapter{Wstęp}
-TODO: wstęp...
 
 \section{Cel}
 Celem pracy jest stworzenie zbioru rekomendacji dla programistów tworzących interaktywne aplikacje webowe.
@@ -79,6 +80,8 @@ Dalsza część pracy została rozdzielona na następujące części:
 \begin{itemize}
     \item Rozdział 2 -- zawiera przedstawienie aktualnego stanu wiedzy
     \item Rozdział 3 -- przedstawia porównanie języków kompilowanych do WebAssembly
+    \item Rozdział 4 -- bardziej szczegółowo sprawdza jeden z wybranych języków
+    \item Rozdział 5 -- prezentuje przykładową aplikację webową
 \end{itemize}
 
 \chapter{Stan wiedzy}
@@ -397,7 +400,7 @@ Po konwersji tablicy na typ \emph{Vec} używamy na niej funkcji \emph{sort\_by},
 \subsection{Kompilacja}
 Cały projekt kompilujemy korzystając z programu \emph{wasm-pack}.
 
-\begin{minted}{text}
+\begin{minted}{console}
     $ wasm-pack build
 \end{minted}
 
@@ -430,19 +433,43 @@ W celu dokonania porównania, utworzono prostą aplikacje internetową.
 Ładuje ona stworzone wcześniej moduły WebAssembly i wypisuje czas wywołania konkretnych funkcji dla różnych parametrów.
 Warto też wspomnieć, że wyniki zależą od użytego sprzętu oraz przeglądarki.
 Wszystkie aplikacje uruchamiane były na przeglądarce Google Chrome\footnote{\url{https://www.google.com/chrome/}} oraz Mozilla Firefox\footnote{\url{https://www.mozilla.org/firefox/}}.
-
 Konfiguracja sprzętowa komputera testowego przedstawia się następująco:
 \begin{itemize}
+    \itemsep0em
     \item Procesor \emph{ADM Ryzen 5 5600} -- 6 rdzeni / 12 wątków / 4,4 GHz
     \item Karta graficzna \emph{GeForce GTX 1080}
     \item Pamięć RAM 16GB DDR4
     \item System operacyjny \emph{Windows 10}
 \end{itemize}
 
+Poniżej przedstawiono również kod w języku JavaScript do którego porównywane były inne wyniki.
+
+\begin{listing}[H]
+    \begin{minted}{javascript}
+        function sort(array) {
+            array.sort();
+        }
+
+        function fib(n) {
+            if (n === 1) return 1;
+            if (n === 2) return 1;
+            return fib(n - 1) + fib(n - 2); 
+        }
+    \end{minted}
+    \caption{Funkcje \emph{sort} oraz \emph{fib} zaimplementowany w języku JavaScript}
+\end{listing}
+
 Analizę wydajności rozpoczęto od funkcji sortującej milion liczb.
 Jak można zauważyć na wykresie \ref{fig:sort6}, Rust i Zig osiągnęły najlepsze wyniki, AssemblyScript był od nich trochę wolniejszy.
 Dla przeglądarki Chrome wszystkie moduły WebAssembly były o cały rząd złożoności szybsze niż JavaScript.
 Dla przeglądarki Firefox natomiast Zig i Rust były około czterokrotnie szybsze, a AssemblyScript około dwukrotnie szybszy.
+
+\begin{figure}[H]
+    \centering
+    \import{plots}{sort6.pgf}
+    \caption{Czasy sortowania miliona liczb}
+    \label{fig:sort6}
+\end{figure}
 
 Dla funkcji obliczającej ciąg Fibonacciego, w przypadku przeglądarki Firefox odnotowano podobne zależności jak w poprzednim teście.
 Na wykresie \ref{fig:fib40} można zauważyć, że najgorszy wynik uzyskała zwykła funkcja JavaScript.
@@ -453,15 +480,8 @@ Rust jest tylko trochę szybszy od JavaScript, a Zig jest prawie dwukrotnie szyb
 
 \begin{figure}[H]
     \centering
-    \import{plots}{sort6.pgf}
-    \caption{Czas sortowania miliona liczb}
-    \label{fig:sort6}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
     \import{plots}{fib40.pgf}
-    \caption{Czas wykonania \emph{fib(40)}}
+    \caption{Czasy wykonania \emph{fib(40)}}
     \label{fig:fib40}
 \end{figure}
 
@@ -481,22 +501,210 @@ Podsumowując, rekomendowanym wyborem języka programowania modułów WebAssembl
 Posiada wszystko czego można od takiego języka oczekiwać -- wydajność, dojrzałość i dużą ilość materiałów do nauki.
 
 \chapter{Użytkowanie i wydajność Rust}
+Na podstawie prostych testów w poprzednim rozdziale wybrano język Rust jako rekomendowany do tworzenia modułów WebAssembly.
+W tym rozdziale zaprezentowany zostanie dokładniejszy wgląd w prostotę użytkowania oraz wydajność tego języka.
 
 \section{Sumowanie macierzy}
+Zagłębiając się w badania nad wydajnością modułów WebAssembly pisanych w języku Rust dla interaktywnych aplikacji webowych, należy zastanowić się gdzie taka aplikacja używa najwięcej czasu procesora.
+Wykonywane lokalnie obliczenia prawdopodobnie będą odbywały się na danych otrzymanych z jakiegoś zewnętrznego serwera.
+W tym przykładowym teście utworzone zostaną aplikacje wykonujące proste sumowanie dwóch macierzy.
+Będzie to o tyle zbliżone do prawdziwego przypadku użycia, że macierze mogą opisywać np. strumień obrazów otrzymywany od zewnętrznego serwera, a sumowanie ich naśladować operacje wykonywane na tym obrazie.
+Rozmiar sumowanych wektorów ustawiono na \emph{N = 1024}.
 
 \subsection{JavaScript}
+Test rozpoczęto od utworzenia funkcji sumującej macierze jednokolumnowe w języku JavaScript.
+
+\begin{listing}[H]
+    \begin{minted}{javascript}
+        function add(a, b, c) {
+            for (let i = 0; i < N; i++) {
+                c[i] = a[i] + b[i];
+            }
+        }
+    \end{minted}
+    \caption{Funkcja \emph{add} w języku JavaScript}
+\end{listing}
+
+Do funkcji przekazujemy wektory \emph{a}, \emph{b} oraz \emph{c}.
+Funkcja ta następnie do wektora \emph{c} zapisuję sumę wektorów \emph{a} oraz \emph{b}.
 
 \subsection{Rust}
+Taka sama funkcja została zaimplementowana w języku Rust.
+Oprócz niej utworzone zostały pomocnicze funkcje umożliwiające kopiowanie i pobieranie macierzy z wewnętrznej pamięci WebAssembly.
+Dzięki temu czas wywołania funkcji nie będzie zawierał narzutu związanego z kopiowaniem danych.
+
+\begin{listing}[H]
+    \begin{minted}{rust}
+        pub fn add(&mut self) {
+            for i in 0..N {
+                self.c[i] = self.a[i] + self.b[i];
+            }
+        }
+    \end{minted}
+    \caption{Funkcja \emph{add} w języku Rust}
+\end{listing}
 
 \subsection{Rust z wykorzystaniem SIMD}
+Tworzenie modułów WebAssembly umożliwia dostęp do operacji \emph{SIMD}\footnotemark{}.
+\footnotetext{Single instruction, multiple data -- w kontekście architektury procesora, umożliwia jedną instrukcją modyfikację wielu danych jednocześnie}
+Dzięki temu wykonując obliczenia na dużej ilości danych, wykorzystamy w pełni możliwości używanego procesora.
+
+\begin{listing}[H]
+    \begin{minted}{rust}
+        pub fn add_simd(&mut self) {
+            let simd_a = self.a.as_ptr() as *const f32x16;
+            let simd_b = self.b.as_ptr() as *const f32x16;
+            let simd_c = self.c.as_mut_ptr() as *mut f32x16;
+    
+            let chunks = (N / 16) as isize;
+
+            for i in 0..chunks {
+                unsafe {
+                    *simd_c.offset(i) = *simd_a.offset(i) + *simd_b.offset(i);
+                }
+            }
+        }
+    \end{minted}
+    \caption{Funkcja \emph{add} w języku Rust z użyciem SIMD}
+\end{listing}
+
+Funkcja ta jest bardziej skomplikowana od swoich poprzedników.
+Działanie jej sprowadza się do sumowania w jednej iteracji szesnastu liczb jednocześnie, zamiast jednej.
+Teoretycznie więc procesor musi wykonać szesnastokrotnie mniej operacji w celu uzyskania tego samego wyniku.
+Nie oznacza to jednak, że kod będzie dużo szybszy, należy pamiętać o tym, że instrukcje SIMD zajmują więcej cykli procesora.
+Sporą część czasu zajmuje też wczytanie danych do pamięci cache.
+W niektórych przypadkach kompilator potrafi nawet sam przekształcić nasz kod tak, aby wykorzystywał instrukcje SIMD.
+Koniecznie jest więc sprawdzenie czy faktycznie warto pisać kod w taki sposób, bo może kompilator robi to już sam.
+
+\subsection{Wydajność}
+Na wykresie czasu wykonania funkcji \ref{fig:matrix} można zauważyć, że każda kolejna funkcja radzi sobie lepiej od poprzedniej.
+Dla obu testowanych przeglądarek wyniki wyszły podobne -- JavaScript poradził sobie najgorzej z czasem w okolicach jednej sekundy.
+Wersja napisana w języku Rust była około dwa razy szybsza, a kiedy dodatkowo korzystała z SIMD, czas skrócił się o około 250 milisekund dla Chrome i 100 milisekund dla Firefox.
+
+\begin{figure}[H]
+    \centering
+    \import{plots}{matrix.pgf}
+    \caption{Czasy wykonania miliona iteracji funkcji obliczającej $\vec{c} = \vec{a} + \vec{b}$}
+    \label{fig:matrix}
+\end{figure}
+
+\subsection{Wnioski}
+Ten prosty test udowadnia, że Rust potrafi bardzo przyspieszyć operacje na dużej ilości danych.
+Pokazuje też, że dzięki stosowaniu niskopoziomowego języka można uzyskać większą kontrolę nad instrukcjami wykonywanymi przez procesor, otrzymując jeszcze większe przyspieszenie.
 
 \section{Symulacja N ciał}
+Kolejnym testem będzie symulacja N ciał.
+Polega ona na wyznaczeniu toru ruchów wszystkich ciał układu o danych masach, prędkościach i początkowych położeniach.
+Opiera się ona o prawa ruchu i założenie, że ciała oddziałują ze sobą zgodnie z prawem grawitacji Newtona.
+Oprócz samych obliczeń wykonywanych zarówno w JavaScript jak i Rust, aktualny stan układu wyświetlany jest w przeglądarce, jak przedstawiono na rysunku \ref{fig:nbody_screenshot}. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{images/nbody.pdf}
+    \caption{Wyświetlany stan symulacji w przeglądarce po kilku sekundach}
+    \label{fig:nbody_screenshot}
+\end{figure}
 
 \subsection{JavaScript}
+Symulacja została początkowo napisana w języku JavaScript, aby stanowić punkt odniesienia dla przyszłego kodu pisanego w języku Rust.
+Zaimplementowano prosty algorytm, z zagnieżdżoną pętlą, która dla każdego ciała oblicza siły na nie działające, a następnie na tej podstawie zmienia jego położenie.
+
+\begin{listing}[H]
+    \begin{minted}{javascript}
+        function tick(bodies) {
+            for (let i = 1; i < bodies.length; i++) {
+                bodies[i].ax = 0;
+                bodies[i].ay = 0;
+
+                for (let j = 0; j < bodies.length; j++) {
+                    if (i === j) {
+                        continue;
+                    }
+
+                    let dx = bodies[i].x - bodies[j].x;
+                    let dy = bodies[i].y - bodies[j].y;
+                    let r = Math.max(Math.sqrt(dx * dx + dy * dy), E);
+                    let f = G * bodies[j].mass / (r * r);
+
+                    bodies[i].ax -= f * (dx / r);
+                    bodies[i].ay -= f * (dy / r);
+                }
+            }
+
+            for (let i = 1; i < bodies.length; i++) {
+                bodies[i].vx += bodies[i].ax * DT;
+                bodies[i].vy += bodies[i].ay * DT;
+                bodies[i].x += bodies[i].vx * DT;
+                bodies[i].y += bodies[i].vy * DT;
+            }
+        }
+    \end{minted}
+    \caption{Kod obliczania kroku symulacji w języku JavaScript}
+\end{listing}
+
+Warto dodać, że nie jest to najbardziej optymalny algorytm z którego można było skorzystać, ponieważ nie było to celem tego testu.
+Test ten miał sprawdzić czy nawet taki naiwny algorytm po przepisaniu do języka Rust uzyska przyspieszenie w działaniu.
 
 \subsection{Rust}
+Przedstawiony poniżej kod jest praktycznie odzwierciedleniem kodu napisanego w JavaScript.
+Pokazuje to jak łatwo można przepisać istniejące funkcje JavaScript na język Rust bez specjalnych trudności.
+
+\begin{listing}[H]
+    \begin{minted}{rust}
+        pub fn tick(&mut self) {
+            for i in 1..self.bodies.len() {
+                self.bodies[i].ax = 0.0;
+                self.bodies[i].ay = 0.0;
+    
+                for j in 0..self.bodies.len() {
+                    if i == j {
+                        continue;
+                    }
+    
+                    let dx = self.bodies[i].x - self.bodies[j].x;
+                    let dy = self.bodies[i].y - self.bodies[j].y;
+                    let r = (dx * dx + dy * dy).sqrt().max(self.e);
+                    let f = self.g * self.bodies[j].mass / (r * r);
+    
+                    self.bodies[i].ax -= f * (dx / r);
+                    self.bodies[i].ay -= f * (dy / r);
+                }
+            }
+    
+            for i in 1..self.bodies.len() {
+                self.bodies[i].vx += self.bodies[i].ax * self.dt;
+                self.bodies[i].vy += self.bodies[i].ay * self.dt;
+                self.bodies[i].x += self.bodies[i].vx * self.dt;
+                self.bodies[i].y += self.bodies[i].vy * self.dt;
+            }
+        }
+    \end{minted}
+    \caption{Kod obliczania kroku symulacji w języku Rust}
+\end{listing}
+
+Pominięto w tym kodzie funkcje pomocnicze tworzące klasę zawierającą funkcje przedstawioną powyżej.
+Nie przedstawiona została również funkcja pomocnicza zwracająca aktualny stan symulacji dla modułu wyświetlającego napisanego w JavaScript.
+
+\subsection{Wydajność}
+Na wykresie \ref{fig:nbody} można zaobserwować, że wszystkie czasy były do siebie bardzo zbliżone.
+Mimo wszystko jednak moduł WebAssembly napisany w języku Rust odnotował czasy gorsze o 0.5 milisekundy dla przeglądarki Chrome oraz 0.2 milisekundy dla Firefox.
+
+\begin{figure}[H]
+    \centering
+    \import{plots}{nbody.pgf}
+    \caption{Średnie czasy wykonania jednego kroku symulacji N ciał}
+    \label{fig:nbody}
+\end{figure}
 
 \section{Wnioski}
+Test ten pokazał, że WebAssembly nie będzie szybszy od JavaScript w każdym przypadku.
+Silniki JavaScript zawarte w przeglądarkach są jedynymi z najlepiej zoptymalizowanych programów na świecie.
+Wynika to z tego, że mało który kod jest tak często uruchamiany na komputerach jak ten odpowiadający za działanie większości stron internetowych.
+Korzystają one z kompilacji \emph{JIT}\footnotemark{} (ang. just-in-time) dla funkcji, które są często używane.
+\footnotetext{Kompilacja just-in-time -- sposób wykonywania kodu wymagający kompilacji programu w trakcie jego wykonywania}
+Kompilator JIT potrafi generować bezpośrednio natywny kod maszynowy komputera na którym uruchamiany jest kod JavaScript.
+Z tego powodu, w przypadku tego testu, wykonywał się on minimalnie szybciej niż jego odpowiednik w module WebAssembly.
+Należy mieć tego świadomość tworząc aplikację internetową, gdyż korzystanie z WebAssembly w miejscach, w których nie do końca się do tego nadaje może nie przynieść żadnych korzyści.
 
 \chapter{Interaktywna aplikacja webowa z użyciem WebAssembly}
 
@@ -505,6 +713,13 @@ Posiada wszystko czego można od takiego języka oczekiwać -- wydajność, dojr
 \section{Porównanie wydajności}
 
 \section{Aplikacja natywna}
+
+\begin{figure}[H]
+    \centering
+    \import{plots}{edges.pgf}
+    \caption{Czasy procesowania pojedynczej klatki}
+    \label{fig:edges}
+\end{figure}
 
 \section{WebRTC vs WebSocket}
 

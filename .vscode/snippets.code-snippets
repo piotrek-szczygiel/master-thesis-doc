@@ -27,7 +27,7 @@
         "scope": "latex",
         "prefix": "cmd",
         "body": [
-            "\\begin{minted}{text}",
+            "\\begin{minted}{console}",
             "    $ $1",
             "\\end{minted}"
         ]
