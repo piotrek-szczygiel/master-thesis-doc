@@ -80,8 +80,8 @@ Dalsza część pracy została rozdzielona na następujące części:
 \begin{itemize}
     \item Rozdział 2 -- zawiera przedstawienie aktualnego stanu wiedzy
     \item Rozdział 3 -- przedstawia porównanie języków kompilowanych do WebAssembly
-    \item Rozdział 4 -- bardziej szczegółowo sprawdza jeden z wybranych języków
-    \item Rozdział 5 -- prezentuje przykładową aplikację webową
+    \item Rozdział 4 -- bardziej szczegółowo wgłębia się w jeden z języków
+    \item Rozdział 5 -- prezentuje przykładową interaktywną aplikację webową
 \end{itemize}
 
 \chapter{Stan wiedzy}
@@ -502,13 +502,13 @@ Posiada wszystko czego można od takiego języka oczekiwać -- wydajność, dojr
 
 \chapter{Użytkowanie i wydajność Rust}
 Na podstawie prostych testów w poprzednim rozdziale wybrano język Rust jako rekomendowany do tworzenia modułów WebAssembly.
-W tym rozdziale zaprezentowany zostanie dokładniejszy wgląd w prostotę użytkowania oraz wydajność tego języka.
+W tym rozdziale zaprezentowany zostanie dokładniejszy wgląd w prostotę użytkowania oraz wydajność modułów WebAssembly napisanych w tym języku.
 
 \section{Sumowanie macierzy}
 Zagłębiając się w badania nad wydajnością modułów WebAssembly pisanych w języku Rust dla interaktywnych aplikacji webowych, należy zastanowić się gdzie taka aplikacja używa najwięcej czasu procesora.
 Wykonywane lokalnie obliczenia prawdopodobnie będą odbywały się na danych otrzymanych z jakiegoś zewnętrznego serwera.
 W tym przykładowym teście utworzone zostaną aplikacje wykonujące proste sumowanie dwóch macierzy.
-Będzie to o tyle zbliżone do prawdziwego przypadku użycia, że macierze mogą opisywać np. strumień obrazów otrzymywany od zewnętrznego serwera, a sumowanie ich naśladować operacje wykonywane na tym obrazie.
+Będzie to o tyle zbliżone do prawdziwego przypadku użycia, że macierze mogą opisywać np. strumień obrazów otrzymywany od zewnętrznego serwera, a sumowanie ich może naśladować operacje wykonywane na tym obrazie.
 Rozmiar sumowanych wektorów ustawiono na \emph{N = 1024}.
 
 \subsection{JavaScript}
@@ -571,7 +571,8 @@ Dzięki temu wykonując obliczenia na dużej ilości danych, wykorzystamy w peł
 Funkcja ta jest bardziej skomplikowana od swoich poprzedników.
 Działanie jej sprowadza się do sumowania w jednej iteracji szesnastu liczb jednocześnie, zamiast jednej.
 Teoretycznie więc procesor musi wykonać szesnastokrotnie mniej operacji w celu uzyskania tego samego wyniku.
-Nie oznacza to jednak, że kod będzie dużo szybszy, należy pamiętać o tym, że instrukcje SIMD zajmują więcej cykli procesora.
+Nie oznacza to jednak, że kod będzie dużo szybszy.
+Należy pamiętać o tym, że instrukcje SIMD zajmują więcej cykli procesora.
 Sporą część czasu zajmuje też wczytanie danych do pamięci cache.
 W niektórych przypadkach kompilator potrafi nawet sam przekształcić nasz kod tak, aby wykorzystywał instrukcje SIMD.
 Koniecznie jest więc sprawdzenie czy faktycznie warto pisać kod w taki sposób, bo może kompilator robi to już sam.
@@ -588,6 +589,8 @@ Wersja napisana w języku Rust była około dwa razy szybsza, a kiedy dodatkowo 
     \label{fig:matrix}
 \end{figure}
 
+\clearpage
+
 \section{Symulacja N ciał}
 Kolejnym testem będzie symulacja N ciał.
 Polega ona na wyznaczeniu toru ruchów wszystkich ciał układu o danych masach, prędkościach i początkowych położeniach.
@@ -596,8 +599,8 @@ Oprócz samych obliczeń wykonywanych zarówno w JavaScript jak i Rust, aktualny
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.4\textwidth]{images/nbody.pdf}
-    \vspace*{10pt}
+    \includegraphics[width=0.5\textwidth]{images/nbody.pdf}
+    \vspace*{15pt}
     \caption{Wyświetlany stan symulacji w przeglądarce po kilku sekundach}
     \label{fig:nbody_screenshot}
 \end{figure}
@@ -640,7 +643,7 @@ Zaimplementowano prosty algorytm, z zagnieżdżoną pętlą, która dla każdego
 \end{listing}
 
 Warto dodać, że nie jest to najbardziej optymalny algorytm z którego można było skorzystać, ponieważ nie było to celem tego testu.
-Test ten miał sprawdzić czy nawet taki naiwny algorytm po przepisaniu do języka Rust uzyska przyspieszenie w działaniu.
+Test ten miał sprawdzić czy nawet naiwny algorytm, po przepisaniu go do języka Rust, uzyska przyspieszenie w jego działaniu.
 
 \subsection{Rust}
 Przedstawiony poniżej kod jest praktycznie odzwierciedleniem kodu napisanego w JavaScript.
@@ -707,19 +710,19 @@ Z tego powodu, w przypadku tego testu, wykonywał się on minimalnie szybciej ni
 Należy mieć tego świadomość tworząc aplikację internetową, gdyż korzystanie z WebAssembly w miejscach, w których nie do końca się do tego nadaje może nie przynieść żadnych korzyści.
 
 \chapter{Interaktywna aplikacja webowa z użyciem WebAssembly}
-Testy wykonane w poprzednich rozdziałach pokazały, że korzystając z WebAssembly można w niektórych przypadkach osiągnąć duże przyspieszenia w działaniu aplikacji.
+Testy wykonane w poprzednich rozdziałach pokazały, że korzystanie z WebAssembly może w niektórych przypadkach zapewnić duże przyspieszenia w działaniu aplikacji.
 Były to jednak uproszczone testy nie oddające działania prawdziwej interaktywnej aplikacji.
 W tym rozdziale przedstawiona zostanie prosta aplikacja webowa, która wczytuje strumień wideo i wykonuje na nim operacje przetwarzania obrazu.
 Przykładem zastosowania takiej aplikacji może być np. urządzenie do przeprowadzania zdalnych operacji chirurgicznych.
-Lekarz znajdujący się w zupełnie innym miejscu niż jego pacjent, zdalnie dokonuje na nim operacji korzystając z robota oraz aplikacji, która umożliwia nad nim kontrole.
+Lekarz znajdujący się w zupełnie innym miejscu niż jego pacjent, zdalnie dokonuje na nim operacji korzystając z robota oraz aplikacji, która umożliwia jego kontrolę.
 Przetwarzanie obrazu może w tym wypadku służyć jako wsparcie lekarza w podejmowaniu decyzji lub jako ułatwienie identyfikowania rzeczy znajdujących się na obrazie.
 Aplikacja została napisana z wykorzystaniem JavaScript oraz WebAssembly.
 Utworzona została również natywna aplikacja o tej samej funkcjonalności.
 Będzie ona stanowiła punkt odniesienia dla wydajności aplikacji webowych.
 Warstwa komunikacji korzystać będzie z technologii WebRTC oraz WebSocket.
-Porównane zostaną zarówno różnice w opóźnieniach jak i sens korzystania z danej technologii w konkretnych przypadkach.
+Porównane zostaną różnice w opóźnieniach oraz stabilności połączenia, które przekładać się będą na responsywność aplikacji na polecenia chirurga.
 
-\section{Przykładowa aplikacja}
+\section{Analiza obrazu}
 Na początku aplikacje były tworzone w oparciu o własnoręcznie pisane algorytmy przetwarzania obrazu.
 W toku tworzenia pracy natknięto się jednak na informacje, że popularna biblioteka do przetwarzania obrazu OpenCV\footnotemark{} posiada również wersje JavaScript oraz WebAssembly.
 \footnotetext{\url{https://opencv.org/}}
@@ -728,9 +731,9 @@ Dzięki temu można mieć większą pewność, że algorytmy w niej zawarte są 
 
 Utworzone zostały więc trzy funkcjonalnie identyczne aplikacje:
 \begin{itemize}
-    \item aplikacja webowa wykorzystująca OpenCV dla języka JavaScript
-    \item aplikacja webowa wykorzystująca OpenCV skompilowaną do modułu WebAssembly
-    \item aplikacja natywna napisana w języku Rust wykorzystująca bibliotekę OpenCV
+    \item aplikacja webowa wykorzystująca OpenCV w wersji JavaScript
+    \item aplikacja webowa wykorzystująca OpenCV w wersji WebAssembly
+    \item aplikacja natywna wykorzystująca OpenCV w języku Rust
 \end{itemize}
 
 Każda z aplikacji odwołuje się do tych samych funkcji biblioteki.
@@ -738,8 +741,8 @@ Dla uproszczenia testowania aplikacji, jako algorytm przetwarzający obraz zosta
 \footnotetext{Canny -- metoda detekcji krawędzi wykorzystująca wielostopniowy algorytm opracowana w 1986 roku przez Johna F. Canny}
 Jest on wystarczająco wymagający dla procesora, aby zauważyć różnice w wydajności dla różnych wersji aplikacji.
 Dzięki niemu można też w łatwy sposób zweryfikować czy funkcja faktycznie działa, wyświetlając wygenerowany przez nią obraz wynikowy.
-Przykładowy wynik działania takiej funkcji zaprezentowany jest na rysunku \ref{fig:edges_example}.
-Poniżej jest przedstawiony kod procesujący pojedynczą klatkę obrazu dla aplikacji natywnej.
+Przykładowy wynik działania takiej funkcji zaprezentowany został na rysunku \ref{fig:edges_example}.
+Poniżej przedstawiony został kod procesujący pojedynczą klatkę obrazu dla aplikacji natywnej.
 Kod dla wersji aplikacji korzystającej z JavaScript i WebAssembly jest analogiczny i różni się jedynie składnią języka.
 
 \begin{listing}[H]
@@ -770,8 +773,8 @@ Kod dla wersji aplikacji korzystającej z JavaScript i WebAssembly jest analogic
 \end{listing}
 
 Jak można wyczytać z kodu klatka obrazu jest najpierw konwertowana do skali szarości, a następnie uruchamiany jest na niej faktyczny algorytm Canny.
-Jak widać czas mierzony jest jedynie dla wykonania tych dwóch funkcji, więc funkcje pomocnicze, ani czas oczekiwania na obraz nie są wliczone w wyniki.
-W kolejnym rozdziale czasy zostaną porównane ze sobą między rożnymi wersjami aplikacji.
+Czas mierzony jest jedynie dla wykonania tych dwóch funkcji, więc funkcje pomocnicze i czas oczekiwania na otrzymanie obrazu nie zostały wliczone w wyniki.
+W podrozdziale poniżej czasy zostaną ze sobą porównane dla różnych wersji tej aplikacji.
 
 \begin{figure}[H]
     \centering
@@ -781,16 +784,16 @@ W kolejnym rozdziale czasy zostaną porównane ze sobą między rożnymi wersjam
     \label{fig:edges_example}
 \end{figure}
 
-\section{Porównanie wydajności}
+\subsection{Wydajność}
 Na wykresie \ref{fig:edges} widać, że wersja wykorzystująca wersję biblioteki napisaną w JavaScript odniosła zdecydowanie najgorsze wyniki.
 Dla przeglądarki Chrome czas około 50 milisekund potrzebny na procesowanie jednej klatki oznaczać będzie strumień 20 klatek na sekundę.
 Jest to zdecydowanie niewystarczająca płynność obrazu, która może powodować u odbiorcy dyskomfort związany z niską responsywnością aplikacji.
-Przeglądarka Firefox poradziła sobie z tą wersją aplikacji dużo lepiej, uzyskując wynik, dzięki któremu strumień będzie mieć ponad 60 klatek na sekundę.
-Należy jednak pamiętać, że na słabszym sprzęcie wyniki te będą prezentować się dużo gorzej.
+Przeglądarka Firefox poradziła sobie z tą wersją aplikacji dużo lepiej, uzyskując wynik, dzięki któremu strumień będzie mieć około 60 klatek na sekundę.
+Należy jednak pamiętać, że na słabszym sprzęcie wyniki te mogą prezentować się gorzej i dla przeglądarki Firefox strumień również może nie być płynny.
 
 Wersja aplikacji korzystająca z biblioteki OpenCV skompilowanej do WebAssembly poradziła sobie dużo lepiej.
 W obu przeglądarkach wyniki były zbliżone i oscylowały w okolicach 8 milisekund.
-Jest to wystarczająco niski czas procesowania klatki, aby zapewnić płynność obrazu nawet w wypadku dodania większej ilości funkcji procesujących.
+Jest to wystarczająco niski czas procesowania klatki, aby zapewnić płynność obrazu nawet w wypadku dodania większej ilości funkcji procesujących obraz.
 
 Wersja natywna napisana w języku Rust i uruchomiona na systemie Windows odniosła najlepsze wyniki.
 Oczywistym jest, że aplikacje natywne są szybsze od ich odpowiedników uruchamianych w przeglądarce internetowej.
@@ -803,10 +806,56 @@ Jednak fakt, że w tym wypadku jest szybsza o cały rząd złożoności pokazuje
     \label{fig:edges}
 \end{figure}
 
-\section{WebRTC vs WebSocket}
+\section{Komunikacja z użyciem WebSocket oraz WebRTC}
+Do aplikacji napisanych w przeglądarce zaimplementowano moduł komunikujący się z odległym serwerem.
+Na potrzeby testów, moduł ten wysyła raz na sekundę komunikat składający się z aktualnego czasu systemowego oraz 64 losowych bajtów.
+Rozmiar komunikatu mógłby być większy o ile nie przekroczyłby MTU\footnotemark{}, ponieważ mogłoby wtedy dojść do wysłania więcej niż jednego pakietu.
+\footnotetext{MTU -- rozmiar największego datagramu, który można przekazać przez warstwę protokołu komunikacyjnego}
+Serwer znajdujący się we Frankfurcie po otrzymaniu tego pakietu odsyła go natychmiastowo do aplikacji webowej.
+Aplikacja po otrzymaniu pakietu zwrotnego odczytuje swój aktualny czas systemowy i odejmuje od niego czas zawarty w pakiecie.
+Na tej podstawie oblicza RTT\footnotemark{}.
+\footnotetext{Round Trip Time -- czas wymagany do przesłania sygnału w obu kierunkach, od nadawcy do odbiorcy, a następnie w drugą stronę}
+W przedstawionym wcześniej przykładzie aplikacji do telechirurgii RTT stanowi wyznacznik opóźnienia między komendą chirurga, a informacją zwrotną od robota.
+Badania przedstawione w książce \emph{Robot Surgery} \cite{telesurgery} pokazały, że chirurdzy posiadają zdolność do dostosowywania się do różnych czasów opóźnienia.
+Nawet w przypadku połączenia satelitarnego o czasach opóźnienia na poziomie około 550 milisekund operacja trwała tyle samo co dla połączenia naziemnego z czasami opóźnienia w okolicach 60 milisekund.
+Co okazało się jednak bardzo istotne w kontekście możliwości chirurga w bezproblemowym wykonaniu operacji to stabilność tego połączenia.
 
-\chapter{Podsumowanie}
+Stworzone zostały dwie wersje aplikacji komunikujące się z serwerem z wykorzystaniem technologii WebSocket oraz WebRTC.
+Wersja aplikacji korzystająca z WebSocket łączy się z prostą aplikacją napisaną w Node.js\footnotemark{} uruchomioną na serwerze.
+\footnotetext{Node.js -- środowisko uruchomieniowe do tworzenia aplikacji serwerowych napisanych w języku JavaScript}
+Jedynym zadaniem tej aplikacji jest nasłuchiwanie na połączenie, odczytanie nadchodzącego komunikatu i natychmiastowe odesłanie go z powrotem do klienta.
+Funkcjonalność serwera WebRTC jest taka sama, z tą różnicą, że jeśli nie uda się ustanowić bezpośredniego połączenia, ruch może być dodatkowo przekierowywany przez serwer TURN\footnotemark{}.
+\footnotetext{Traversal Using Relays around NAT -- protokół służący do przekazywania ruchu sieciowego umożliwiający komunikacje, kiedy nie jest możliwe ustanowienie bezpośredniego połączenia} 
 
+\subsection{Opóźnienia}
+Wyniki przedstawione na wykresie \ref{fig:network} prezentują wartości RTT dla dwóch wersji aplikacji komunikujących się z tym samym serwerem.
+Można zauważyć, że aplikacja korzystająca z WebSocket posiadała bardzo stabilne połączenie i jej RTT wynosił około 32 milisekundy dla każdego wysłanego komunikatu.
+W przypadku aplikacji używającej WebRTC uzyskane wyniki były jednak gorsze.
+Średni RTT był większy o 3 milisekundy, jednak co najważniejsze to stabilność połączenia była dużo niższa.
+Najniższe uzyskane RTT wynosiło około 33 milisekundy a największe około 42 milisekundy.
+
+\begin{figure}[H]
+    \centering
+    \import{plots}{network.pgf}
+    \vspace*{5pt}
+    \caption{RTT dla aplikacji korzystającej z WebSocket oraz WebRTC}
+    \label{fig:network}
+\end{figure}
+
+\section{Wnioski}
+Aplikacja stworzona na potrzeby tego rozdziału umożliwiła przetestowanie technologii WebAssembly, WebSocket oraz WebRTC dla rzeczywistego przykładu użycia.
+Wersja aplikacji korzystająca z WebAssembly osiągnęła zdecydowanie lepszą wydajność niż jej odpowiednik wykorzystujący jedynie JavaScript.
+Czas potrzebny na procesowanie jednej klatki był wystarczająco mały, aby uzyskać płynny strumień obrazu w pełni wystarczający do interaktywnej obsługi zdalnego urządzenia.
+Natywna wersja aplikacji była o cały rząd złożoności szybsza od jakiejkolwiek wersji uruchamianej w przeglądarce.
+Należy o tym pamiętać zastanawiając się nad stosem technologicznym w tworzonej interaktywnej aplikacji.
+Mimo tego, że praca ta dotyczy interaktywnych aplikacji webowych, to należy pamiętać, że nie wszystkie aplikacje muszą być tworzone w taki sposób.
+Jeśli aplikacja wymaga bardzo dużej ilości skomplikowanych obliczeń i WebAssembly nie jest wystarczające, aby zapewnić tej aplikacji płynność w działaniu, to być może aplikacja ta nie nadaje się po prostu do uruchamiania w przeglądarce.
+
+W kontekście technologii używanych do komunikacji, WebSocket osiągnęło zdecydowanie lepsze wyniki.
+Większe opóźnienia dla aplikacji wykorzystującej WebRTC spowodowane były pośrednikiem w postaci serwera TURN.
+Nie jest to jednak coś co da się ominąć w większości przypadków, chyba że obie aplikacje znajdowałyby się w tej samej sieci lokalnej lub sieci użytkowników miałyby odpowiednio skonfigurowane routery.
+WebSocket był również dużo prostszy do zaimplementowania przez właśnie brak konieczności konfiguracji serwerów STUN\footnotemark{} oraz TURN.
+\footnotetext{Session Traversal Utilities for NAT -- protokół sieciowy pozwalający klientom ukrytym za NAT na znalezienie ich publicznych adresów IP}
 \backmatter
 
 \cleardoublepage

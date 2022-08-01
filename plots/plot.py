@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import matplotlib
 import pandas as pd
+from scipy.interpolate import make_interp_spline
+import numpy as np
 
 PAGE_WIDTH = 5.23724  # inches
 
@@ -143,6 +145,95 @@ def edges():
     plt.close(fig)
 
 
+def network():
+    fig, ax = plt.subplots(figsize=(PAGE_WIDTH, 3.5))
+    ax.set_ymargin(0.1)
+
+    color_ws, color_rtc = "#006e3d", "#be1d24"
+
+    websocket = [
+        31.8,
+        31.9,
+        32.0,
+        31.7,
+        31.5,
+        31.3,
+        32.1,
+        32.1,
+        31.3,
+        31.1,
+        31.4,
+        31.4,
+        32.0,
+        31.5,
+        31.4,
+        31.5,
+        31.6,
+        32.2,
+        32.0,
+        31.7,
+        31.1,
+    ]
+
+    webrtc = [
+        34.0,
+        33.1,
+        33.2,
+        33,
+        38.3,
+        36.2,
+        37.4,
+        35.3,
+        33.9,
+        38.3,
+        32.9,
+        34.8,
+        36.6,
+        42.2,
+        34,
+        35.5,
+        34.5,
+        34.1,
+        36.3,
+        33.6,
+        35.1,
+    ]
+
+    assert len(websocket) == len(webrtc)
+
+    x = list(range(len(websocket)))
+
+    websocket_spline = make_interp_spline(x, websocket)
+    webrtc_spline = make_interp_spline(x, webrtc)
+
+    x_spline = np.linspace(min(x), max(x), len(x) * 100)
+    y_spline_websocket = websocket_spline(x_spline)
+    y_spline_webrtc = webrtc_spline(x_spline)
+
+    ax.plot(x_spline, y_spline_webrtc, color=color_rtc, linewidth=0.5)
+    ax.plot(x_spline, y_spline_websocket, color=color_ws, linewidth=0.5)
+
+    ax.scatter(x, webrtc, label="WebRTC", color=color_rtc, marker=".")
+    ax.scatter(x, websocket, label="WebSocket", color=color_ws, marker=".")
+    ax.legend()
+
+    webrtc_mean = [np.mean(webrtc)] * (len(x) + 2)
+    ax.plot([-1] + x + [21], webrtc_mean, color=color_rtc, linestyle="--", linewidth=0.5, label="WebRTC avg.")
+
+    websocket_mean = [np.mean(websocket)] * (len(x) + 2)
+    ax.plot([-1] + x + [21], websocket_mean, color=color_ws, linestyle="--", linewidth=0.5, label="WebSocket avg.")
+
+    ax.set_xlim(-1, 21)
+    plt.xticks(np.arange(min(x), max(x) + 2, 5))
+
+    plt.xlabel("Czas trwania testu (s)")
+    plt.ylabel("Round Trip Time (ms)")
+
+    fig.savefig("network.pgf")
+    plt.close(fig)
+
+
+network()
 benchmark()
 matrix()
 nbody()
