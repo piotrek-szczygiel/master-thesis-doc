@@ -25,6 +25,8 @@
 \frontmatter
 \maketitle
 
+\addtocontents{toc}{\protect\enlargethispage{\baselineskip}}
+\addtocontents{toc}{\protect\enlargethispage{\baselineskip}}
 \setcounter{tocdepth}{1}
 \tableofcontents
 
@@ -35,12 +37,12 @@
 \chapter{Wstęp}
 Większość ludzi posiadających dostęp do Internetu każdego dnia korzysta z różnego rodzaju stron internetowych.
 Kiedyś strony w większości były statyczne i nie wymagały od użytkownika żadnej interakcji.
-Jednak wraz z rozwojem Internetu coraz więcej z nich zaczęła przekształcać się w interaktywne aplikacje webowe, umożliwiające użytkownikowi wchodzenie z nimi w interakcje oraz komunikacje z zewnętrznymi serwerami.
+Jednak wraz z rozwojem Internetu coraz więcej z nich zaczęła przekształcać się w interaktywne aplikacje webowe, umożliwiające użytkownikowi wchodzenie z nimi w interakcje oraz komunikację z zewnętrznymi serwerami.
 W kieszeni posiadamy komputery z procesorami szybszymi niż komputery personalne jeszcze nie tak dawno temu.
-Pomimo tego aplikacje webowe w większości sprawiają wrażenie mało responsywnych i niewspółmiernie wolnych do sprzętu na którym są uruchamiane.
+Pomimo tego aplikacje webowe w większości sprawiają wrażenie mało responsywnych i niewspółmiernie wolnych do sprzętu, na którym są uruchamiane.
 Na przestrzeni ostatnich lat pojawiły się technologie, których celem była adresacja tego problemu.
 Jedną z nich był WebAssembly, który oferuje przeglądarkom środowisko uruchomieniowe dla programów kompilowanych.
-Dzięki temu silniki przeglądarek mogłyby zaoszczędzić dużo czasu uruchamiając wcześniej skompilowane programy, zamiast interpretować i kompilować je w trakcie działania aplikacji.
+Dzięki temu silniki przeglądarek mogłyby zaoszczędzić dużo czasu, uruchamiając wcześniej skompilowane programy, zamiast interpretować i kompilować je w trakcie działania aplikacji.
 Oprócz kwestii kodu wykonywanego lokalnie, dla większości interaktywnych aplikacji równie ważna jest komunikacja z zewnętrznymi serwerami.
 Powszechnie używane technologie, takie jak ciągłe odpytywanie serwera (ang. polling) czy SSE\footnotemark{} nie umożliwiały uzyskanie dwukierunkowej, niskoopóźnieniowej komunikacji z serwerem.
 \footnotetext{Server-sent events -- technologia umożliwiająca otrzymywanie wiadomości od serwera za pomocą połączenia HTTP}
@@ -62,7 +64,7 @@ Oprócz tego przedstawione zostaną różnice w wygodzie tworzenia aplikacji z u
 Finalnie więc czytelnik będzie miał pogląd na technologie używane w procesie tworzenia wydajnych i responsywnych aplikacji webowych.
 
 \section{Motywacja}
-Pomimo wielkich postępów technologicznych w zakresie mocy obliczeniowej urządzeń z których korzystamy na co dzień, nadal mnóstwo stron internetowych potrafi ładować się po kilka sekund, a przy próbie interakcji z nimi zachowywać się nieresponsywnie.
+Pomimo wielkich postępów technologicznych w zakresie mocy obliczeniowej urządzeń, z których korzystamy na co dzień, nadal mnóstwo stron internetowych potrafi ładować się po kilka sekund, a przy próbie interakcji z nimi zachowywać się nieresponsywnie.
 Wiele osób jest poirytowanych takim stanem rzeczy i wspomina czasy dużo wolniejszych komputerów, na których aplikacje mimo tego ładowały się szybko i nie zacinały się.
 Stan ten spowodowany jest w głównej mierze pewnego rodzaju chaosem panującym wśród twórców stron internetowych.
 Poradniki do tworzenia nawet najprostszych aplikacji zawierają kod zaciągający tysiące bibliotek niepotrzebnie spowalniających ich działanie.
@@ -76,7 +78,7 @@ Po wybraniu trzech interesujących języków utworzono z ich wykorzystaniem pros
 Został on użyty do przeprowadzenia badań nad wydajnością aplikacji utworzonych w każdym z tych języków, a proces ich tworzenia dostarczył informacji o wygodzie pisania w danym języku.
 Po wybraniu jednego z języków utworzono inne aplikacje webowe, które dostarczyły więcej informacji o danej technologii.
 Pozwalały one zbadać wydajność aplikacji napisanej w tym języku i porównać ją z aplikacją napisaną w powszechnie stosowanym języku JavaScript.
-Na koniec zaprojektowano przykładową interaktywną aplikacje webową.
+Na koniec zaprojektowano przykładową interaktywną aplikację webową.
 Zostały utworzone trzy wersje aplikacji o identycznej funkcjonalności różniące się technologiami użytymi do jej stworzenia.
 Utworzono aplikację webową JavaScript, aplikację webową korzystającą z WebAssembly oraz aplikację natywną.
 Następnie wykonano testy porównujące technologie WebRTC oraz WebSocket w kontekście wykorzystania ich w takiej aplikacji.
@@ -111,31 +113,31 @@ Określa tzw. piaskownicę\footnotemark{}, czyli bezpieczne pod względem pamię
 Programy skompilowane do WebAssembly mogą być współcześnie stosowane jako dopełnienie JavaScript w tworzeniu aplikacji webowych.
 Stopień tego dopełnienia może być różny, ale praca ta skupi się głównie na zastępowaniu fragmentów programu wykonujących dużą ilość obliczeń oraz wpływ tego na wydajność aplikacji.
 
-Na listingu \ref{lst:wasm} poniżej zaprezentowano przykładową funkcję obliczającą silnie napisaną w języku C oraz wynik jej kompilacji do WebAssembly.
-Jak można zauważyć wynikowy format WebAssembly jest bardzo zbliżony do języków asemblera, z których korzystają współczesne architektury, takie jak np. x86-64.
+Na listingu \ref{lst:wasm} zaprezentowano przykładową funkcję obliczającą silnie napisaną w języku C oraz wynik jej kompilacji do WebAssembly.
+Jak można zauważyć, wynikowy format WebAssembly jest bardzo zbliżony do języków asemblera, z których korzystają współczesne architektury, takie jak np. x86-64.
 Upraszcza to bardzo zadanie silnikom przeglądarek, które tłumaczyć będą go na natywny kod maszynowy.
 
 \begin{listing}[H]
-\begin{center}
-\begin{tabular}{ |p{0.3\textwidth}|p{0.3\textwidth}|p{0.3\textwidth}| }
+    \begin{center}
+        \begin{tabular}{ |p{0.3\textwidth}|p{0.3\textwidth}|p{0.3\textwidth}| }
 
-\hline
-Kod źródłowy C & Format tekstowy WASM & Format binarny WASM \\
-\hline
+            \hline
+            Kod źródłowy C & Format tekstowy WASM & Format binarny WASM \\
+            \hline
 
-\begin{minted}[frame=none,fontsize=\scriptsize]{c}
-    int silnia(int n)
+            \begin{minted}[frame=none,fontsize=\scriptsize]{c}
+    int fact(int n)
     {
      if (n == 0)
       return 1;
      else
-      return n * silnia(n-1);
+      return n * fact(n-1);
     }
 \end{minted}
 
-&
+                           &
 
-\begin{minted}[frame=none,fontsize=\scriptsize]{wat}
+            \begin{minted}[frame=none,fontsize=\scriptsize]{wat}
     (func (param i64)
           (result i64)
         local.get 0
@@ -152,9 +154,9 @@ Kod źródłowy C & Format tekstowy WASM & Format binarny WASM \\
         end)
 \end{minted}
 
-&
+                           &
 
-\begin{minted}[frame=none,fontsize=\scriptsize]{text}
+            \begin{minted}[frame=none,fontsize=\scriptsize]{text}
     00 61 73 6D 01 00 00 00
     01 00 01 60 01 73 01 73 06
     03 00 01 00 02
@@ -175,19 +177,18 @@ Kod źródłowy C & Format tekstowy WASM & Format binarny WASM \\
     0B 15 17
 \end{minted}
 
-\\
+            \\
 
-\hline
+            \hline
+        \end{tabular}
+    \end{center}
 
-\end{tabular}
-\end{center}
-
-\caption{Porównanie kodu źródłowego funkcji oraz wynikowego kodu WebAssembly}
-\label{lst:wasm}
+    \caption{Porównanie kodu źródłowego funkcji oraz wynikowego kodu WebAssembly}
+    \label{lst:wasm}
 
 \end{listing}
 
-Aby użyć takiego skompilowanego modułu WebAssembly w aplikacji webowej należy go wczytać z poziomu języka JavaScript, co prezentuje kod poniżej.
+Aby użyć takiego skompilowanego modułu WebAssembly, w aplikacji webowej należy go wczytać z poziomu języka JavaScript, co prezentuje kod poniżej.
 
 \begin{listing}[H]
     \begin{minted}{javascript}
@@ -199,18 +200,23 @@ Aby użyć takiego skompilowanego modułu WebAssembly w aplikacji webowej należ
         };
 
         WebAssembly.instantiateStreaming(
-            fetch("silnia.wasm"),
+            fetch("fact.wasm"),
             importObject
         ).then(obj => {
-            const silnia = obj.instance.exports.silnia;
-            console.log(silnia(5));
+            const fact = obj.instance.exports.fact;
+            console.log(fact(5));
         });
     \end{minted}
     \caption{Wczytanie i wywołanie funkcji z modułu WebAssembly}
 \end{listing}
 
-\section{Stan wiedzy}
-Przedstawione poniżej prace poruszają kwestie porównania wydajności WebAssembly z resztą dostępnych rozwiązań.
+\section{Stan wiedzy na temat wydajności WebAssembly}
+Przedstawione poniżej prace przedstawiają aktualny stan wiedzy o WebAssembly oraz poruszają kwestie porównania wydajności WebAssembly z resztą dostępnych rozwiązań.
+
+Artykuł \cite{wasm} \emph{Bringing the web up to speed with WebAssembly} jest wczesną prezentacją WebAssembly napisaną przez samych twórców tej technologii.
+Prezentuje opis języka oraz wczesne testy wydajności, które pokazują dla niektórych testów wyniki zbliżone do prędkości natywnych aplikacji.
+Podsumowany jest przyszłościowymi planami rozwoju technologii, m.in. udostępnieniem udogodnień znanych z języków programowania wysokiego poziomu jak np. obsługa wątków czy \emph{garbage collector}\footnotemark{}.
+\footnotetext{Garbage collector -- odpowiada za automatyczną dezalokacje nieużywanej pamięci w programie}
 
 W pracy \cite{wasm_blazor} \emph{Dawid Suryś}, \emph{Piotr Szłapa} oraz \emph{Maria Skublewska-Paszkowska} prowadzą badania nad wydajnością WebAssembly oraz JavaScript.
 Dochodzą do wniosków, że WebAssembly może być szybszy od JavaScript w przypadku aplikacji zawierających dużą ilość obliczeń oraz operacji na zbiorach danych.
@@ -225,30 +231,37 @@ Był on skompilowany do kodu bajtowego platformy .NET, następnie uruchamianym w
 Pośrednio więc kod wykonywał się w dwóch zagnieżdżonych maszynach wirtualnych, co spowodowało jego mniejszą wydajność.
 Projekt ten pokazał jednak, że WebAssembly jest na tyle dojrzały, aby stworzyć w nim kompletny i działający projekt.
 
-Praca \cite{wasm_speedyjs} \emph{Micha Reiser} oraz \emph{Luc Bl\"{a}ser} przedstawia projekt \emph{Speedy.js}, który kompiluje wybrane funkcję z języka TypeScript\footnotemark{} do WebAssembly.
+Praca \cite{wasm_speedyjs} \emph{Micha Reiser} oraz \emph{Luc Bl\"{a}ser} przedstawia projekt \emph{Speedy.js}, który kompiluje wybrane funkcje z języka TypeScript\footnotemark{} do WebAssembly.
 \footnotetext{TypeScript -- statycznie typowany nadzbiór JavaScript (\url{https://www.typescriptlang.org/})}
 Generuje on również automatycznie kod pozwalający na łatwą integrację z resztą kodu napisanego w TypeScript.
 W niektórych przypadkach osiągnięto nawet czterokrotne przyspieszenie dla funkcji skompilowanych do WebAssembly.
 Projekt proponuje ciekawą strategię stopniowej transformacji kodu obliczeniowo intensywnego do WebAssembly.
 
 \emph{Abhinav Jangda} i inni w swojej pracy \cite{wasm_native} porównują wydajność WebAssembly z natywnymi aplikacjami.
-Wykorzystując \emph{BROWSIX-WASM}\footnotemark{} porównano wydajność programów skompilowanych do aplikacji natywnych oraz WebAssembly.
+Wykorzystując \emph{BROWSIX-WASM}\footnotemark{}, porównano wydajność programów skompilowanych do aplikacji natywnych oraz WebAssembly.
 \footnotetext{BROWSIX -- projekt umożliwiający uruchamianie niezmodyfikowanych plików wykonywalnych systemu Linux w przeglądarce (\url{https://browsix.org/})}
 Aplikacje WebAssembly były średnio wolniejsze od natywnych aplikacji o 1.55x dla przeglądarki Chrome i 1.45x dla Firefox.
-Główny powód dla którego WebAssembly jest wolniejsze od natywnej aplikacji to gorsza optymalizacja kodu maszynowego.
+Główny powód, dla którego WebAssembly jest wolniejsze od natywnej aplikacji to gorsza optymalizacja kodu maszynowego.
 Spowodowane jest to ograniczeniami wynikającymi ze specyfikacji WebAssembly (np. stack overflow checks, indirect call checks, reserved registers).
 Ograniczenia te nie muszą być zawarte w aplikacji natywnej.
 
 Artykuł \cite{wasm_js_bench} napisany przez \emph{David Herrera} i innych zawiera zbiór benchmarków porównujących WebAssembly oraz JavaScript w różnych konfiguracjach.
-Dla maszyny z systemem Windows, WebAssembly był około 70\% szybszy dla przeglądarki Chrome, 60\% szybszy dla Firefox i 163\% szybszy dla przeglądarki Edge.
+Dla maszyny z systemem Windows WebAssembly był około 70\% szybszy dla przeglądarki Chrome, 60\% szybszy dla Firefox i 163\% szybszy dla przeglądarki Edge.
 Z tych trzech przeglądarek najlepsze wyniki odniósł Firefox.
 
 \emph{Weihang Wang} w swoim artykule \cite{wasm_js_bench2} porównuje WebAssembly i JavaScript dla czasu wykonania i zużycia pamięci różnych programów.
 Zauważa, że WebAssembly zużywa dużo więcej pamięci niż JavaScript.
 Mimo tego WebAssembly był dużo szybszy od JavaScript dla bardzo małych rozmiarów danych (35.3x średnie przyspieszenie) oraz małych danych (7.67x średnie przyspieszenie).
-Natomiast dla większych rozmiarów danych, dzięki \emph{JIT}\footnotemark{}, JavaScript doganiał WebAssembly, a nawet zdarzały się przypadki gdzie WebAssembly był wolniejszy od JavaScript.
+Natomiast dla większych rozmiarów danych, dzięki \emph{JIT}\footnotemark{}, JavaScript doganiał WebAssembly, a nawet zdarzały się przypadki, gdzie WebAssembly był wolniejszy od JavaScript.
 \footnotetext{Kompilator JIT -- kompiluje kod w trakcie wykonywania programu, w przeciwieństwie do zwykłych kompilatorów, które robią to przed jego uruchomieniem}
 Otrzymane przez niego wyniki pokazują, że optymalizacja \emph{JIT} w Chrome znacząco poprawia wyniki JavaScript, nie mając wpływu na WebAssembly.
+
+Jeden z rozdziałów książki \cite{wasm_yew} autorstwa \emph{Shing Lyu} przedstawia wykorzystanie WebAssembly do tworzenia warstwy wizualnej aplikacji webowych.
+Użycie języka Rust wraz z biblioteką \emph{Yew}\footnote{\url{https://yew.rs/}} umożliwia zastąpienie innych popularnych bibliotek takich jak np. \emph{React.js}\footnote{\url{https://reactjs.org/}}.
+
+Autorzy artykułu \cite{wasm_energy} \emph{WebAssembly versus JavaScript: Energy and Runtime Performance} przeprowadzają badania nad wydajnością i oszczędnością energii WebAssembly w porównaniu do JavaScript.
+Otrzymane wyniki pokazały, że WebAssembly jest średnio o 30\% bardziej energooszczędny niż JavaScript.
+WebAssembly poradził sobie również lepiej pod względem wydajności niż JavaScript.
 
 \section{Wnioski}
 WebAssembly jest obiecującą technologią.
@@ -263,83 +276,145 @@ W tym rozdziale zaprezentowane zostaną technologie WebRTC i WebSocket oraz aktu
 
 \section{WebRTC}
 WebRTC to otwartoźródłowy projekt zapewniający przeglądarkom internetowym możliwość komunikacji w czasie rzeczywistym za pomocą zestawu interfejsów programowania.
-Umożliwia aplikacjom webowym przechwytywanie oraz opcjonalne strumieniowanie mediów audio-wizualnych.
+Umożliwia aplikacjom webowym przechwytywanie oraz opcjonalne strumieniowanie mediów audiowizualnych.
 Pozwala również na wymianę różnorodnych danych pomiędzy przeglądarkami bez konieczności posiadania serwera pośredniczącego.
 Pod spodem korzysta z protokołów UDP, TCP oraz SCTP w zależności od ustawień firewall użytkowników oraz rodzaju przesyłanych danych.
 
 Udostępniony zestaw interfejsów programowania dla języka JavaScript to między innymi:
 
 \begin{itemize}
-    \item \emph{getUserMedia} -- otrzymuje dostęp do mediów audio-wizualnych użytkownika (np. uzyskując dostęp do mikrofonu oraz kamery)
-    \item \emph{RTCPeerConnection} -- uruchamia komunikacje audio-wizualną pomiędzy użytkownikami, odpowiada za przetwarzanie sygnału, obsługę kodeków, komunikację, bezpieczeństwo oraz zarządzanie prędkości połączenia
-    \item \emph{RTCDataChannel} -- umożliwia dwukierunkową komunikacje z wykorzystaniem różnorodnych danych pomiędzy użytkownikami
+    \item \emph{getUserMedia} -- otrzymuje dostęp do mediów audiowizualnych użytkownika (np. uzyskując dostęp do mikrofonu oraz kamery)
+    \item \emph{RTCPeerConnection} -- uruchamia komunikację audiowizualną pomiędzy użytkownikami, odpowiada za przetwarzanie sygnału, obsługę kodeków, komunikację, bezpieczeństwo oraz zarządzanie prędkości połączenia
+    \item \emph{RTCDataChannel} -- umożliwia dwukierunkową komunikację z wykorzystaniem różnorodnych danych pomiędzy użytkownikami
 \end{itemize}
 
 Interfejs programowania WebRTC nie udostępnia możliwości wykrywania innych użytkowników do których można się połączyć.
 W większości aplikacji rozwiązane jest to za pomocą zewnętrznego serwera sygnalizującego, który umożliwia wymianę kandydatów ICE\footnotemark{}.
 \footnotetext{Interactive Connectivity Establishment -- technika umożliwiająca znalezienie sposobu komunikacji użytkowników w najbardziej bezpośredni sposób}
-Użytkownicy znajdujący się z NATem będą musieli również skomunikować się z serwerem STUN\footnotemark{}, w celu otrzymania swojego publicznego adresu IP.
+Użytkownicy znajdujący się z NATem\footnotemark{} będą musieli również
+\footnotetext{Network Address Translation -- technika przesyłania ruchu sieciowego poprzez ruter, która wiąże się ze zmianą źródłowych adresów IP}
+skomunikować się z serwerem STUN\footnotemark{}, w celu otrzymania swojego publicznego adresu IP.
 \footnotetext{Session Traversal Utilities for NAT -- protokół sieciowy pozwalający klientom ukrytym za NAT na znalezienie ich publicznych adresów IP}
 W przypadku braku możliwość ustanowienia bezpośredniej komunikacji będzie konieczne również skorzystanie z pośredniczącego serwera TURN\footnotemark{}, którego jedynym zadaniem jest przekazywanie wiadomości pomiędzy klientami.
-\footnotetext{Traversal Using Relays around NAT -- protokół służący do przekazywania ruchu sieciowego umożliwiający komunikacje, kiedy nie jest możliwe ustanowienie bezpośredniego połączenia}
-Rysunek \ref{fig:webrtc} poniżej przedstawia ten proces inicjalizacji połączenia pomiędzy dwoma użytkownikami.
+\footnotetext{Traversal Using Relays around NAT -- protokół służący do przekazywania ruchu sieciowego umożliwiający komunikację, kiedy nie jest możliwe ustanowienie bezpośredniego połączenia}
+Schemat przedstawiony na rysunku \ref{fig:webrtc} przedstawia ten proces inicjalizacji połączenia pomiędzy dwoma użytkownikami.
 
 \begin{figure}[H]
     \centering
     \vspace*{15pt}
     \includegraphics[width=\textwidth]{images/webrtc.pdf}
-    \caption{Komunikacja z wykorzystaniem technologii WebRTC}
+    \caption{Schemat komunikacji z wykorzystaniem technologii WebRTC}
     \label{fig:webrtc}
 \end{figure}
 
+\pagebreak
+
 \section{WebSocket}
-WebSocket natomiast to technologia umożliwiająca otwarcie interaktywnej sesji komunikacji pomiędzy przeglądarką a serwerem.
-Zapewnia dwukierunkowy kanał wymiany danych poprzez pojedyncze połączenie TCP.
-Przedstawione poniżej prace skupiają się na porównaniu tych dwóch technologii w różnych kontekstach.
+WebSocket to protokół komunikacyjny zapewniający dwukierunkowy kanał wymiany danych poprzez pojedyncze połączenie TCP.
+Umożliwia przeglądarkom otwarcie interaktywnej sesji komunikacji z zewnętrznym serwerem przy niższym obciążeniu niż alternatywne rozwiązanie takie jak np. ciągłe odpytywanie HTTP.
+Ułatwia przy tym znacznie przesyłanie danych w czasie rzeczywistym do i z serwera.
+
+Łącząc się z serwerem, klient wysyła żądanie typu handshake\footnotemark{}, dla którego serwer zwraca odpowiednią odpowiedź.
+\footnotetext{Handshake -- wymiana informacji między dwoma urządzeniami w celu ustalenia wspólnych parametrów transmisji danych}
+Po ustanowieniu połączenia klient z serwerem mogą zaczynać wysyłać sobie dane, jak jest to zaprezentowane na schemacie przedstawionym na rysunku \ref{fig:websocket}.
+
+\begin{figure}[H]
+    \centering
+    \vspace*{15pt}
+    \includegraphics[width=0.6435\textwidth]{images/websocket.pdf}
+    \caption{Schemat komunikacji z wykorzystaniem technologii WebSocket}
+    \label{fig:websocket}
+\end{figure}
+
+Na listingu \ref{lst:websocket} przedstawiono przykładowe użycie udostępnionego interfejsu programowania dla języka JavaScript w celu połączenia, wysłania i odebrania danych z zewnętrznego serwera.
+
+\begin{listing}[H]
+    \begin{minted}{javascript}
+        const socket = new WebSocket("wss://www.example.com/server");
+        socket.onmessage = (event) => console.log(event.data);
+        socket.send("Przykładowa wiadomość");
+    \end{minted}
+    \caption{Połączenie, wysłanie i odebranie danych z użyciem WebSocket}
+    \label{lst:websocket}
+\end{listing}
+
+Jak można zauważyć, interfejs programowania jest bardzo prosty, w przeciwieństwie do WebRTC, gdzie taki sam przykład użycia wymagałby dużo więcej kodu.
+
+\pagebreak
 
 \section{Stan wiedzy na temat WebRTC i WebSocket}
-\emph{G{\"u}nay Mert Karadogan} w swojej pracy \cite{websocket_webrtc_iot} bada WebRTC oraz WebSocket pod względem użycia ich w IoT\footnotemark{}.
+Przedstawione poniżej prace skupiają się na porównaniu technologii WebRTC oraz WebSocket.
+
+\emph{G{\"u}nay Mert Karadogan} w swojej pracy \cite{websocket_webrtc_iot} bada WebRTC oraz WebSocket pod względem ich użycia w \emph{IoT}\footnotemark{}.
 \footnotetext{Internet of Things -- sieć fizycznych obiektów wyposażonych w czujniki i oprogramowanie umożliwiające wymianę danych z innymi urządzeniami za pośrednictwem Internetu}
-Wnioskuje on, że zarówno WebSocket jak i WebRTC może zostać użyte do łączenia urządzeń IoT z Internetem.
+Próbuje rozwiązać problem zbierania danych w czasie rzeczywistym z urządzenia IoT.
+Wykorzystał telefon jako bramkę IoT -- stanowiącą pośrednika między urządzeniami a Internetem.
+Wnioskuje on, że zarówno WebSocket, jak i WebRTC może zostać użyte do łączenia urządzeń IoT z Internetem.
 
 \emph{Tomasz Karla} i \emph{Jarosław Tarnawski} w pracy \cite{websocket_webrtc_realtime} porównują opóźnienie technologii WebRTC oraz WebSocket w różnych scenariuszach.
 Testowane były przykładowo sieci lokalne, GSM oraz WiFi. Technologia WebRTC zanotowała minimalnie mniejsze opóźnienia.
-Umożliwił on również komunikacje aplikacji w obrębie sieci lokalnej\footnotemark{}, mimo postawienia strony na publicznym serwerze.
+Umożliwił on również komunikację aplikacji w obrębie sieci lokalnej\footnotemark{}, mimo postawienia strony na publicznym serwerze.
 \footnotetext{WebRTC potrafi połączyć się między dwoma przeglądarkami bezpośrednio, jeśli ustawienia Firewall użytkowników na to pozwalają}
 Autorzy wnioskują, że obie technologie jak najbardziej nadają się do tworzenia aplikacji sieciowej.
 
-Praca \cite{websocket_webrtc_streamr} \emph{Santeri Juslenius} analizowała zachowanie technologii WebRTC oraz WebSocket w sieci \emph{Streamr}, która jest zdecentralizowanym systemem \emph{publish-subscribe}\footnotemark{}.
+Praca \cite{websocket_webrtc_streamr} autorstwa \emph{Santeri Juslenius} analizowała zachowanie technologii WebRTC oraz WebSocket w sieci \emph{Streamr}, która jest zdecentralizowanym systemem \emph{publish-subscribe}\footnotemark{}.
 \footnotetext{Jest to system komunikacji, w którym wysyłane wiadomości mają przypisane pewne kategorie, które odbiorcy mogą subskrybować w celu ich otrzymywania}
 Na podstawie wyników badań autorzy doszli do wniosku, że WebSocket odnosi lepsze rezultaty pod względem opóźnień.
 Jednak dla tej konkretnej topologii WebRTC był bardziej użyteczny ze względu na lepsze wyniki dla małych pakietów oraz możliwości połączeń P2P.
 
+\emph{Ogundeyi} oraz \emph{Yinka-Banjo} w swoim artykule \cite{websocket_realtime} sprawdzają, czy technologia WebSocket nadaje się do wykorzystania w webowych aplikacjach czasu rzeczywistego.
+Na przykładzie aplikacji otrzymującej na bieżąco aktualizacje od serwera porównali WebSocket z konwencjonalnymi metodami komunikacji.
+Doszli do wniosku, że WebSocket oferuje lepsze rezultaty i uznali go za dobre rozwiązanie w aplikacjach komunikujących się w czasie rzeczywistym.
+
+Artykuł \cite{webrtc_signaling} napisany przez \emph{Agnieszkę} oraz \emph{Roberta Chodorek} prezentuje serwer sygnalizacyjny dla WebRTC.
+Wykorzystano do jego stworzenia środowisko uruchomieniowe \emph{Node.js}.
+Pomimo dużej prostoty, serwer jest w pełni funkcjonalnym serwer sygnalizacyjnym WebRTC.
+Umożliwia on realizacje komunikacji pomiędzy dwoma aplikacjami webowymi używającymi WebRTC.
+
+Praca \cite{webrtc_latency} autorstwa \emph{Sakari Tanskanen} bada kontrybutorów opóźnień dla technologii WebRTC.
+Opóźnienia mierzone były za pomocą kamery skierowanej na diodę zapalającą się w momencie otrzymania pakietu.
+Wyniki pokazały, że spora część czasu była poświęcona przetwarzaniu oraz buforowaniu obrazu.
+
+\emph{Pimentel}, \emph{Nickerson} i \emph{Bradford} w swoim artykule \cite{websocket_sensor} badają czy technologia WebSocket jest szybsza od odpytywania HTTP.
+Zbudowali stronę internetową mierzącą opóźnienia w komunikacji dla transmisji danych z sensora wiatru.
+Z uzyskanych wyników wywnioskowali, że technologia WebSocket umożliwia uzyskanie mniejszych opóźnień dla aplikacji czasu rzeczywistego.
+
+Artykuł \cite{websocket_monitoring} autorstwa \emph{Kun Ma} oraz \emph{Weijuan Zhang} prezentuje system monitorujący zasoby znajdujące się w chmurze.
+Wykorzystana została w nim technologia WebSocket, aby umożliwić szybszy i częstszy dostęp do informacji o tych zasobach.
+Na podstawie eksperymentalnej aplikacji webowej uznali, że wykorzystanie technologii WebSocket umożliwia uzyskanie niższych opóźnień niż odpytywanie HTTP czy rozwiązania \emph{FlashSocket} i \emph{Socket}.
+
 \section{Wnioski}
 Wszystkie prace zgodnie uznają, że obie technologie nadają się do tworzenia aplikacji sieciowych.
 Niektóre mówią o niższych opóźnieniach dla WebRTC, a inne dla WebSocket.
-W tej pracy porównamy wykorzystanie tych technologii w interaktywnych aplikacjach webowych.
+W kontekście prostoty użycia, interfejs programowania dla WebSocket wydaje się prostszy, nie wymaga również korzystania z serwerów STUN oraz TURN.
+Kiedy nie uda się ustanowić bezpośredniego połączenia, korzystając z WebRTC, np. z powodu posiadania NAT, konieczne będzie korzystanie z serwera TURN.
+Może to spowodować większe opóźnienie w komunikacji, ponieważ każdy pakiet będzie musiał przejść przez dodatkowe urządzenie pośredniczące.
+Należy również pamiętać, że WebRTC jest dużo lepiej przystosowane do przesyłania obrazu oraz dźwięku w czasie rzeczywistym.
+Jest tak ze względu na interfejs programowania posiadający funkcje do obsługi audio i wideo oraz korzystanie z lepiej przystosowanego do transmisji audiowizualnej protokołu UDP.
+W tej pracy porównamy jednak użycie tych technologii w interaktywnych aplikacjach webowych w kontekście wysyłania komend do drugiego urządzenia.
 
 \chapter{Języki kompilowane do WebAssembly}
 WebAssembly jest binarnym formatem, interpretowanym przez wirtualną maszynę uruchamianą w przeglądarce lub jako niezależną aplikację.
 Nie jest on więc językiem programowania samym w sobie.
 Może on natomiast być celem kompilacji dla innych języków.
-Wybór takiego języka może okazać się równie ważny jak podjęcie decyzji o tym czy w ogóle korzystać z WebAssembly.
+Wybór takiego języka może okazać się równie ważny, jak podjęcie decyzji o tym, czy w ogóle korzystać z WebAssembly.
 Aktualnie dużo języków ma możliwość ustawienia WebAssembly jako platformę wynikową kompilacji.
 W tej pracy jednak skupiono się na trzech: Zig, AssemblyScript oraz Rust.
-Pierwszym językiem, któremu zostanie poświęcona uwaga w tej pracy jest Zig.
+Pierwszym językiem, któremu zostanie poświęcona uwaga w tej pracy, jest Zig.
 Jest to młody, szybko rozwijający się język, którego celem jest zastąpienie współczesnych użyć języka C.
 AssemblyScript został wybrany jako język bardzo zbliżony składnią i użyciem do popularnego TypeScript.
 Dzięki niemu programiści stron internetowych mogliby bez dużej ilości nauki tworzyć moduły WebAssembly.
 Rust został wybrany ze względu na największą popularność wśród programistów WebAssembly.
-W tym rozdziale przedstawione będzie porównanie tych języków zarówno pod względem wydajności kodu wynikowego jak i prostoty tworzenia aplikacji.
-Pominięto takie języki jak C oraz C++ ze względu na to, że tak samo jak Rust i Zig korzystają z LLVM\footnotemark{} do generowania kodu wynikowego.
+W tym rozdziale przedstawione będzie porównanie tych języków zarówno pod względem wydajności kodu wynikowego, jak i prostoty tworzenia aplikacji.
+Pominięto takie języki jak C oraz C++ ze względu na to, że tak samo, jak Rust i Zig korzystają z LLVM\footnotemark{} do generowania kodu wynikowego.
 \footnotetext{LLVM -- backend dla kompilatorów z którego korzystają różne frontendy dla takich języków jak C, C++, Rust, Zig, Swift i wiele innych (\url{https://llvm.org/})}
 Z tego powodu różnice w wydajności kodu wynikowego będą marginalne i będą wywodzić się głównie ze stylu pisania kodu w danym języku.
-Mimo, że pod spodem korzystają z tego samego kompilatora, to programy napisane w języku C często są szybsze od ich odpowiedników w C++.
+Mimo że pod spodem korzystają z tego samego kompilatora, to programy napisane w języku C często są szybsze od ich odpowiedników w C++.
 Spowodowane jest to tym, że programiści C pozbawieni takich funkcjonalności języka jak RAII\footnotemark{}, zmuszeni są do bardziej szczegółowej kontroli alokacji pamięci i sposobu ułożenia w niej danych.
 \footnotetext{Resource acquisition is initialization -- wzorzec projektowy łączący konstrukcję i destrukcję obiektu z alokacją i zwalnianiem zasobów z których korzysta}
 Z tego powodu C i C++ niekoniecznie będą wydajniejsze od Rust, a współcześnie programiści starają się odchodzić od korzystania z tych języków w nowych projektach na rzecz nowocześniejszych i wygodniejszych technologii.
 Zaprezentowane zostanie utworzenie dwóch prostych funkcji w każdym z języków -- rekurencyjnego obliczania n-tej liczby ciągu Fibonacciego oraz sortowania tablicy liczb.
-Proces ich implementacji będzie służył zaobserwowaniu jak skomplikowane jest utworzenie modułu WebAssembly w każdym z wybranych języków.
+Proces ich implementacji będzie służył zaobserwowaniu, jak skomplikowane jest utworzenie modułu WebAssembly w każdym z wybranych języków.
 Przedstawiona będzie rekurencyjna wersja obliczania n-tej liczby ciągu Fibonacciego zamiast iteracyjnej, ponieważ jest dużo wolniejsza i szybko zapełnia stos, dzięki czemu łatwiej pokazuje różnice w wydajności między językami.
 Te dwie testowane funkcje nie umożliwią dokładnego porównania wydajności kodu wynikowego dla tych języków, ale zapewnią nam pewien powierzchowny wgląd w ich wydajność, który wystarczy do wstępnej oceny danego języka.
 
@@ -347,13 +422,13 @@ Te dwie testowane funkcje nie umożliwią dokładnego porównania wydajności ko
 Posiłkując się definicją ze strony głównej projektu\footnotemark{}, Zig to język programowania ogólnego przeznaczenia i zestaw narzędzi do utrzymywania solidnego i optymalnego oprogramowania wielokrotnego użytku.
 \footnotetext{\url{https://ziglang.org/}}
 Jest nowoczesnym zastępcą języka C, czyli niskopoziomowym kompilowanym językiem, bez ukrytych alokacji pamięci, automatycznej dezalokacji i tym podobnych rozwiązań.
-Jednocześnie próbuje naprawić główne problemy swojego poprzednika przykładowo wychwytując dużo problemów związanych z bezpieczeństwem pamięci już w trakcie kompilacji.
+Jednocześnie próbuje naprawić główne problemy swojego poprzednika, przykładowo wychwytując dużo problemów związanych z bezpieczeństwem pamięci już w trakcie kompilacji.
 
 \subsection{Instalacja}
 Proces instalacji potrzebnych narzędzi jest bardzo prosty i zajmuje dosłownie minutę.
 Wystarczy pobrać archiwum ze strony, wypakować i ewentualnie dodać folder do zmiennej środowiskowej \emph{PATH}, aby można było kompilować bez podawania pełnej ścieżki do kompilatora.
 Zamiast pobierać manualnie, można też skorzystać z menadżera paczek dla używanego systemu operacyjnego.
-Pobrany zestaw narzędzi zawiera wszystko co potrzebne do utworzenia modułu WebAssembly.
+Pobrany zestaw narzędzi zawiera wszystko, co potrzebne do utworzenia modułu WebAssembly.
 
 \subsection{Tworzenie funkcji \emph{fib}}
 Tworzenie aplikacji można rozpocząć od napisania funkcji rekurencyjnie liczącej n-tą liczbę w ciągu Fibonacciego.
@@ -369,7 +444,7 @@ Tworzenie aplikacji można rozpocząć od napisania funkcji rekurencyjnie liczą
     \caption{Funkcja \emph{fib} w języku Zig}
 \end{listing}
 
-Jak widać składnia jest bardzo zbliżona do języków z rodziny C.
+Jak widać, składnia jest bardzo zbliżona do języków z rodziny C.
 Słowo kluczowe \emph{export} umożliwia wywołanie danej funkcji z poziomu JavaScript.
 
 \subsection{Tworzenie funkcji \emph{sort}}
@@ -402,7 +477,7 @@ Należy więc udostępnić tę pamięć użytkownikowi, aby mógł przez nią pr
 Funkcja \emph{initialize\_array} alokuje najpierw 10MB pamięci, a następnie zwraca wskaźnik na początek zaalokowanej tablicy.
 Dzięki temu użytkownik będzie mógł ją wypełnić swoimi danymi, a następnie za pomocą funkcji \emph{sort} posortować N pierwszych liczb.
 Nie jest to najwygodniejszy sposób pisania kodu operującego na danych przekazywanych z poziomu strony internetowej.
-Aby dało się w prostszy sposób przekazywać dane należałoby zaimplementować swój własny alokator\footnotemark{} pamięci WebAssembly.
+Aby dało się w prostszy sposób przekazywać dane, należałoby zaimplementować swój własny alokator\footnotemark{} pamięci WebAssembly.
 \footnotetext{Alokator -- odpowiada za zarządzanie dynamiczną pamięcią programu, czyli jej alokacje, dezalokacje i realokacje}
 Za jego pomocą przed wywołaniem funkcji z poziomu JavaScript można by przekopiować dane o konkretnym rozmiarze do pamięci WebAssembly.
 Istnieje wprawdzie gotowy alokator \emph{zee\_alloc}\footnotemark{}, ale problemy z jego wdrożeniem do projektu, brak dokumentacji oraz mała popularność spowodowały zaniechanie próby wykorzystania go w testach.
@@ -419,7 +494,7 @@ Można teraz skompilować plik, który nazwany został \emph{main.zig} i utworzy
 
 Ustawiono poziom optymalizacji na \emph{ReleaseFast}, aby uzyskać jak najlepszą wydajność modułu.
 Język Zig oprócz kompilacji z poziomu linii poleceń umożliwia również tworzenie bardziej skomplikowanych programów budujących.
-Mogą być one napisane również w języku Zig, zamiast w jakimś innym, nie związanym z aplikacją języku opisującym proces budowania.
+Mogą być one napisane również w języku Zig, zamiast w jakimś innym, niezwiązanym z aplikacją języku opisującym proces budowania.
 Dzięki temu nie trzeba uczyć się dodatkowych narzędzi takich jak CMake, Make czy wiele innych.
 Temat ten jednak wychodzi poza zakres tej pracy.
 
@@ -430,7 +505,7 @@ Korzysta ze składni bardzo zbliżonej do języka TypeScript, dzięki czemu prog
 
 \subsection{Instalacja}
 AssemblyScript w prosty sposób integruje się z istniejącym ekosystemem stron internetowych.
-Zainstalować go można korzystając z menadżera paczek \emph{npm}.
+Zainstalować go można, korzystając z menadżera paczek \emph{npm}.
 Cały proces inicjalizacji nowego projektu jest szybki, prosty i dokładnie opisany w oficjalnym wstępie do języka\footnotemark{}.
 \footnotetext{\url{https://www.assemblyscript.org/getting-started.html}}
 
@@ -465,7 +540,7 @@ Funkcje sort można w tym języku napisać dużo szybciej niż w języku Zig.
     \caption{Funkcja \emph{sort} w języku AssemblyScript}
 \end{listing}
 
-Jak można zauważyć, wystarczy że ustawimy typ zmiennej wejściowej jako \emph{Array<f64>}, aby funkcja przyjmowała tablicę liczb zmiennoprzecinkowych.
+Jak można zauważyć, wystarczy, że ustawimy typ zmiennej wejściowej jako \emph{Array<f64>}, aby funkcja przyjmowała tablicę liczb zmiennoprzecinkowych.
 W przeciwieństwie do języka Zig, nie jest konieczne manualnie tworzenie bufora, do którego przekażemy tablice z zewnątrz.
 AssemblyScript w trakcie kompilacji automatycznie generuje kod, dzięki któremu nie musimy się tym przejmować.
 Tworzona jest funkcja okalająca (ang. wrapper function), która alokuje pamięć dla naszej tablicy i przekazuje ją do właściwej funkcji jako wskaźnik na tę pamięć.
@@ -499,10 +574,10 @@ Według corocznej ankiety serwisu Stack Overflow\footnotemark{}, Rust jest najba
 \footnotetext{\url{https://insights.stackoverflow.com/survey/}}
 
 \subsection{Instalacja}
-Rust można zainstalować korzystając z menadżera paczek systemu operacyjnego lub skorzystać z programu \emph{rustup}\footnotemark{}, który szybko przeprowadzi użytkownika przez kolejne kroki instalacji.
+Rust można zainstalować, korzystając z menadżera paczek systemu operacyjnego lub skorzystać z programu \emph{rustup}\footnotemark{}, który szybko przeprowadzi użytkownika przez kolejne kroki instalacji.
 \footnotetext{\url{https://rustup.rs/}}
 Instalacja w systemie Windows wymaga również zainstalowania Microsoft Visual Studio dla języka C++.
-Po zainstalowaniu języka możemy przystąpić do tworzenia nowego projektu.
+Po zainstalowaniu języka możemy przystąpić do tworzenia nowego projektu. \\
 Książka \emph{Rust and WebAssembly}\footnotemark{} prezentuje krok po kroku ten proces.
 \footnotetext{\url{https://rustwasm.github.io/}}
 Jest on prosty i zrozumiały oraz przedstawia jak w prosty sposób zintegrować utworzone moduły ze stronami internetowymi.
@@ -528,7 +603,7 @@ Jak widać, poza specyficzną dyrektywą \emph{match}, kod powinien być zrozumi
 W języku Rust ostatnie wyrażenie w funkcji uznawane jest jako wartość zwracana, a dyrektywa \emph{match} działa podobnie jak \emph{switch} w językach z rodziny C.
 Atrybut \emph{wasm\_bindgen} oznacza funkcje jako dostępną do wywołania z poziomu kodu JavaScript strony internetowej.
 Jest to wymagane, dlatego że oprócz modułu WebAssembly, automatycznie generowany będzie również kod JavaScript inicjalizujący ten moduł oraz dodający funkcje pomocnicze.
-Podobne rozwiązanie mogliśmy zauważyć w projekcie AssemblyScript, a brak jego jest odczuwalny tworząc projekt w języku Zig.
+Podobne rozwiązanie mogliśmy zauważyć w projekcie AssemblyScript, a brak jego jest odczuwalny, tworząc projekt w języku Zig.
 
 \subsection{Tworzenie funkcji \emph{sort}}
 Przekazywanie tablicy do modułu WebAssembly można zrobić na różne sposoby.
@@ -551,7 +626,7 @@ Rozwiązanie tutaj przedstawione jest jednak preferowane w większości wypadkó
 Po konwersji tablicy na typ \emph{Vec} używamy na niej funkcji \emph{sort\_by}, która sortuje tablicę.
 
 \subsection{Kompilacja}
-Cały projekt kompilujemy korzystając z programu \emph{wasm-pack}.
+Cały projekt kompilujemy, korzystając z programu \emph{wasm-pack}.
 
 \begin{minted}{console}
     $ wasm-pack build
@@ -571,18 +646,18 @@ Instalacja sprowadzała się do pobrania i wypakowania archiwum, po czym można 
 AssemblyScript oraz Rust były trochę cięższe w instalacji, ale nie były one też specjalnie trudne.
 Instalacja trwała po prostu dłużej.
 Należy też zaznaczyć, że projekty tworzone w AssemblyScript oraz Rust, oprócz kompilacji do modułu WebAssembly, generowały też przydatne pliki JavaScript oraz TypeScript.
-Zig na dzień dzisiejszy nie posiada bibliotek, które umożliwiałyby taką funkcjonalność.
+Zig obecnie nie posiada bibliotek, które umożliwiałyby taką funkcjonalność.
 
 \subsection{Implementacja prostych funkcji}
 Kwestia składni i prostoty pisania w danym języku jest bardzo subiektywna, ponieważ w zależności od umiejętności i doświadczenia, każda osoba może mieć inne odczucia.
 Najbardziej wyróżniającym się problemem były trudności w przekazywaniu dużych tablic do funkcji napisanej w języku Zig.
-Zarówno Rust jak i AssemblyScript, dzięki generowaniu pomocniczych modułów JavaScript odciążają programistę z konieczności implementacji ich samemu.
+Zarówno Rust, jak i AssemblyScript, dzięki generowaniu pomocniczych modułów JavaScript odciążają programistę z konieczności implementacji ich samemu.
 Bardzo ważną kwestią jest też to, że Zig nie posiada żadnego wsparcia dla integracji z aplikacjami internetowymi.
 Rust i AssemblyScript generując wspominane wcześniej pomocnicze moduły, bardzo upraszczają integrację modułu WebAssembly z resztą kodu pisanego w JavaScript.
 
 \subsection{Wydajność}
 Jednym z najważniejszych zagadnień w kontekście minimalizacji opóźnień aplikacji jest wydajność programów napisanych w danym języku.
-W celu dokonania porównania, utworzono prostą aplikacje internetową.
+W celu dokonania porównania utworzono prostą aplikacje internetową.
 Ładuje ona stworzone wcześniej moduły WebAssembly i wypisuje czas wywołania konkretnych funkcji dla różnych parametrów.
 Warto też wspomnieć, że wyniki zależą od użytego sprzętu oraz przeglądarki.
 Wszystkie aplikacje uruchamiane były na przeglądarce Google Chrome\footnote{\url{https://www.google.com/chrome/}} oraz Mozilla Firefox\footnote{\url{https://www.mozilla.org/firefox/}}.
@@ -595,7 +670,7 @@ Konfiguracja sprzętowa komputera testowego przedstawia się następująco:
     \item System operacyjny \emph{Windows 10}
 \end{itemize}
 
-Poniżej przedstawiono również kod w języku JavaScript do którego porównywane były inne wyniki.
+Poniżej przedstawiono również kod w języku JavaScript, do którego porównywane były inne wyniki.
 
 \begin{listing}[H]
     \begin{minted}{javascript}
@@ -624,6 +699,8 @@ Dla przeglądarki Firefox natomiast Zig i Rust były około czterokrotnie szybsz
     \label{fig:sort6}
 \end{figure}
 
+\pagebreak
+
 Dla funkcji obliczającej ciąg Fibonacciego, w przypadku przeglądarki Firefox odnotowano podobne zależności jak w poprzednim teście.
 Na wykresie \ref{fig:fib40} można zauważyć, że najgorszy wynik uzyskała zwykła funkcja JavaScript.
 Aplikacje napisane w Rust i Zig odnotowują najlepsze wyniki, natomiast AssemblyScript jest od nich trochę wolniejsze.
@@ -649,16 +726,16 @@ Poza samą wydajnością jednak Rust jest lepszy na prawie każdym polu.
 Integracja z aplikacjami webowymi jest dużo prostsza -- generowanie pomocniczego kodu potrafi zaoszczędzić mnóstwo czasu.
 Do tego dokumentacja jest o wiele lepsza.
 Pisaniu programów w Rust dla WebAssembly poświęcona jest cała książka, natomiast dla języka Zig ciężko znaleźć jakiekolwiek materiały w Internecie.
-Rust posiada również bardzo bogaty ekosystem bibliotek, coś czego na ten moment językowi Zig brakuje.
+Rust posiada również bardzo bogaty ekosystem bibliotek, coś, czego na ten moment językowi Zig brakuje.
 Podsumowując, rekomendowanym wyborem języka programowania modułów WebAssembly dla interaktywnych aplikacji webowych jest zdecydowanie Rust.
-Posiada wszystko czego można od takiego języka oczekiwać -- wydajność, dojrzałość i dużą ilość materiałów do nauki.
+Posiada wszystko, czego można od takiego języka oczekiwać -- wydajność, dojrzałość i dużą ilość materiałów do nauki.
 
 \chapter{Użytkowanie i wydajność Rust}
 Na podstawie prostych testów w poprzednim rozdziale wybrano język Rust jako rekomendowany do tworzenia modułów WebAssembly.
 W tym rozdziale zaprezentowany zostanie dokładniejszy wgląd w sposób użytkowania oraz wydajność modułów WebAssembly napisanych w tym języku.
 
 \section{Sumowanie macierzy}
-Zagłębiając się w badania nad wydajnością modułów WebAssembly pisanych w języku Rust dla interaktywnych aplikacji webowych, należy zastanowić się gdzie taka aplikacja używa najwięcej czasu procesora.
+Zagłębiając się w badania nad wydajnością modułów WebAssembly pisanych w języku Rust dla interaktywnych aplikacji webowych, należy zastanowić się, gdzie taka aplikacja używa najwięcej czasu procesora.
 Wykonywane lokalnie obliczenia prawdopodobnie będą odbywały się na danych otrzymanych z jakiegoś zewnętrznego serwera.
 W tym przykładowym teście utworzone zostaną aplikacje wykonujące proste sumowanie dwóch macierzy.
 Będzie to o tyle zbliżone do prawdziwego przypadku użycia, że macierze mogą opisywać np. strumień obrazów otrzymywany od zewnętrznego serwera, a sumowanie ich może naśladować operacje wykonywane na tym obrazie.
@@ -743,21 +820,22 @@ Wersja napisana w języku Rust była około dwa razy szybsza, a kiedy dodatkowo 
     \label{fig:matrix}
 \end{figure}
 
-\clearpage
-
 \section{Symulacja N ciał}
 Kolejnym testem będzie symulacja N ciał.
 Polega ona na wyznaczeniu toru ruchów wszystkich ciał układu o danych masach, prędkościach i początkowych położeniach.
 Opiera się ona o prawa ruchu i założenie, że ciała oddziałują ze sobą zgodnie z prawem grawitacji Newtona.
-Oprócz samych obliczeń wykonywanych zarówno w JavaScript jak i Rust, aktualny stan układu wyświetlany jest w przeglądarce, jak przedstawiono na rysunku \ref{fig:nbody_screenshot}. 
+Oprócz samych obliczeń wykonywanych zarówno w JavaScript jak i Rust, aktualny stan układu wyświetlany jest w przeglądarce, jak przedstawiono na rysunku \ref{fig:nbody_screenshot}.
 
 \begin{figure}[H]
     \centering
+    \vspace*{60pt}
     \includegraphics[width=0.5\textwidth]{images/nbody.pdf}
     \vspace*{15pt}
     \caption{Wyświetlany stan symulacji w przeglądarce po kilku sekundach}
     \label{fig:nbody_screenshot}
 \end{figure}
+
+\clearpage
 
 \subsection{JavaScript}
 Symulacja została początkowo napisana w języku JavaScript, aby stanowić punkt odniesienia dla przyszłego kodu pisanego w języku Rust.
@@ -796,12 +874,12 @@ Zaimplementowano prosty algorytm, z zagnieżdżoną pętlą, która dla każdego
     \caption{Kod obliczania kroku symulacji w języku JavaScript}
 \end{listing}
 
-Warto dodać, że nie jest to najbardziej optymalny algorytm z którego można było skorzystać, ponieważ nie było to celem tego testu.
-Test ten miał sprawdzić czy nawet naiwny algorytm, po przepisaniu go do języka Rust, uzyska przyspieszenie w jego działaniu.
+Warto dodać, że nie jest to optymalny algorytm, ponieważ celem tego testu nie było go zaimplementowanie.
+Test ten miał sprawdzić, czy nawet naiwny algorytm, po przepisaniu go do języka Rust, uzyska przyspieszenie w jego działaniu.
 
 \subsection{Rust}
 Przedstawiony poniżej kod jest praktycznie odzwierciedleniem kodu napisanego w JavaScript.
-Pokazuje to jak łatwo można przepisać istniejące funkcje JavaScript na język Rust bez specjalnych trudności.
+Pokazuje to, jak łatwo można przepisać istniejące funkcje JavaScript na język Rust bez specjalnych trudności.
 
 \begin{listing}[H]
     \begin{minted}{rust}
@@ -859,19 +937,19 @@ Silniki JavaScript zawarte w przeglądarkach są jedynymi z najlepiej zoptymaliz
 Swoją optymalizację zawdzięczają temu, że mało który kod jest tak często uruchamiany na komputerach jak ten odpowiedzialny za działanie stron internetowych.
 Korzystają one z kompilacji \emph{JIT}\footnotemark{} (ang. just-in-time) dla funkcji, które są często używane.
 \footnotetext{Kompilacja just-in-time -- sposób wykonywania kodu wymagający kompilacji programu w trakcie jego wykonywania}
-Kompilator JIT potrafi generować bezpośrednio natywny kod maszynowy komputera na którym uruchamiany jest kod JavaScript.
+Kompilator JIT potrafi generować bezpośrednio natywny kod maszynowy komputera, na którym uruchamiany jest kod JavaScript.
 Z tego powodu, w przypadku tego testu, wykonywał się on minimalnie szybciej niż jego odpowiednik w module WebAssembly.
 Należy jednak pamiętać, że kompilacja JIT odbywa się jedynie dla funkcji, które silnik JavaScript uzna za warte skompilowania np. w przypadku częstego ich używania.
-Kompilując kod do WebAssembly nie trzeba zastanawiać się czy warunki kompilacji JIT zostaną spełnione w trakcie wykonywania programu.
-Ważne jest to chociażby w przypadku funkcji, które mimo tego że są rzadko wykonywane, zajmują dużo czasu procesora.
+Kompilując kod do WebAssembly, nie trzeba zastanawiać się czy warunki kompilacji JIT zostaną spełnione w trakcie wykonywania programu.
+Ważne jest to, chociażby w przypadku funkcji, które mimo tego, że są rzadko wykonywane, zajmują dużo czasu procesora.
 W przypadku napisania ich w języku JavaScript może nie dojść nigdy do ich skompilowania i wydajność działania programu może na tym ucierpieć.
 
 \chapter{Interaktywna aplikacja webowa z użyciem WebAssembly}
 Testy wykonane w poprzednich rozdziałach pokazały, że korzystanie z WebAssembly może w niektórych przypadkach zapewnić duże przyspieszenia w działaniu aplikacji.
-Były to jednak uproszczone testy nie oddające działania prawdziwej interaktywnej aplikacji.
+Były to jednak uproszczone testy nieoddające działania prawdziwej interaktywnej aplikacji.
 W tym rozdziale przedstawiona zostanie prosta aplikacja webowa, która wczytuje strumień wideo i wykonuje na nim operacje przetwarzania obrazu.
 Przykładem zastosowania takiej aplikacji może być np. urządzenie do przeprowadzania zdalnych operacji chirurgicznych.
-Lekarz znajdujący się w zupełnie innym miejscu niż jego pacjent, zdalnie dokonuje na nim operacji korzystając z robota oraz aplikacji, która umożliwia jego kontrolę.
+Lekarz znajdujący się w zupełnie innym miejscu niż jego pacjent, zdalnie dokonuje na nim operacji, korzystając z robota oraz aplikacji, która umożliwia jego kontrolę.
 Przetwarzanie obrazu może w tym wypadku służyć jako wsparcie lekarza w podejmowaniu decyzji lub jako ułatwienie identyfikowania rzeczy znajdujących się na obrazie.
 Aplikacja została napisana z wykorzystaniem JavaScript oraz WebAssembly.
 Utworzona została również natywna aplikacja o tej samej funkcjonalności.
@@ -879,8 +957,8 @@ Będzie ona stanowiła punkt odniesienia dla wydajności aplikacji webowych.
 Warstwa komunikacji korzystać będzie z technologii WebRTC oraz WebSocket.
 Porównane zostaną różnice w opóźnieniach oraz stabilności połączenia, które przekładać się będą na responsywność aplikacji na polecenia chirurga.
 
-\section{Analiza obrazu}
-Na początku aplikacje były tworzone w oparciu o własnoręcznie pisane algorytmy przetwarzania obrazu.
+\section{Przetwarzanie obrazu}
+Na początku aplikacje były tworzone na podstawie własnoręcznie pisanych algorytmów przetwarzania obrazu.
 W toku tworzenia pracy natknięto się jednak na informacje, że popularna biblioteka do przetwarzania obrazu OpenCV\footnotemark{} posiada również wersje JavaScript oraz WebAssembly.
 \footnotetext{\url{https://opencv.org/}}
 Zdecydowano się więc wykorzystać gotową bibliotekę.
@@ -929,7 +1007,7 @@ Kod dla wersji aplikacji korzystającej z JavaScript i WebAssembly jest analogic
     \caption{Kod wykrywający krawędzie w obrazie napisany w języku Rust}
 \end{listing}
 
-Jak można wyczytać z kodu klatka obrazu jest najpierw konwertowana do skali szarości, a następnie uruchamiany jest na niej faktyczny algorytm Canny.
+Jak można wyczytać z kodu, klatka obrazu jest najpierw konwertowana do skali szarości, a następnie uruchamiany jest na niej faktyczny algorytm Canny.
 Czas mierzony jest jedynie dla wykonania tych dwóch funkcji, więc funkcje pomocnicze i czas oczekiwania na otrzymanie obrazu nie zostały wliczone w wyniki.
 W podrozdziale poniżej czasy zostaną ze sobą porównane dla różnych wersji tej aplikacji.
 
@@ -953,8 +1031,8 @@ W obu przeglądarkach wyniki były zbliżone i oscylowały w okolicach 8 milisek
 Jest to wystarczająco niski czas procesowania klatki, aby zapewnić płynność obrazu nawet w wypadku dodania większej ilości funkcji przetwarzających obraz.
 
 Wersja natywna napisana w języku Rust i uruchomiona na systemie Windows odniosła najlepsze wyniki.
-Oczywistym jest, że aplikacje natywne są szybsze od ich odpowiedników uruchamianych w przeglądarce internetowej.
-Jednak fakt, że w tym wypadku jest szybsza o cały rząd złożoności pokazuje narzut jaki przeglądarka wprowadza na działanie aplikacji w niej uruchamianych.
+Oczywiste jest, że aplikacje natywne są szybsze od ich odpowiedników uruchamianych w przeglądarce internetowej.
+Jednak fakt, że w tym wypadku jest szybsza o cały rząd złożoności, pokazuje narzut jaki przeglądarka wprowadza na działanie aplikacji w niej uruchamianych.
 
 \begin{figure}[H]
     \centering
@@ -966,18 +1044,18 @@ Jednak fakt, że w tym wypadku jest szybsza o cały rząd złożoności pokazuje
 \section{Komunikacja z użyciem WebSocket oraz WebRTC}
 Do aplikacji napisanych w przeglądarce zaimplementowano moduł komunikujący się z odległym serwerem.
 Na potrzeby testów, moduł ten wysyła raz na sekundę komunikat składający się z aktualnego czasu systemowego oraz 64 losowych bajtów.
-Rozmiar komunikatu mógłby być większy o ile nie przekroczyłby MTU\footnotemark{}, ponieważ mogłoby wtedy dojść do wysłania więcej niż jednego pakietu, co w efekcie mogłoby spowodować zwiększenie testowanych opóźnień.
+Rozmiar komunikatu mógłby być większy, o ile nie przekroczyłby MTU\footnotemark{}, ponieważ mogłoby wtedy dojść do wysłania więcej niż jednego pakietu, co w efekcie mogłoby spowodować zwiększenie testowanych opóźnień.
 \footnotetext{MTU -- rozmiar największego datagramu, który można przekazać przez warstwę protokołu komunikacyjnego}
 Serwer znajdujący się we Frankfurcie po otrzymaniu tego pakietu odsyła go natychmiastowo do aplikacji webowej.
 Aplikacja po otrzymaniu pakietu zwrotnego odczytuje swój aktualny czas systemowy i odejmuje od niego czas zawarty w pakiecie.
 Na tej podstawie oblicza RTT\footnotemark{}.
 \footnotetext{Round Trip Time -- czas wymagany do przesłania sygnału w obu kierunkach, od nadawcy do odbiorcy, a następnie w drugą stronę}
-W przedstawionym wcześniej przykładzie aplikacji do telechirurgii RTT stanowi wyznacznik opóźnienia między komendą chirurga, a informacją zwrotną od robota.
-Badania przedstawione w książce \emph{Robot Surgery} \cite{telesurgery} pokazały, że chirurdzy posiadają zdolność do dostosowywania się do różnych czasów opóźnienia.
+W przedstawionym wcześniej przykładzie aplikacji do telechirurgii RTT stanowi wyznacznik opóźnienia między komendą chirurga a informacją zwrotną od robota.
+Badania przedstawione w książce \emph{Robot Surgery} \cite{telesurgery} pokazały, że chirurdzy mają zdolność do dostosowywania się do różnych czasów opóźnienia.
 Nawet w przypadku połączenia satelitarnego o czasach opóźnienia na poziomie około 550 milisekund operacja trwała tyle samo co dla połączenia naziemnego z czasami opóźnienia w okolicach 60 milisekund.
 Co okazało się jednak bardzo istotne w kontekście możliwości chirurga w bezproblemowym wykonaniu operacji to stabilność tego połączenia.
 
-Stworzone zostały dwie wersje aplikacji komunikujące się z serwerem z wykorzystaniem technologii WebSocket oraz WebRTC.
+Stworzone zostały dwie wersje aplikacji komunikujące się z serwerem, z wykorzystaniem technologii WebSocket oraz WebRTC.
 Wersja aplikacji korzystająca z WebSocket łączy się z prostą aplikacją napisaną w Node.js\footnotemark{} uruchomioną na serwerze.
 \footnotetext{Node.js -- środowisko uruchomieniowe do tworzenia aplikacji serwerowych napisanych w języku JavaScript}
 Jedynym zadaniem tej aplikacji jest nasłuchiwanie na połączenie, odczytanie nadchodzącego komunikatu i natychmiastowe odesłanie go z powrotem do klienta.
@@ -1003,14 +1081,24 @@ Aplikacja stworzona na potrzeby tego rozdziału umożliwiła przetestowanie tech
 Wersja aplikacji korzystająca z WebAssembly osiągnęła zdecydowanie lepszą wydajność niż jej odpowiednik wykorzystujący jedynie JavaScript.
 Czas potrzebny na procesowanie jednej klatki był wystarczająco mały, aby uzyskać płynny strumień obrazu w pełni wystarczający do interaktywnej obsługi zdalnego urządzenia.
 Natywna wersja aplikacji była o cały rząd złożoności szybsza od jakiejkolwiek wersji uruchamianej w przeglądarce.
-Należy o tym pamiętać zastanawiając się nad stosem technologicznym w tworzonej interaktywnej aplikacji.
+Należy o tym pamiętać, zastanawiając się nad stosem technologicznym w tworzonej interaktywnej aplikacji.
 Mimo tego, że praca ta dotyczy interaktywnych aplikacji webowych, to należy pamiętać, że nie wszystkie aplikacje muszą być tworzone w taki sposób.
 Jeśli aplikacja wymaga bardzo dużej ilości skomplikowanych obliczeń i WebAssembly nie jest wystarczające, aby zapewnić tej aplikacji płynność w działaniu, to być może aplikacja ta nie nadaje się po prostu do uruchamiania w przeglądarce.
 
 W kontekście technologii używanych do komunikacji, WebSocket osiągnęło zdecydowanie lepsze wyniki.
 Większe opóźnienia dla aplikacji wykorzystującej WebRTC spowodowane były pośrednikiem w postaci serwera TURN.
-Nie jest to jednak coś co da się ominąć w większości przypadków, chyba że obie aplikacje znajdowałyby się w tej samej sieci lokalnej lub sieci użytkowników miałyby odpowiednio skonfigurowane routery.
+Nie jest to jednak coś, co da się ominąć w większości przypadków, chyba że obie aplikacje znajdowałyby się w tej samej sieci lokalnej lub sieci użytkowników miałyby odpowiednio skonfigurowane routery.
 WebSocket był również dużo prostszy do zaimplementowania przez właśnie brak konieczności konfiguracji serwerów STUN oraz TURN.
+
+\section{Podsumowanie}
+Tworząc interaktywne aplikacje webowe mamy do dyspozycji wiele dostępnych technologii, z których można skorzystać.
+Na podstawie testów zaprezentowanych w tej pracy można jednak zarekomendować stos technologiczny, który powinien zapewnić minimalizacje opóźnień w interakcji użytkowników korzystających z aplikacji webowych.
+Zastosowanie WebAssembly w wielu przypadkach przyspieszyło działanie aplikacji i stosowanie go w obliczeniowo intensywnych partiach kodu jest wskazane.
+Język Rust umożliwił pisanie czytelnego i wydajnego kodu.
+Na ten moment jest zdecydowanie dobrym wyborem do tworzenia modułów WebAssembly.
+W testach opóźnień technologia WebSocket osiągnęła lepsze wyniki niż WebRTC.
+Jej prostota użycia i wydajność sprawia, że lepiej nadaje się do wykorzystania w komunikacji z zewnętrznymi serwerami.
+
 \backmatter
 
 \cleardoublepage
