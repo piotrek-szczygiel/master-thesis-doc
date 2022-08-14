@@ -44,7 +44,7 @@ Na przestrzeni ostatnich lat pojawiły się technologie, których celem była ad
 Jedną z nich było WebAssembly, który oferuje przeglądarkom środowisko uruchomieniowe dla programów kompilowanych.
 Dzięki temu silniki przeglądarek mogłyby zaoszczędzić dużo czasu, uruchamiając wcześniej skompilowane programy, zamiast interpretować i kompilować je w trakcie działania aplikacji.
 Oprócz kwestii kodu wykonywanego lokalnie, dla większości interaktywnych aplikacji równie ważna jest komunikacja z zewnętrznymi serwerami.
-Powszechnie używane technologie, takie jak ciągłe odpytywanie serwera (ang. polling) czy SSE\footnotemark{} nie umożliwiały uzyskanie dwukierunkowej, niskoopóźnieniowej komunikacji z serwerem.
+Powszechnie używane technologie, takie jak ciągłe odpytywanie serwera (ang. polling) czy SSE\footnotemark{} nie umożliwiały uzyskania dwukierunkowej, niskoopóźnieniowej komunikacji z serwerem.
 \footnotetext{Server-sent events -- technologia umożliwiająca otrzymywanie wiadomości od serwera za pomocą połączenia HTTP}
 Pojawienie się takich technologii jak WebRTC czy WebSocket, udostępniło aplikacjom webowym możliwość dwukierunkowej komunikacji z serwerem, bez stosowania protokołu HTTP nieprzystosowanego do takich zastosowań.
 Praca ta skupi się na eksploracji tych technologii, które w założeniu powinny zmniejszyć opóźnienia użytkowników w interakcji z aplikacjami webowymi.
@@ -250,7 +250,7 @@ Artykuł \cite{wasm_js_bench} napisany przez \emph{David Herrera} i innych zawie
 Dla maszyny z systemem Windows WebAssembly był około 70\% szybszy dla przeglądarki Chrome, 60\% szybszy dla Firefox i 163\% szybszy dla przeglądarki Edge.
 Z tych trzech przeglądarek najlepsze wyniki odniósł Firefox.
 
-\emph{Weihang Wang} w swoim artykule \cite{wasm_js_bench2} porównuje WebAssembly i JavaScript dla czasu wykonania i zużycia pamięci różnych programów.
+\emph{Weihang Wang} w swoim artykule \cite{wasm_js_bench2} porównuje WebAssembly i JavaScript pod kątem czasu wykonania i zużycia pamięci różnych programów.
 Zauważa, że WebAssembly zużywa dużo więcej pamięci niż JavaScript.
 Mimo tego WebAssembly był dużo szybszy od JavaScript dla bardzo małych rozmiarów danych (35.3x średnie przyspieszenie) oraz małych danych (7.67x średnie przyspieszenie).
 Natomiast dla większych rozmiarów danych, dzięki \emph{JIT}\footnotemark{}, JavaScript doganiał WebAssembly, a nawet zdarzały się przypadki, gdzie WebAssembly był wolniejszy od JavaScript.
@@ -268,7 +268,7 @@ WebAssembly poradził sobie również lepiej pod względem wydajności.
 WebAssembly jest obiecującą technologią.
 Dla wielu przypadków osiągał dużo lepsze wyniki, jeśli chodzi o obliczenia w przeglądarce.
 Mimo tego wspomniane prace głównie skupiały się na samej wydajności, a niewiele było poruszonych tematów tworzenia aplikacji.
-Wiele benchmarków były to programy napisane w C przeportowane\footnotemark{} do WebAssembly.
+Wiele benchmarków było programami napisanymi w C przeportowanymi\footnotemark{} do WebAssembly.
 \footnotetext{Portowanie -- proces przenoszenia wersji programu komputerowego na inną platformę sprzętową lub programistyczną}
 W tej pracy poruszony zostanie natomiast temat tworzenia nowych aplikacji oraz wybór języka kompilowanego do WebAssembly, który się do tego najbardziej aktualnie nadaje.
 
@@ -359,7 +359,7 @@ Umożliwiła ona również komunikację aplikacji w obrębie sieci lokalnej\foot
 \footnotetext{WebRTC potrafi połączyć się między dwiema przeglądarkami bezpośrednio, jeśli ustawienia Firewall użytkowników na to pozwalają}
 Autorzy wnioskują, że obie technologie jak najbardziej nadają się do tworzenia aplikacji sieciowej.
 
-Praca \cite{websocket_webrtc_streamr} autorstwa \emph{Santeri Juslenius} analizowała zachowanie technologii WebRTC oraz WebSocket w sieci \emph{Streamr}, która jest zdecentralizowanym systemem \emph{publish-subscribe}\footnotemark{}.
+Praca \cite{websocket_webrtc_streamr} autorstwa \emph{Santeri Juslenius} i innych analizowała zachowanie technologii WebRTC oraz WebSocket w sieci \emph{Streamr}, która jest zdecentralizowanym systemem \emph{publish-subscribe}\footnotemark{}.
 \footnotetext{Jest to system komunikacji, w którym wysyłane wiadomości mają przypisane pewne kategorie, które odbiorcy mogą subskrybować w celu ich otrzymywania}
 Na podstawie wyników badań autorzy doszli do wniosku, że WebSocket odnosi lepsze rezultaty pod względem opóźnień.
 Jednak dla tej konkretnej topologii WebRTC był bardziej użyteczny ze względu na lepsze wyniki dla małych pakietów oraz możliwości połączeń \emph{P2P}\footnotemark{}.
