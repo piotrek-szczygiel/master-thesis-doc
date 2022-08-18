@@ -11,6 +11,8 @@
 \date{2022}
 \dedication{Test}
 
+\raggedbottom
+
 \usepackage[backend=biber,doi=true,url=false]{biblatex}
 \addbibresource{bibliography.bib}
 
@@ -253,9 +255,9 @@ Z tych trzech przeglądarek najlepsze wyniki odniósł Firefox.
 \emph{Weihang Wang} w swoim artykule \cite{wasm_js_bench2} porównuje WebAssembly i JavaScript pod kątem czasu wykonania i zużycia pamięci różnych programów.
 Zauważa, że WebAssembly zużywa dużo więcej pamięci niż JavaScript.
 Mimo tego WebAssembly był dużo szybszy od JavaScript dla bardzo małych rozmiarów danych (35.3x średnie przyspieszenie) oraz małych danych (7.67x średnie przyspieszenie).
-Natomiast dla większych rozmiarów danych, dzięki \emph{JIT}\footnotemark{}, JavaScript doganiał WebAssembly, a nawet zdarzały się przypadki, gdzie WebAssembly był wolniejszy od JavaScript.
-\footnotetext{Kompilator JIT -- kompiluje kod w trakcie wykonywania programu, w przeciwieństwie do zwykłych kompilatorów, które robią to przed jego uruchomieniem}
-Otrzymane przez niego wyniki pokazują, że optymalizacja \emph{JIT} w Chrome znacząco poprawia wyniki JavaScript, nie mając wpływu na WebAssembly.
+Natomiast dla większych rozmiarów danych, dzięki kompilacji \emph{JIT}\footnotemark{}, JavaScript doganiał WebAssembly, a nawet zdarzały się przypadki, gdzie WebAssembly był wolniejszy od JavaScript.
+\footnotetext{Kompilator JIT (ang. just-in-time) -- kompiluje kod w trakcie wykonywania programu, w przeciwieństwie do zwykłych kompilatorów, które robią to przed jego uruchomieniem}
+Otrzymane przez niego wyniki pokazują, że optymalizacje kompilatora JIT w Chrome znacząco poprawiają wyniki JavaScript, nie mając wpływu na WebAssembly.
 
 Jeden z rozdziałów książki \cite{wasm_yew} autorstwa \emph{Shing Lyu} przedstawia wykorzystanie WebAssembly do tworzenia warstwy wizualnej aplikacji webowych.
 Użycie języka Rust wraz z biblioteką \emph{Yew}\footnote{\url{https://yew.rs/}} umożliwia zastąpienie innych popularnych bibliotek takich jak np. \emph{React.js}\footnote{\url{https://reactjs.org/}}.
@@ -384,7 +386,7 @@ Z uzyskanych wyników wywnioskowali, że technologia WebSocket umożliwia uzyska
 
 Artykuł \cite{websocket_monitoring} autorstwa \emph{Kun Ma} oraz \emph{Weijuan Zhang} prezentuje system monitorujący zasoby znajdujące się w chmurze.
 Wykorzystana została w nim technologia WebSocket, aby umożliwić szybszy i częstszy dostęp do informacji o tych zasobach.
-Na podstawie eksperymentalnej aplikacji webowej uznali, że wykorzystanie technologii WebSocket umożliwia uzyskanie niższych opóźnień niż odpytywanie HTTP czy rozwiązania \emph{FlashSocket} i \emph{Socket}.
+Na podstawie eksperymentalnej aplikacji webowej uznali, że wykorzystanie technologii WebSocket umożliwia uzyskanie niższych opóźnień niż odpytywanie HTTP czy wykorzystana w pracy biblioteka FlashSocket.
 
 \section{Wnioski}
 Wszystkie prace zgodnie uznają, że obie technologie nadają się do tworzenia aplikacji sieciowych.
@@ -409,11 +411,11 @@ AssemblyScript został wybrany jako język bardzo zbliżony składnią i użycie
 Dzięki niemu programiści stron internetowych mogliby bez dużej ilości nauki tworzyć moduły WebAssembly.
 Rust został wybrany ze względu na największą popularność wśród programistów WebAssembly.
 W tym rozdziale przedstawione będzie porównanie tych języków zarówno pod względem wydajności kodu wynikowego, jak i prostoty tworzenia aplikacji.
-Pominięto takie języki jak C oraz C++ ze względu na to, że tak samo, jak Rust i Zig korzystają z LLVM\footnotemark{} do generowania kodu wynikowego.
+Pominięto takie języki jak C oraz C++ ze względu na to, że tak samo, jak Rust i Zig korzystają z \emph{LLVM}\footnotemark{} do generowania kodu wynikowego.
 \footnotetext{LLVM -- backend dla kompilatorów z którego korzystają różne frontendy dla takich języków jak C, C++, Rust, Zig, Swift i wiele innych (\url{https://llvm.org/})}
 Z tego powodu różnice w wydajności kodu wynikowego będą marginalne i będą wywodzić się głównie ze stylu pisania kodu w danym języku.
 Mimo że pod spodem korzystają z tego samego kompilatora, to programy napisane w języku C często są szybsze od ich odpowiedników w C++.
-Spowodowane jest to tym, że programiści C pozbawieni takich funkcjonalności języka jak RAII\footnotemark{}, zmuszeni są do bardziej szczegółowej kontroli alokacji pamięci i sposobu ułożenia w niej danych.
+Spowodowane jest to tym, że programiści C pozbawieni takich funkcjonalności języka jak \emph{RAII}\footnotemark{}, zmuszeni są do bardziej szczegółowej kontroli alokacji pamięci i sposobu ułożenia w niej danych.
 \footnotetext{Resource acquisition is initialization -- wzorzec projektowy łączący konstrukcję i destrukcję obiektu z alokacją i zwalnianiem zasobów z których korzysta}
 Z tego powodu C i C++ niekoniecznie będą wydajniejsze od Rust, a współcześnie programiści starają się odchodzić od korzystania z tych języków w nowych projektach na rzecz nowocześniejszych i wygodniejszych technologii.
 Zaprezentowane zostanie utworzenie dwóch prostych funkcji w każdym z języków -- rekurencyjnego obliczania n-tej liczby ciągu Fibonacciego oraz sortowania tablicy liczb.
@@ -608,6 +610,8 @@ Atrybut \emph{wasm\_bindgen} oznacza funkcje jako dostępną do wywołania z poz
 Jest to wymagane, dlatego że oprócz modułu WebAssembly, automatycznie generowany będzie również kod JavaScript inicjalizujący ten moduł oraz dodający funkcje pomocnicze.
 Podobne rozwiązanie mogliśmy zauważyć w projekcie AssemblyScript, a brak jego jest odczuwalny, tworząc projekt w języku Zig.
 
+\clearpage
+
 \subsection{Tworzenie funkcji \emph{sort}}
 Przekazywanie tablicy do modułu WebAssembly można zrobić na różne sposoby.
 Jeden z nich jest przedstawiony poniżej.
@@ -667,10 +671,10 @@ Wszystkie aplikacje uruchamiane były na przeglądarce Google Chrome\footnote{\u
 Konfiguracja sprzętowa komputera testowego przedstawia się następująco:
 \begin{itemize}
     \itemsep0em
-    \item Procesor \emph{ADM Ryzen 5 5600} -- 6 rdzeni / 12 wątków / 4,4 GHz
-    \item Karta graficzna \emph{GeForce GTX 1080}
-    \item Pamięć RAM 16GB DDR4
-    \item System operacyjny \emph{Windows 10}
+    \item Procesor: \emph{ADM Ryzen 5 5600} -- 6 rdzeni 4.4 GHz
+    \item Karta graficzna: \emph{GeForce GTX 1080}
+    \item Pamięć RAM: \emph{DDR4 16GB}
+    \item System operacyjny: \emph{Microsoft Windows 10}
 \end{itemize}
 
 Poniżej przedstawiono również kod w języku JavaScript, do którego porównywane były inne wyniki.
@@ -938,8 +942,7 @@ Pokazuje też, że dzięki stosowaniu niskopoziomowego języka można uzyskać w
 Test symulacji N ciał pokazał natomiast, że WebAssembly nie będzie szybszy od JavaScript w każdym przypadku.
 Silniki JavaScript zawarte w przeglądarkach są jedynymi z najlepiej zoptymalizowanych programów na świecie.
 Swoją optymalizację zawdzięczają temu, że mało który kod jest tak często uruchamiany na komputerach jak ten odpowiedzialny za działanie stron internetowych.
-Korzystają one z kompilacji \emph{JIT}\footnotemark{} (ang. just-in-time) dla funkcji, które są często używane.
-\footnotetext{Kompilacja just-in-time -- sposób wykonywania kodu wymagający kompilacji programu w trakcie jego wykonywania}
+Korzystają one z kompilacji JIT dla funkcji, które są często używane.
 Kompilator JIT potrafi generować bezpośrednio natywny kod maszynowy komputera, na którym uruchamiany jest kod JavaScript.
 Z tego powodu, w przypadku tego testu, wykonywał się on minimalnie szybciej niż jego odpowiednik w module WebAssembly.
 Należy jednak pamiętać, że kompilacja JIT odbywa się jedynie dla funkcji, które silnik JavaScript uzna za warte skompilowania np. w przypadku częstego ich używania.
@@ -962,7 +965,7 @@ Porównane zostaną różnice w opóźnieniach oraz stabilności połączenia, k
 
 \section{Przetwarzanie obrazu}
 Na początku aplikacje były tworzone na podstawie własnoręcznie pisanych algorytmów przetwarzania obrazu.
-W toku tworzenia pracy natknięto się jednak na informacje, że popularna biblioteka do przetwarzania obrazu OpenCV\footnotemark{} posiada również wersje JavaScript oraz WebAssembly.
+W toku tworzenia pracy natknięto się jednak na informacje, że popularna biblioteka do przetwarzania obrazu \emph{OpenCV}\footnotemark{} posiada również wersje JavaScript oraz WebAssembly.
 \footnotetext{\url{https://opencv.org/}}
 Zdecydowano się więc wykorzystać gotową bibliotekę.
 Dzięki temu można mieć większą pewność, że algorytmy w niej zawarte są optymalne i różnice w wydajności będą wynikały głównie z użytego rodzaju biblioteki.
@@ -1047,11 +1050,11 @@ Jednak fakt, że w tym wypadku jest szybsza o cały rząd złożoności, pokazuj
 \section{Komunikacja z użyciem WebSocket oraz WebRTC}
 Do aplikacji napisanych w przeglądarce zaimplementowano moduł komunikujący się z odległym serwerem.
 Na potrzeby testów, moduł ten wysyła raz na sekundę komunikat składający się z aktualnego czasu systemowego oraz 64 losowych bajtów.
-Rozmiar komunikatu mógłby być większy, o ile nie przekroczyłby MTU\footnotemark{}, ponieważ mogłoby wtedy dojść do wysłania więcej niż jednego pakietu, co w efekcie mogłoby spowodować zwiększenie testowanych opóźnień.
+Rozmiar komunikatu mógłby być większy, o ile nie przekroczyłby \emph{MTU}\footnotemark{}, ponieważ mogłoby wtedy dojść do wysłania więcej niż jednego pakietu, co w efekcie mogłoby spowodować zwiększenie testowanych opóźnień.
 \footnotetext{MTU -- rozmiar największego datagramu, który można przekazać przez warstwę protokołu komunikacyjnego}
 Serwer znajdujący się we Frankfurcie po otrzymaniu tego pakietu odsyła go natychmiastowo do aplikacji webowej.
 Aplikacja po otrzymaniu pakietu zwrotnego odczytuje swój aktualny czas systemowy i odejmuje od niego czas zawarty w pakiecie.
-Na tej podstawie oblicza RTT\footnotemark{}.
+Na tej podstawie oblicza \emph{RTT}\footnotemark{}.
 \footnotetext{Round Trip Time -- czas wymagany do przesłania sygnału w obu kierunkach, od nadawcy do odbiorcy, a następnie w drugą stronę}
 W przedstawionym wcześniej przykładzie aplikacji do telechirurgii RTT stanowi wyznacznik opóźnienia między komendą chirurga a informacją zwrotną od robota.
 Badania przedstawione w książce \emph{Robot Surgery} \cite{telesurgery} pokazały, że chirurdzy mają zdolność do dostosowywania się do różnych czasów opóźnienia.
@@ -1059,7 +1062,7 @@ Nawet w przypadku połączenia satelitarnego o czasach opóźnienia na poziomie 
 Co okazało się jednak bardzo istotne w kontekście możliwości chirurga w bezproblemowym wykonaniu operacji to stabilność tego połączenia.
 
 Stworzone zostały dwie wersje aplikacji komunikujące się z serwerem, z wykorzystaniem technologii WebSocket oraz WebRTC.
-Wersja aplikacji korzystająca z WebSocket łączy się z prostą aplikacją napisaną w Node.js\footnotemark{} uruchomioną na serwerze.
+Wersja aplikacji korzystająca z WebSocket łączy się z prostą aplikacją napisaną w \emph{Node.js}\footnotemark{} uruchomioną na serwerze.
 \footnotetext{Node.js -- środowisko uruchomieniowe do tworzenia aplikacji serwerowych napisanych w języku JavaScript}
 Jedynym zadaniem tej aplikacji jest nasłuchiwanie na połączenie, odczytanie nadchodzącego komunikatu i natychmiastowe odesłanie go z powrotem do klienta.
 Funkcjonalność serwera WebRTC jest taka sama, z tą różnicą, że jeśli nie uda się ustanowić bezpośredniego połączenia, ruch może być dodatkowo przekierowywany przez serwer TURN.
