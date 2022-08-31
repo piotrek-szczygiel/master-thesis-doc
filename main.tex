@@ -27,8 +27,6 @@
 \frontmatter
 \maketitle
 
-\addtocontents{toc}{\protect\enlargethispage{\baselineskip}}
-\addtocontents{toc}{\protect\enlargethispage{\baselineskip}}
 \setcounter{tocdepth}{1}
 \tableofcontents
 
@@ -56,13 +54,21 @@ Praca ta skupi się na eksploracji tych technologii, które w założeniu powinn
 
 \pagebreak
 
+\section{Definicje kluczowych pojęć}
+W pracy pojawiają się następujące kluczowe pojęcia, które wymagają zdefiniowania:
+\begin{itemize}
+    \item aplikacja webowa -- aplikacja uruchamiana w przeglądarce, która przez dostarczony interfejs oferuje użytkownikowi jakąś konkretną usługę
+    \item interaktywna aplikacja webowa -- aplikacja webowa, która w odpowiedzi na interakcje z użytkownikiem lub zewnętrzne komunikaty, wykonuje lokalne obliczenia oraz komunikuje się z zewnętrznymi serwerami (np. \emph{Twitter}\footnote{\url{https://twitter.com/}})
+    \item kolaboratywna aplikacja webowa -- interaktywna aplikacja webowa, która umożliwia współpracę wielu użytkowników (np. \emph{Google Docs}\footnote{\url{https://docs.google.com/}})
+\end{itemize}
+
 \section{Cel}
-Celem pracy jest stworzenie zbioru rekomendowanych praktyk wykorzystywanych przy tworzeniu interaktywnych aplikacji webowych.
+Celem pracy jest stworzenie zbioru rekomendowanych praktyk wykorzystywanych przy tworzeniu kolaboratywnych aplikacji webowych.
 Rekomendacje będą dotyczyć dwóch aspektów -- doboru technologii używanych do uruchamiania kodu w przeglądarce oraz do komunikacji sieciowej w aplikacjach webowych.
 
 Pierwsza rekomendacja dotyczyć będzie kwestii używania WebAssembly w nowych i istniejących aplikacjach webowych.
-Przedstawione zostaną przypadki, w których WebAssembly nie zwiększy wydajności aplikacji.
-Zaprezentowane zostaną również te, gdzie użycie WebAssembly znacząco poprawi wydajność i responsywność danej strony.
+Przedstawione zostaną przypadki, gdzie użycie WebAssembly znacząco poprawi wydajność i responsywność danej strony.
+Zaprezentowane zostaną również te, w których WebAssembly nie zwiększy wydajności aplikacji.
 Rekomendacja będzie dotyczyć również wyboru języka programowania kompilowanego do WebAssembly.
 Programista tworzący aplikację z użyciem WebAssembly, musi zdecydować się na język programowania, którym będzie się posługiwać.
 Różnią się one między sobą wygodą użytkowania oraz wydajnością kodu wynikowego generowanego przez ich kompilatory, więc jest to ważna decyzja do podjęcia.
@@ -72,8 +78,10 @@ Przedstawione zostaną wyniki testów opóźnień dla technologii WebSocket oraz
 Oprócz tego przedstawione zostaną różnice w wygodzie tworzenia aplikacji z użyciem danej technologii.
 Finalnie więc czytelnik będzie miał pogląd na technologie używane w procesie tworzenia wydajnych i responsywnych aplikacji webowych.
 
+\clearpage
+
 \section{Motywacja}
-Pomimo wielkich postępów technologicznych w zakresie mocy obliczeniowej urządzeń, z których korzystamy na co dzień, nadal mnóstwo stron internetowych potrafi ładować się po kilka sekund, a przy próbie interakcji z nimi zachowywać się nieresponsywnie.
+Jak już wspomniano, pomimo wielkich postępów technologicznych w zakresie mocy obliczeniowej urządzeń, z których korzystamy na co dzień, nadal mnóstwo stron internetowych potrafi ładować się po kilka sekund, a przy próbie interakcji z nimi zachowywać się nieresponsywnie.
 Wiele osób jest poirytowanych takim stanem rzeczy, spowodowanym w głównej mierze przez pewnego rodzaju chaos panujący wśród twórców stron internetowych.
 Poradniki do tworzenia nawet najprostszych aplikacji zawierają kod zaciągający tysiące bibliotek niepotrzebnie spowalniających ich działanie.
 Nowoczesne technologie, takie jak WebAssembly, WebSocket czy WebRTC kuszą wielu programistów możliwością rozwiązania tych problemów.
@@ -82,20 +90,32 @@ Aby ułatwić twórcom aplikacji wybór stosu technologicznego, skupiono się w 
 
 \section{Metodyka}
 Prace rozpoczęto od zapoznania się z językami kompilowanymi do WebAssembly.
-Po wybraniu trzech interesujących języków utworzono z ich wykorzystaniem prosty benchmark.
+Po wybraniu trzech nowoczesnych języków programowania utworzono z ich wykorzystaniem prosty benchmark.
 Został on użyty do przeprowadzenia badań nad wydajnością aplikacji utworzonych w każdym z tych języków.
 Sam proces ich tworzenia dostarczył również informacji o wygodzie pisania w danym języku.
 
-Po wybraniu jednego z języków utworzono inne aplikacje webowe, które dostarczyły więcej informacji o danej technologii.
+Po wybraniu najbardziej obiecującego języka utworzono inne aplikacje webowe, które dostarczyły więcej informacji o procesie tworzenia aplikacji z wykorzystaniem WebAssembly.
 Pozwalały one zbadać wydajność aplikacji napisanych w tym języku i porównać je z aplikacjami napisanymi w powszechnie stosowanym języku JavaScript.
 
-Na koniec zaprojektowano przykładową interaktywną aplikację webową.
-Dla uproszczenia, interaktywna aplikacja webowa, będzie w tej pracy interpretowana, jako strona internetowa wykonująca lokalne obliczenia w przeglądarce oraz komunikująca się z zewnętrznym serwerem.
+Jako końcowy test, zdecydowano się zaprojektować aplikacje, które przetestują technologie WebAssembly, WebSocket i WebRTC w kontekście tworzenia kolaboratywnych aplikacji webowych.
+W większości przypadków, schemat komunikacji takiej aplikacji wygląda tak jak na rysunku \ref{fig:collaboration}.
+W celu łatwiejszego zbadania wpływu wybranych technologii na występujące w aplikacji opóźnienia, zdecydowano się na badanie przypadku pojedynczego użytkownika i serwera.
+Jakiekolwiek zmierzone opóźnienia miałyby bezpośrednie odzwierciedlenie w działaniu kolaboratywnej aplikacji webowej dla wielu użytkowników.
+
+\begin{figure}[H]
+    \centering
+    \vspace*{15pt}
+    \includegraphics[width=0.72809\textwidth]{images/collaboration.pdf}
+    \caption{Najczęstszy schemat komunikacji w kolaboratywnej aplikacji webowej}
+    \label{fig:collaboration}
+\end{figure}
+
+Zaprojektowano więc przykładową interaktywną aplikację webową.
 Zostały utworzone trzy wersje aplikacji o identycznej funkcjonalności, różniące się technologiami użytymi do jej stworzenia.
 Utworzono aplikację webową JavaScript, aplikację webową korzystającą z WebAssembly oraz aplikację natywną.
 Następnie wykonano testy porównujące technologie WebRTC oraz WebSocket w kontekście wykorzystania ich w takiej aplikacji.
 
-Na podstawie otrzymanych wyników sporządzono wnioski oraz utworzono zestaw rekomendowanych praktyk dla tworzenia interaktywnych aplikacji webowych.
+ Na podstawie otrzymanych wyników sporządzono wnioski oraz utworzono zestaw rekomendowanych praktyk dla tworzenia tego rodzaju aplikacji webowych.
 
 \clearpage
 
@@ -103,7 +123,7 @@ Na podstawie otrzymanych wyników sporządzono wnioski oraz utworzono zestaw rek
 Dalsza część pracy została podzielona na następujące części:
 
 \begin{itemize}
-    \item Rozdział 2 -- zawiera przedstawienie technologi WebAssembly oraz aktualnego stanu wiedzy na jej temat
+    \item Rozdział 2 -- zawiera przedstawienie technologii WebAssembly oraz aktualnego stanu wiedzy na jej temat
     \item Rozdział 3 -- prezentuje technologie WebRTC i WebSocket wraz z aktualnym stanem wiedzy na ich temat
     \item Rozdział 4 -- przedstawia opis, analizę oraz porównanie języków kompilowanych do WebAssembly
     \item Rozdział 5 -- jest poświęcony dokładniejszej analizie wydajności aplikacji pisanych w języku programowania, który uzyskał najlepsze wyniki w poprzednim rozdziale
@@ -120,7 +140,7 @@ Został stworzony jako przenośny cel kompilacji dla języków programowania\foo
 Umożliwia tworzenie aplikacji webowych działających zarówno po stronie klienta jak i serwera.
 
 Maszyna WebAssembly została zaprojektowana do wczytywania binarnego formatu zapewniającego oszczędność rozmiaru i czasu ładowania uruchamianych na niej programów.
-Celuje w osiągnięcie prędkości zbliżonej do natywnych aplikacji, korzystając z powszechnych możliwości sprzętowych\footnotemark{} dostępnych na różnych platformach.
+Celuje w osiągnięcie szybkości działania zbliżonej do natywnych aplikacji, korzystając z powszechnych możliwości sprzętowych\footnotemark{} dostępnych na różnych platformach.
 \footnotetext{Przenośność WebAssembly wymaga, aby środowisko wykonywalne spełniało takie charakterystyki jak np. posiadanie 8 bitowych bajtów, możliwości adresowania pojedynczych bajtów pamięci, czy wykorzystanie IEEE 754 jako binarnej reprezentacji liczb zmiennoprzecinkowych}
 Określa tzw. piaskownicę\footnotemark{}, czyli bezpieczne pod względem pamięci oraz dostępu z zewnątrz środowisko wykonywalne.
 \footnotetext{Piaskownica (ang. sandbox) -- mechanizm izolacji uruchamianych programów służący poprawie bezpieczeństwa.}
@@ -275,16 +295,16 @@ Jeden z rozdziałów książki \cite{wasm_yew} autorstwa \emph{Shing Lyu} przeds
 Użycie języka Rust wraz z biblioteką \emph{Yew}\footnote{\url{https://yew.rs/}} umożliwia zastąpienie innych popularnych bibliotek takich jak np. \emph{React.js}\footnote{\url{https://reactjs.org/}}.
 
 Autorzy artykułu \cite{wasm_energy} \emph{WebAssembly versus JavaScript: Energy and Runtime Performance} przeprowadzają badania nad wydajnością i oszczędnością energii WebAssembly w porównaniu do JavaScript.
-Otrzymane wyniki pokazały, że WebAssembly jest średnio 30\% bardziej energooszczędny niż JavaScript.
+Otrzymane wyniki pokazały, że aplikacje WebAssembly są średnio o 30\% bardziej energooszczędne niż te napisane w JavaScript.
 WebAssembly poradził sobie również lepiej pod względem wydajności.
 
 \section{Wnioski}
 WebAssembly jest obiecującą technologią.
 Dla wielu przypadków osiągał dużo lepsze wyniki, jeśli chodzi o obliczenia w przeglądarce.
-Mimo tego wspomniane prace głównie skupiały się na samej wydajności, a niewiele było poruszonych tematów tworzenia aplikacji.
+Prace o tematyce WebAssembly w większości poruszają temat samej wydajności, a niewiele skupia się na procesie tworzenia aplikacji.
 Wiele benchmarków było programami napisanymi w C przeportowanymi\footnotemark{} do WebAssembly.
 \footnotetext{Portowanie -- proces przenoszenia wersji programu komputerowego na inną platformę sprzętową lub programistyczną}
-W tej pracy poruszony zostanie natomiast temat tworzenia nowych aplikacji oraz wybór języka kompilowanego do WebAssembly, który się do tego najbardziej aktualnie nadaje.
+W tej pracy poruszony zostanie natomiast temat tworzenia nowych aplikacji oraz wybór języka programowania kompilowanego do WebAssembly, który się do tego najbardziej aktualnie nadaje.
 
 \chapter{WebRTC i WebSocket}
 W tym rozdziale zaprezentowane zostaną technologie WebRTC i WebSocket oraz aktualny stan wiedzy z nimi związany.
@@ -299,7 +319,7 @@ Udostępniony zestaw interfejsów programowania dla języka JavaScript to międz
 
 \begin{itemize}
     \item \emph{getUserMedia} -- otrzymuje dostęp do mediów audiowizualnych użytkownika (np. uzyskując dostęp do mikrofonu oraz kamery)
-    \item \emph{RTCPeerConnection} -- uruchamia komunikację audiowizualną pomiędzy użytkownikami, odpowiada za przetwarzanie sygnału, obsługę kodeków, komunikację, bezpieczeństwo oraz zarządzanie prędkością połączenia
+    \item \emph{RTCPeerConnection} -- uruchamia komunikację audiowizualną pomiędzy użytkownikami, odpowiada za przetwarzanie sygnału, obsługę kodeków, bezpieczeństwo oraz adaptacje wielkości strumienia danych
     \item \emph{RTCDataChannel} -- umożliwia dwukierunkową komunikację z wykorzystaniem różnorodnych danych pomiędzy użytkownikami
 \end{itemize}
 
@@ -313,7 +333,7 @@ skomunikować się z serwerem STUN\footnotemark{}, w celu otrzymania swojego pub
 W przypadku braku możliwość ustanowienia bezpośredniej komunikacji będzie konieczne również skorzystanie z pośredniczącego serwera TURN\footnotemark{}, którego jedynym zadaniem jest przekazywanie wiadomości pomiędzy klientami.
 \footnotetext{Traversal Using Relays around NAT -- protokół służący do przekazywania ruchu sieciowego umożliwiający komunikację, kiedy nie jest możliwe ustanowienie bezpośredniego połączenia}
 Schemat przedstawiony na rysunku \ref{fig:webrtc} przedstawia ten proces inicjalizacji połączenia pomiędzy dwoma użytkownikami.
-Na schemacie przedstawiono komunikacje bezpośrednią oraz pośrednią z wykorzystaniem serwera TURN.
+Na schemacie przedstawiono komunikację bezpośrednią oraz pośrednią z wykorzystaniem serwera TURN.
 
 \begin{figure}[H]
     \centering
@@ -356,7 +376,6 @@ Na listingu \ref{lst:websocket} przedstawiono przykładowe użycie udostępnione
     \label{lst:websocket}
 \end{listing}
 
-Jak można zauważyć, interfejs programowania jest bardzo prosty, w przeciwieństwie do WebRTC, gdzie taki sam przykład użycia wymagałby dużo więcej kodu.
 Dokładniejszy opis działania WebSocket znajdziemy w dokumencie \emph{RFC 6455: The WebSocket Protocol} \cite{RFC6455}.
 
 \pagebreak
@@ -369,7 +388,7 @@ Niektóre z prac również porównują ze sobą te technologie.
 \footnotetext{Internet of Things -- sieć fizycznych obiektów wyposażonych w czujniki i oprogramowanie umożliwiające wymianę danych z innymi urządzeniami za pośrednictwem Internetu}
 Próbuje rozwiązać problem zbierania danych w czasie rzeczywistym z urządzenia IoT.
 Wykorzystał telefon jako bramkę IoT, czyli pośrednika między urządzeniami a Internetem.
-Wnioskuje on, że zarówno WebSocket, jak i WebRTC może zostać użyte do łączenia urządzeń IoT z Internetem.
+Wnioskuje on, że zarówno WebSocket, jak i WebRTC nadają się do zaimplementowania komunikacji w czasie rzeczywistym urządzeń IoT z Internetem.
 
 \emph{Tomasz Karla} i \emph{Jarosław Tarnawski} w pracy \cite{websocket_webrtc_realtime} porównują opóźnienia dla technologii WebRTC oraz WebSocket w różnych scenariuszach.
 Testowane były przykładowo sieci lokalne, GSM oraz WiFi. Technologia WebRTC zanotowała minimalnie mniejsze opóźnienia.
@@ -392,7 +411,7 @@ Wykorzystano do jego stworzenia środowisko uruchomieniowe \emph{Node.js}.
 Pomimo dużej prostoty, jest on w pełni funkcjonalnym serwerem sygnalizacyjnym WebRTC.
 Umożliwia on realizację komunikacji pomiędzy dwiema aplikacjami webowymi używającymi WebRTC.
 
-Praca \cite{webrtc_latency} autorstwa \emph{Sakari Tanskanen} bada kontrybutorów opóźnień dla technologii WebRTC.
+Praca \cite{webrtc_latency} autorstwa \emph{Sakari Tanskanen} analizuje udział opóźnień na różnych etapach przetwarzania dla technologii WebRTC.
 Opóźnienia mierzone były za pomocą kamery skierowanej na diodę zapalającą się w momencie otrzymania pakietu.
 Wyniki pokazały, że spora część czasu była poświęcona przetwarzaniu oraz buforowaniu obrazu.
 
@@ -412,7 +431,7 @@ Kiedy nie uda się ustanowić bezpośredniego połączenia, korzystając z WebRT
 Może to spowodować większe opóźnienie w komunikacji, ponieważ każdy pakiet będzie musiał przejść przez dodatkowe urządzenie pośredniczące.
 Należy również pamiętać, że WebRTC jest dużo lepiej przystosowane do przesyłania obrazu oraz dźwięku w czasie rzeczywistym.
 Jest tak ze względu na interfejs programowania posiadający funkcje do obsługi audio i wideo oraz korzystanie z lepiej przystosowanego do transmisji audiowizualnej protokołu UDP.
-W tej pracy porównamy jednak użycie tych technologii w interaktywnych aplikacjach webowych w kontekście wysyłania komend do drugiego urządzenia.
+W tej pracy porównamy jednak użycie tych technologii w interaktywnych aplikacjach webowych w kontekście wysyłania komunikatów do drugiego urządzenia.
 
 \chapter{Języki kompilowane do WebAssembly}
 WebAssembly jest binarnym formatem, interpretowanym przez wirtualną maszynę uruchamianą w przeglądarce lub niezależnie.
@@ -473,7 +492,7 @@ Kolejnym krokiem jest utworzenie funkcji, która otrzymuje tablicę z zewnątrz,
 Pojawia się tutaj jednak pierwszy problem -- zarządzanie pamięcią.
 Nie można mianowicie przekazać tablicy bezpośrednio z poziomu kodu napisanego w JavaScript do modułu WebAssembly.
 Program napisany w Zig ma jedynie dostęp do swojej pamięci, która znajduję się w piaskownicy.
-Należy więc udostępnić tę pamięć użytkownikowi, aby mógł przez nią przekazać nam tablicę do posortowania.
+Należy więc udostępnić tę pamięć programowi JavaScript, aby mógł przez nią przekazać tablicę do posortowania.
 
 % Minted doesn't detect Zig 10_000_000 number correctly and it breaks syntax highlighting
 \begin{listing}[H]
@@ -683,7 +702,7 @@ Jednym z najważniejszych zagadnień w kontekście minimalizacji opóźnień apl
 W celu dokonania porównania utworzono prostą aplikacje internetową.
 Ładuje ona stworzone wcześniej moduły WebAssembly i wypisuje czas wywołania konkretnych funkcji dla różnych parametrów.
 Warto też wspomnieć, że wyniki zależą od użytego sprzętu oraz przeglądarki.
-Wszystkie aplikacje uruchamiane były na przeglądarce Google Chrome\footnote{\url{https://www.google.com/chrome/}} oraz Mozilla Firefox\footnote{\url{https://www.mozilla.org/firefox/}}.
+Wszystkie aplikacje uruchamiane były na przeglądarkach Google Chrome\footnote{\url{https://www.google.com/chrome/}} oraz Mozilla Firefox\footnote{\url{https://www.mozilla.org/firefox/}}.
 Konfiguracja sprzętowa komputera testowego przedstawia się następująco:
 \begin{itemize}
     \itemsep0em
@@ -979,8 +998,8 @@ Warstwa komunikacji korzystać będzie z technologii WebRTC oraz WebSocket.
 Porównane zostaną różnice w opóźnieniach oraz stabilności połączenia, które przekładać się będą na responsywność aplikacji na polecenia chirurga.
 
 \section{Przetwarzanie obrazu}
-Prowadząc wstępne badania do pracy, aplikacje tworzone były na podstawie własnoręcznie pisanych algorytmów przetwarzania obrazu.
-W toku tworzenia pracy znaleziono jednak informację, że popularna biblioteka do przetwarzania obrazu \emph{OpenCV}\footnotemark{} posiada również wersje JavaScript oraz WebAssembly.
+Na wstępnym etapie prac badawczych, aplikacje tworzone były na podstawie własnoręcznie pisanych algorytmów przetwarzania obrazu.
+W trakcie tworzenia aplikacji znaleziono jednak informację, że popularna biblioteka do przetwarzania obrazu \emph{OpenCV}\footnotemark{} posiada również wersje JavaScript oraz WebAssembly.
 \footnotetext{\url{https://opencv.org/}}
 Zdecydowano się więc wykorzystać gotową bibliotekę.
 Dzięki temu uzyskano większą pewność, że algorytmy w niej zawarte są optymalne i różnice w wydajności będą wynikały głównie z użytego rodzaju biblioteki.
@@ -1071,7 +1090,7 @@ Serwer znajdujący się we Frankfurcie po otrzymaniu tego pakietu odsyła go nat
 Aplikacja po otrzymaniu pakietu zwrotnego odczytuje swój aktualny czas systemowy i odejmuje od niego czas zawarty w pakiecie.
 Na tej podstawie oblicza \emph{RTT}\footnotemark{}.
 \footnotetext{Round Trip Time -- czas wymagany do przesłania sygnału w obu kierunkach, od nadawcy do odbiorcy, a następnie w drugą stronę}
-W przedstawionym wcześniej przykładzie aplikacji do telechirurgii RTT stanowi wyznacznik opóźnienia między komendą chirurga a informacją zwrotną od robota.
+We wspomnianym wcześniej przykładzie aplikacji do telechirurgii RTT stanowi wyznacznik opóźnienia między komendą chirurga a informacją zwrotną od robota.
 Badania przedstawione w książce \emph{Robot Surgery} \cite{telesurgery} pokazały, że chirurdzy mają zdolność do dostosowywania się do różnych czasów opóźnienia.
 Nawet w przypadku połączenia satelitarnego o czasach opóźnienia na poziomie około 550 milisekund operacja trwała tyle samo co dla połączenia naziemnego z czasami opóźnienia w okolicach 60 milisekund.
 Co okazało się jednak bardzo istotne w kontekście możliwości chirurga w bezproblemowym wykonaniu operacji to stabilność tego połączenia.
@@ -1088,7 +1107,7 @@ Komunikacja odbywała się za pomocą data channel, w celu możliwości wysyłan
 Wyniki przedstawione na wykresie \ref{fig:network} prezentują wartości RTT dla dwóch wersji aplikacji komunikujących się z tym samym serwerem.
 Można zauważyć, że aplikacja korzystająca z WebSocket posiadała bardzo stabilne połączenie i jej RTT wynosił około 32 milisekundy dla każdego wysłanego komunikatu.
 W przypadku aplikacji używającej WebRTC uzyskane wyniki były gorsze.
-Średni RTT był większy o 3 milisekundy, jednak co najważniejsze to stabilność połączenia była dużo niższa.
+Średni RTT był większy o 3 milisekundy, jednak co najważniejsze, stabilność połączenia była dużo niższa.
 Najniższe uzyskane RTT wynosiło około 33 milisekundy a największe około 42 milisekundy.
 
 \begin{figure}[H]
@@ -1109,18 +1128,19 @@ Mimo tego, że praca ta dotyczy interaktywnych aplikacji webowych, to należy pa
 Jeśli aplikacja wymaga bardzo dużej ilości skomplikowanych obliczeń i WebAssembly nie jest wystarczające, aby zapewnić tej aplikacji płynność w działaniu, to być może aplikacja ta nie nadaje się po prostu do uruchamiania w przeglądarce.
 
 W kontekście technologii używanych do komunikacji, WebSocket osiągnęło zdecydowanie lepsze wyniki.
-Większe opóźnienia dla aplikacji wykorzystującej WebRTC spowodowane były pośrednikiem w postaci serwera TURN.
-Nie jest to jednak coś, co da się ominąć w większości przypadków, chyba że obie aplikacje znajdowałyby się w tej samej sieci lokalnej lub sieci użytkowników miałyby odpowiednio skonfigurowane routery.
+Większe opóźnienia dla aplikacji wykorzystującej WebRTC mogły być spowodowane komunikacją poprzez pośrednika w postaci serwera TURN.
 WebSocket był również dużo prostszy do zaimplementowania przez właśnie brak konieczności konfiguracji serwerów STUN oraz TURN.
 
 \section{Podsumowanie}
-Tworząc interaktywne aplikacje webowe mamy do dyspozycji wiele dostępnych technologii, z których można skorzystać.
-Na podstawie testów zaprezentowanych w tej pracy można jednak zarekomendować stos technologiczny, który powinien zapewnić minimalizacje opóźnień w interakcji użytkowników korzystających z aplikacji webowych.
+Tworząc aplikacje webowe mamy do dyspozycji wiele dostępnych technologii, z których można skorzystać.
+Na podstawie testów zaprezentowanych w tej pracy można jednak zarekomendować stos technologiczny, który powinien zapewnić minimalizację opóźnień w interakcji użytkowników korzystających z aplikacji webowych.
 Zastosowanie WebAssembly w wielu przypadkach przyspieszyło działanie aplikacji i stosowanie go w obliczeniowo intensywnych partiach kodu może przynieść bardzo dobre rezultaty.
 Język Rust umożliwił pisanie czytelnego i wydajnego kodu.
 Na ten moment jest zdecydowanie dobrym wyborem do tworzenia modułów WebAssembly.
 W testach opóźnień technologia WebSocket osiągnęła lepsze wyniki niż WebRTC.
 Jej prostota użycia i wydajność sprawia, że lepiej nadaje się do wykorzystania w komunikacji z zewnętrznymi serwerami.
+
+\addtocontents{toc}{\protect\pagebreak}
 
 \backmatter
 

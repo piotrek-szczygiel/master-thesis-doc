@@ -190,6 +190,6 @@ Minister właściwy do spraw szkolnictwa wyższego i~nauki może korzystać z~pr
 \begin{center}\small\sffamily\noindent{}Kraków, \@date\end{center}
 \end{titlepage}
 \cleardoubleoddemptypage
-\@declaration
-\cleardoubleoddemptypage
+% \@declaration
+% \cleardoubleoddemptypage
 }
