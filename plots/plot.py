@@ -136,7 +136,7 @@ def edges():
     ticks_val.append("Natywna")
 
     ax.set_xticks(ticks_x, ticks_val)
-    ax.set(ylabel="Średni czas procesowania klatki (ms)")
+    ax.set(ylabel="Średni czas przetwarzania klatki (ms)")
     handles, labels = plt.gca().get_legend_handles_labels()
     by_label = dict(zip(labels, handles))
     plt.legend(by_label.values(), by_label.keys())
